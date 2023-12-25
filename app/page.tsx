@@ -1,20 +1,44 @@
-import Image from 'next/image'
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog"
+import { Button } from "@/components/ui/button"
+
+export function AlertDialogDemo() {
+  return (
+    <AlertDialog>
+      <AlertDialogTrigger asChild>
+        <Button variant="outline">Show Dialog</Button>
+      </AlertDialogTrigger>
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+          <AlertDialogDescription>
+            This action cannot be undone. This will permanently delete your
+            account and remove your data from our servers.
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+        <AlertDialogFooter>
+          <AlertDialogCancel>Cancel</AlertDialogCancel>
+          <AlertDialogAction>Continue</AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
+  )
+}
 
 export default function Home() {
+
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
-        <p className="underline">Je ne peux pas te présenter en réel le cadeau du à un retard de colis. Mais permets moi de te l'offrir numériquement pour le moment.</p>
-        <br />
-        <br />
-
-        <h1 className="text-3xl text-amber-600">Chargeur Induction Pliable</h1>
-        <h2 className="text-2xl text-amber-500">Chargeur sans Fil 3 en 1</h2>
-        <br />
-        <img src="/1.jpg" />
-        <br />
-        <img src="/2.jpg" />
-        <br />
-        <img src="/3.jpg" />
+        <AlertDialogDemo />
     </main>
   )
 }
