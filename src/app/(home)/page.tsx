@@ -1,5 +1,5 @@
-import { AlertDialogDemo } from "@/components/alert-dialog"
-import { ThemeToggle } from "@/components/theme-toogle"
+import { HomeFooter } from "@/components/layout/home-footer"
+import { HomeHeader } from "@/components/layout/home-header"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { FlagIcon } from "lucide-react"
@@ -8,33 +8,7 @@ import Link from "next/link"
 export default function HomePage() {
   return (
     <>
-      <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-        <div className="container mx-auto px-6 py-3">
-          <div className="flex items-center justify-between">
-            <div>
-              <a className="text-gray-800 text-xl font-bold" href="#">
-                Questions
-              </a>
-            </div>
-            <div className="lg:flex items-center ml-auto">
-              <nav className="text-sm leading-6 font-semibold text-slate-700 dark:text-slate-200">
-                <ul className="flex space-x-8">
-                  <li>
-                    <a className="transition-colors hover:text-foreground/80 text-foreground/60" href="#">Home</a>
-                  </li>
-                  <li>
-                    <a className="text-gray-800 hover:text-gray-600" href="#">Home</a>
-                  </li>
-                  <li>
-                    <a className="text-gray-800 hover:text-gray-600" href="#">Home</a>
-                  </li>
-                </ul>
-              </nav>
-              <ThemeToggle className="ml-6" />
-            </div>
-          </div>
-        </div>
-      </header>
+      <HomeHeader />
       <main>
         <section className="w-full h-screen py-12 md:py-24 lg:py-32 xl:py-48">
           <div className="container px-4 md:px-6 h-full flex items-center justify-center">
@@ -87,12 +61,7 @@ export default function HomePage() {
           </div>
         </section>
       </main>
-      <footer className="bg-gray-200 py-6">
-        <div className="container mx-auto px-6 text-center text-gray-600">
-          <p>© 2023 Questions App by <Link className="underline" href="https://github.com/Bellico?tab=repositories">Bellico Github</Link></p>
-          <p>Powered by <Link className="underline" href="https://vercel.com/">Vercel</Link> and <Link className="underline" href="https://nextjs.org/">NextJs</Link></p>
-        </div>
-      </footer>
+      <HomeFooter />
     </>
   )
 }
