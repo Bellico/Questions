@@ -1,14 +1,19 @@
+import LoginForm from "@/components/auth/login-form"
 import { HomeFooter } from "@/components/layout/home-footer"
 import { HomeHeader } from "@/components/layout/home-header"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
+import { auth } from "@/lib/auth"
 import { FlagIcon } from "lucide-react"
 import Link from "next/link"
 
-export default function HomePage() {
+export default async function HomePage() {
+
+  const session = await auth()
   return (
     <>
       <HomeHeader />
+      <LoginForm session={session} />
       <main>
         <section className="w-full h-screen py-12 md:py-24 lg:py-32 xl:py-48">
           <div className="container px-4 md:px-6 h-full flex items-center justify-center">
