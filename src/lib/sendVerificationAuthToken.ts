@@ -4,20 +4,20 @@ var html = `
 
         <div style="max-width: 650px;margin: 0 auto">
 
-            <div style="background: #272525; color: #fff;height: 85px;">
-                <div style="text-align: center;font-size: 2.2rem; padding-top: 20px;text-transform: uppercase;">Questions editor</div>
+            <div style="background-color: #272525; color: #fff;padding: 15px 0;">
+                <div style="text-align: center;font-size: 2.2rem;text-transform: uppercase;">Questions editor</div>
             </div>
 
             <p style="text-align: center;font-size: 26px;">Almost, complete your registery</p>
 
-            <div style="margin: 1em auto;width: 18%;">
+            <div style="margin: 1em auto;max-width:115px">
                 <a href="[Url]" style="display: inline-block; padding: 10px 20px; background-color: #CCA250; color: #fff; text-decoration: none; border-radius: 5px; font-weight: bold; letter-spacing:1px">
                     Click here
                 </a>
             </div>
 
-           <div style="background: #272525; color: #fff;height: 85px;">
-                <div style="text-align: center;font-size: 1.2rem; padding-top: 30px;">© 2023 Questions App by Bellico</div>
+           <div style="background-color: #272525; color: #fff;padding: 15px 0;">
+                <div style="text-align: center;font-size: 1.2rem;">© 2023 Questions App by Bellico</div>
             </div>
         </div>
     </body>
