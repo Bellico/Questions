@@ -1,5 +1,6 @@
 import { getAuthSession } from "@/lib/auth";
 import { notFound } from "next/navigation";
+import React from "react";
 
 export default async function DashboardLayout({
   children,
@@ -16,8 +17,6 @@ export default async function DashboardLayout({
   }
 
   return <>
-    1
-    <section>{children}</section>
-    2
+    {children}
   </>
 }

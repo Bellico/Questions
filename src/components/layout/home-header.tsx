@@ -1,12 +1,12 @@
 import { ThemeToggle } from "@/components/theme/theme-toogle";
 
 export const HomeHeader = () => (
-  <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+  <header className="fixed top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
     <div className="container mx-auto px-6 py-3">
       <div className="flex items-center justify-between">
         <div>
           <a className="text-gray-800 text-xl font-bold" href="#">
-            Questions
+            Questions Editor
           </a>
         </div>
         <div className="lg:flex items-center ml-auto">
@@ -14,12 +14,6 @@ export const HomeHeader = () => (
             <ul className="flex space-x-8">
               <li>
                 <a className="transition-colors hover:text-foreground/80 text-foreground/60" href="#">Home</a>
-              </li>
-              <li>
-                <a className="text-gray-800 hover:text-gray-600" href="#">Home</a>
-              </li>
-              <li>
-                <a className="text-gray-800 hover:text-gray-600" href="#">Home</a>
               </li>
             </ul>
           </nav>

@@ -6,6 +6,8 @@ import { signIn, signOut } from "next-auth/react";
 
 export default function LoginForm({ session }: { session: Session | null }) {
 
+    if (!session) return null;
+
     const signId = async () => {
         var response = await signIn('email', { email: 'franck.martin12@hotmail.com', redirect: false });
         console.log(response);

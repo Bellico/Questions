@@ -19,12 +19,12 @@ export const authOptions: NextAuthOptions = {
       async sendVerificationRequest({
         identifier: email,
         url,
-        provider: { server, from },
       }) {
         await sendVerificationAuthToken(email, url)
       },
     }),
-  ]
+  ],
+  debug: process.env.NODE_ENV === 'development'
 };
 
 export const getAuthSession = async () => getServerSession(authOptions);

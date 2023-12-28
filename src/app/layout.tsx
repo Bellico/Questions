@@ -5,6 +5,7 @@ import React from 'react'
 import './globals.css'
 
 const inter = Inter({ subsets: ['latin'] })
+console.log(inter)
 
 export const metadata: Metadata = {
   title: 'Questions App',
