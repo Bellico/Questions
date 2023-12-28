@@ -1,4 +1,13 @@
 -- CreateTable
+CREATE TABLE "User" (
+    "id" TEXT NOT NULL PRIMARY KEY,
+    "name" TEXT,
+    "email" TEXT,
+    "emailVerified" DATETIME,
+    "image" TEXT
+);
+
+-- CreateTable
 CREATE TABLE "Account" (
     "id" TEXT NOT NULL PRIMARY KEY,
     "userId" TEXT NOT NULL,
@@ -29,15 +38,6 @@ CREATE TABLE "VerificationToken" (
     "identifier" TEXT NOT NULL,
     "token" TEXT NOT NULL,
     "expires" DATETIME NOT NULL
-);
-
--- CreateTable
-CREATE TABLE "User" (
-    "id" TEXT NOT NULL PRIMARY KEY,
-    "name" TEXT,
-    "email" TEXT,
-    "emailVerified" DATETIME,
-    "image" TEXT
 );
 
 -- CreateIndex
