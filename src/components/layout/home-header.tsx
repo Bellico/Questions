@@ -6,7 +6,7 @@ export const HomeHeader = () => (
       <div className="flex items-center justify-between">
         <div>
           <a className="text-gray-800 text-xl font-bold" href="#">
-            Questions Editor
+            Questions Editor Preview
           </a>
         </div>
         <div className="lg:flex items-center ml-auto">
