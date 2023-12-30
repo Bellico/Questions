@@ -1,3 +1,4 @@
+import { DashboardHeader } from "@/components/dashboard-layout/header";
 import { auth } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import React from "react";
@@ -13,7 +14,13 @@ export default async function DashboardLayout({
     redirect('/')
   }
 
-  return <>
-    {children}
-  </>
+  return (
+    <>
+      <DashboardHeader />
+
+      <main className="mx-auto p-8">
+        {children}
+      </main>
+    </>
+  )
 }

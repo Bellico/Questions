@@ -36,7 +36,7 @@ export default function SubscribeForm() {
                 <Input placeholder="Enter your email" type="email" {...register('email')} />
                 <Button type="submit" disabled={formState.isSubmitting} >
                     {isSubmitting && <Loader2 className="animate-spin -ml-1 mr-3" />}
-                    Subscribe
+                    Sign In
                 </Button>
             </form>
 
