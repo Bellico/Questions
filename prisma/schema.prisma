@@ -54,3 +54,26 @@ model VerificationToken {
 
   @@unique([identifier, token])
 }
+
+model QuestionGroup {
+  id           String   @id @default(cuid())
+  name         String   @unique @db.VarChar(50)
+  creationDate DateTime
+  questions    Question[]
+}
+
+model Question {
+  id           String   @id @default(cuid())
+  subject      String
+  groupId      String
+  group        QuestionGroup @relation(fields: [groupId], references: [id])
+  responses    Response[]
+}
+
+model Response {
+  id           String   @id @default(cuid())
+  text         String   @db.VarChar(250)
+  questionId   String
+  question     Question @relation(fields: [questionId], references: [id])
+  isCorrect    Boolean
+}

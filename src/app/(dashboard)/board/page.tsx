@@ -1,10 +1,20 @@
 import { QuestionsTable } from "@/components/board/questions-table";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import prisma from "@/lib/prisma";
 import { BoxIcon, DollarSignIcon, Mail } from "lucide-react";
 import Link from "next/link";
 
-export default function BoardPage() {
+const getQuestionGroupQuery = (userId?: string) =>
+  prisma.questionGroup.findMany({
+    orderBy: {
+      creationDate: 'desc',
+    }
+  });
+
+export default async function BoardPage() {
+  const questionGroups = await getQuestionGroupQuery();
+
   return (
     <>
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4 my-5">
@@ -56,7 +66,7 @@ export default function BoardPage() {
         </Link>
       </div>
 
-      <QuestionsTable />
+      <QuestionsTable questionGroups={questionGroups} />
     </>
   )
 }
