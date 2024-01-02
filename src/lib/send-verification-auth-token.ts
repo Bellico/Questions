@@ -17,7 +17,7 @@ var html = `
             <div style="font-size: 14px; color: #444444; line-height: 170%; text-align: center;">
                 <p style="font-size: 14px; line-height: 170%;"><span style="font-size: 16px; line-height: 27.2px;">Lorem
                         ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut
-                        laoreet dolore magna aliquam erat volutpat. </span></p>
+                        laoreet dolore magna aliquam erat volutpat.</span></p>
             </div>
 
             <div align="center" style="margin: 1em auto">

@@ -1,24 +1,61 @@
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
-## Getting Started
+## Environment Variables
 
-First, run the development server:
+#### Create a **`.env`** file
+
+```bash
+# You can use https://neon.tech/
+DATABASE_URL = "postgresql://*******"
+
+# https://resend.com/
+RESEND_API_KEY = "*******"
+
+# For production https://next-auth.js.org/configuration/options
+# Example : openssl rand -base64 32
+NEXTAUTH_SECRET = "*******"
+```
+
+## Local database install
+
+#### Create a postgre database with docker
+
+```
+docker run --name postgres -e POSTGRES_DB=questions -e POSTGRES_USER=Bellico -e POSTGRES_PASSWORD=myPassWord1234 -p 5432:5432 -d postgres
+```
+
+#### Override **`.env`** with a **`.env.local`**
+
+```bash
+DATABASE_URL = "postgresql://Bellico:myPassWord1234@localhost:5432/questions"
+```
+
+#### Migrate the local database
+
+```bash
+npx prisma migrate deploy
+npx prisma db seed
+```
+
+## Run project
+
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
 This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+
+### For update prisma schema
+
+```bash
+npx prisma validate
+npx prisma migrate dev --name init
+(npx prisma generate)
+```
 
 ## Learn More
 
