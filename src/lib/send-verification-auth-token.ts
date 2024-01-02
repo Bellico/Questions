@@ -45,7 +45,7 @@ export async function sendVerificationAuthToken(email: string, url: string) {
         body: JSON.stringify({
             to: [email],
             from: "noreply@resend.dev",
-            subject: "Sign in to Your page",
+            subject: "Sign in link - Questions editor",
             html: html.replace('[Url]', url)
         }),
         headers: {
