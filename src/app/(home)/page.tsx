@@ -22,7 +22,7 @@ export default async function HomePage() {
                   Welcome to your questions editor
                 </h1>
                 <p className="mx-auto max-w-[700px] text-gray-500 md:text-xl dark:text-gray-400">
-                  Sign up to discover test.
+                  Sign up to discover.
                 </p>
               </div>
               <div className="w-full max-w-sm space-y-2">
