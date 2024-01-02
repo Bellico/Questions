@@ -1,5 +1,6 @@
-import { getAuthSession } from "@/lib/auth";
-import { notFound } from "next/navigation";
+import { DashboardHeader } from "@/components/dashboard-layout/header";
+import { auth } from "@/lib/auth";
+import { redirect } from "next/navigation";
 import React from "react";
 
 export default async function DashboardLayout({
@@ -7,16 +8,19 @@ export default async function DashboardLayout({
 }: {
   children: React.ReactNode
 }) {
+  const session = await auth();
 
-  const session = await getAuthSession();
-  console.log(session)
-
-  const userId = session?.user?.email
-  if (!userId) {
-    notFound()
+  if (!session) {
+    redirect('/')
   }
 
-  return <>
-    {children}
-  </>
+  return (
+    <>
+      <DashboardHeader />
+
+      <main className="mx-auto p-8">
+        {children}
+      </main>
+    </>
+  )
 }

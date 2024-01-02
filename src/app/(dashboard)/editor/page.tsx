@@ -1,6 +1,8 @@
+import { createQuestionGroup } from "@/actions/editor";
+import QuestionGroupEditor from "@/components/editor/question-group-editor";
 
-export default function EditorPage() {
-    return (
-        <h1>Quiz QuizEditorPage</h1>
-    )
+export default async function EditorPage() {
+  return (
+    <QuestionGroupEditor onSubmit={createQuestionGroup} />
+  )
 }

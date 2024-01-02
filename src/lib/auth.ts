@@ -1,5 +1,4 @@
-/* @ts-ignore */
-import { sendVerificationAuthToken } from "@/lib/sendVerificationAuthToken";
+import { sendVerificationAuthToken } from "@/lib/send-verification-auth-token";
 /* @ts-ignore */
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import { PrismaClient } from "@prisma/client";

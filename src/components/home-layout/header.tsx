@@ -5,7 +5,7 @@ export const HomeHeader = () => (
     <div className="container mx-auto px-6 py-3">
       <div className="flex items-center justify-between">
         <div>
-          <a className="text-gray-800 text-xl font-bold" href="#">
+          <a className="text-xl font-bold" href="#">
             Questions Editor
           </a>
         </div>

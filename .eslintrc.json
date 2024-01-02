@@ -1,6 +1,10 @@
 {
   "extends": ["next/core-web-vitals", "eslint:recommended"],
   "rules": {
+    "no-unused-vars": 0,
     "react/no-unescaped-entities": 0
-   }
+   },
+   "globals": {
+    "globalThis": true
+  }
 }
