@@ -41,7 +41,7 @@ export const createQuestionGroup = async (data: QuestionGroupType): Promise<stri
     }
 }
 
-export const updateQuestionGroup = async (data: QuestionGroupType): Promise<bool | ActionErrorType> => {
+export const updateQuestionGroup = async (data: QuestionGroupType): Promise<boolean | ActionErrorType> => {
     const errors = ZparseOrError(QuestionGroupSchema, data)
     if (errors) return errors
 
