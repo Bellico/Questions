@@ -13,7 +13,7 @@ import { useShallow } from 'zustand/react/shallow';
 
 type QuestionGroupEditorProps = {
   questionGroup?: QuestionGroupType,
-  saveGroupAction: (values: QuestionGroupType) => Promise<string | ActionErrorType>;
+  saveGroupAction: (values: QuestionGroupType) => Promise<string | boolean | ActionErrorType>;
 };
 
 function _QuestionGroupEditor({ saveGroupAction }: QuestionGroupEditorProps) {
