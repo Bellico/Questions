@@ -47,7 +47,7 @@ export function QuestionsTable({ questionGroups }: QuestionsTableProps) {
                   <DropdownMenuItem>See results</DropdownMenuItem>
                   <DropdownMenuItem>Share</DropdownMenuItem>
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem>Edit</DropdownMenuItem>
+                  <Link href={`/editor/${invoice.id}`}><DropdownMenuItem>Edit</DropdownMenuItem></Link>
                   <DropdownMenuItem>Duplicate</DropdownMenuItem>
                   <DropdownMenuItem>Delete</DropdownMenuItem>
                 </DropdownMenuContent>

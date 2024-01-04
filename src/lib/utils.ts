@@ -1,5 +1,6 @@
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
+import { v4 } from 'uuid';
 import { ZodType } from "zod";
 
 export function cn(...inputs: ClassValue[]) {
@@ -24,6 +25,6 @@ export const ZparseOrError = <T extends ZodType>(schema: T, value: unknown): voi
   }
 }
 
-export const MapToArray = <T>(map: Map<string, T>): T[] => Array.from(map, ([_, value]) => value)
+export const mapToArray = <T>(map: Map<string, T>): T[] => Array.from(map, ([_, value]) => value)
 
-export const ArrayToMap = <T extends { id: string }>(datas: T[]) => new Map<string, T>(datas.map(e => [e.id, e]));
+export const arrayToMap = <T>(datas: T[]) => new Map<string, T>(datas.map(e => [v4(), e]));

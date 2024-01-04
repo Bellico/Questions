@@ -3,19 +3,19 @@ import * as z from "zod";
 // See schema.prisma
 
 export const ResponseSchema = z.object({
-    id: z.string().optional(),
-    text: z.string(),
+    id: z.string().nullable(),
+    text: z.string().min(3).or(z.literal('')),
     isCorrect: z.boolean()
 })
 
 export const QuestionSchema = z.object({
-    id: z.string().optional(),
-    subject: z.string(),
+    id: z.string().nullable(),
+    subject: z.string().min(10),
     responses: z.array(ResponseSchema)
 })
 
 export const QuestionGroupSchema = z.object({
-    id: z.string().optional(),
+    id: z.string().nullable(),
     name: z.string().max(50),
     questions: z.array(QuestionSchema)
 })

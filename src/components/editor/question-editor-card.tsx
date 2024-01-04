@@ -15,7 +15,7 @@ type QuestionEditorCardProps = {
   question: QuestionType
 }
 
-export function QuestionEditorCard({ keyMap, question: { subject, responses } }: QuestionEditorCardProps) {
+export function QuestionEditorCard({ keyMap, question: { id, subject, responses } }: QuestionEditorCardProps) {
 
   const updateQuestion = useQuestionsEditorContext((s) => s.updateQuestion)
 
@@ -23,7 +23,7 @@ export function QuestionEditorCard({ keyMap, question: { subject, responses } }:
 
   const form = useForm<QuestionType>({
     resolver: zodResolver(QuestionSchema),
-    values: { subject, responses }
+    values: { id, subject, responses }
   })
 
   const { register, getValues, control } = form;

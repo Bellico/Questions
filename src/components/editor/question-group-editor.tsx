@@ -6,11 +6,13 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useDebounce } from "@/hooks/utils";
 import { QuestionGroupType } from "@/lib/schema";
-import { ActionErrorType, MapToArray } from "@/lib/utils";
-import { MailIcon } from "lucide-react";
+import { ActionErrorType, mapToArray } from "@/lib/utils";
+import { Mail, MailIcon } from "lucide-react";
+import Link from "next/link";
 import { useShallow } from 'zustand/react/shallow';
 
 type QuestionGroupEditorProps = {
+  questionGroup?: QuestionGroupType,
   saveGroupAction: (values: QuestionGroupType) => Promise<string | ActionErrorType>;
 };
 
@@ -24,18 +26,26 @@ function _QuestionGroupEditor({ saveGroupAction }: QuestionGroupEditorProps) {
     updateName(value)
   }, 300)
 
-  const onSubmitEditor = () => {
-    saveGroupAction({
+  const onSubmitEditor = async () => {
+    const result = await saveGroupAction({
       id: groupId,
       name: groupName,
-      questions: MapToArray(questionsMap)
+      questions: mapToArray(questionsMap)
     })
+
+    console.log('Saved', result)
   }
 
   console.log('render list')
 
   return (
     <>
+      <div className="flex justify-end">
+        <Link href="/board">
+          <Button><Mail className="mr-2 h-4 w-4" />Back</Button>
+        </Link>
+      </div>
+
       <label htmlFor="email" className="relative block w-6/12 m-auto">
         <MailIcon className="w-8 h-8 absolute top-1/2 transform -translate-y-1/2 right-3" />
         <Input
@@ -59,10 +69,10 @@ function _QuestionGroupEditor({ saveGroupAction }: QuestionGroupEditorProps) {
   )
 }
 
-export default function QuestionGroupEditor({ saveGroupAction }: QuestionGroupEditorProps) {
+export default function QuestionGroupEditor({ questionGroup, saveGroupAction }: QuestionGroupEditorProps) {
   return (
     <>
-      <QuestionsEditorProvider>
+      <QuestionsEditorProvider value={questionGroup}>
         <_QuestionGroupEditor saveGroupAction={saveGroupAction} />
       </QuestionsEditorProvider>
     </>

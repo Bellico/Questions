@@ -6,7 +6,7 @@ import { create } from 'zustand';
 enableMapSet()
 
 export type QuestionsEditorProps = {
-    id?: string,
+    id: string | null,
     name: string,
     questionsMap: Map<string, QuestionType>,
 }
@@ -17,9 +17,11 @@ export type QuestionsEditorState = QuestionsEditorProps & {
     updateQuestion: (id: string, question: QuestionType) => void
 }
 
-const defaultQuestion: Omit<QuestionType, 'id'> = {
+const defaultQuestion: QuestionType = {
+    id: null,
     subject: '',
     responses: [{
+        id: null,
         text: '',
         isCorrect: true
     }]
@@ -34,6 +36,7 @@ function createDefaultQuestionsMap(): Map<string, QuestionType> {
 
 export const createQuestionsEditorStore = (initProps?: Partial<QuestionsEditorProps>) => {
     const DEFAULT_PROPS: QuestionsEditorProps = {
+        id: null,
         name: 'My new questions set',
         questionsMap: createDefaultQuestionsMap()
     }
@@ -57,6 +60,7 @@ export const createQuestionsEditorStore = (initProps?: Partial<QuestionsEditorPr
 
             if (question.responses.every(r => !!r.text)) {
                 question.responses.push({
+                    id: null,
                     text: '',
                     isCorrect: false
                 })

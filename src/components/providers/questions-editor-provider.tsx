@@ -1,4 +1,6 @@
 import { QuestionsEditorProps, QuestionsEditorState, createQuestionsEditorStore } from "@/lib/questions-editor-store"
+import { QuestionGroupType } from "@/lib/schema"
+import { arrayToMap } from "@/lib/utils"
 import { PropsWithChildren, createContext, useContext, useRef } from "react"
 import { useStore } from "zustand"
 
@@ -14,11 +16,19 @@ export function useQuestionsEditorContext<T>(selector: (state: QuestionsEditorSt
     return useStore(store, selector)
 }
 
-export function QuestionsEditorProvider({ value, children }: PropsWithChildren<{ value?: QuestionsEditorProps }>) {
+export function QuestionsEditorProvider({ value, children }: PropsWithChildren<{ value?: QuestionGroupType }>) {
     const storeRef = useRef<QuestionsEditorStore>()
+    let storeValue: QuestionsEditorProps | undefined = undefined;
+
+    if (value) {
+        storeValue = {
+            ...value,
+            questionsMap: arrayToMap(value.questions)
+        }
+    }
 
     if (!storeRef.current) {
-        storeRef.current = createQuestionsEditorStore(value)
+        storeRef.current = createQuestionsEditorStore(storeValue)
     }
 
     return (
