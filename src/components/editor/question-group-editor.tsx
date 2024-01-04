@@ -4,22 +4,36 @@ import { QuestionEditorCard } from "@/components/editor/question-editor-card";
 import { QuestionsEditorProvider, useQuestionsEditorContext } from "@/components/providers/questions-editor-provider";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { useDebounce } from "@/hooks/utils";
 import { QuestionGroupType } from "@/lib/schema";
-import { ActionErrorType } from "@/lib/utils";
+import { ActionErrorType, MapToArray } from "@/lib/utils";
 import { MailIcon } from "lucide-react";
 import { useShallow } from 'zustand/react/shallow';
 
 type QuestionGroupEditorProps = {
-  onSubmit: (values: QuestionGroupType) => Promise<string | ActionErrorType>;
+  saveGroupAction: (values: QuestionGroupType) => Promise<string | ActionErrorType>;
 };
 
-function _QuestionGroupEditor({ onSubmit }: QuestionGroupEditorProps) {
+function _QuestionGroupEditor({ saveGroupAction }: QuestionGroupEditorProps) {
 
-  const [groupId, groupName, questions, addNewQuestion] = useQuestionsEditorContext(
-    useShallow((s) => [s.id, s.name, s.getArrayQuestions(), s.addNewQuestion]),
+  const [groupId, groupName, questionsMap, addNewQuestion, updateName] = useQuestionsEditorContext(
+    useShallow((s) => [s.id, s.name, s.questionsMap, s.addNewQuestion, s.updateGroupName]),
   )
 
+  const updateNameDebounced = useDebounce((value) => {
+    updateName(value)
+  }, 300)
+
+  const onSubmitEditor = () => {
+    saveGroupAction({
+      id: groupId,
+      name: groupName,
+      questions: MapToArray(questionsMap)
+    })
+  }
+
   console.log('render list')
+
   return (
     <>
       <label htmlFor="email" className="relative block w-6/12 m-auto">
@@ -30,30 +44,26 @@ function _QuestionGroupEditor({ onSubmit }: QuestionGroupEditorProps) {
           placeholder="Enter your text here"
           type="text"
           defaultValue={groupName}
+          onChange={(e) => updateNameDebounced(e.target.value)}
         />
       </label>
 
-      {questions.map(q => <QuestionEditorCard key={q.id} id={q.id} subject={q.subject} responses={q.responses} />)}
+      {[...questionsMap].map(([key, value]) => <QuestionEditorCard key={key} keyMap={key} question={value} />)}
 
       <Button onClick={() => addNewQuestion()} className="w-full">Add</Button>
 
-      <form action={() => onSubmit({
-        id: groupId,
-        name: groupName,
-        questions: questions
-      })}>
+      <form action={onSubmitEditor}>
         <Button className="w-full">Save</Button>
       </form>
     </>
   )
 }
 
-
-export default function QuestionGroupEditor({ onSubmit }: QuestionGroupEditorProps) {
+export default function QuestionGroupEditor({ saveGroupAction }: QuestionGroupEditorProps) {
   return (
     <>
       <QuestionsEditorProvider>
-        <_QuestionGroupEditor onSubmit={onSubmit} />
+        <_QuestionGroupEditor saveGroupAction={saveGroupAction} />
       </QuestionsEditorProvider>
     </>
   )

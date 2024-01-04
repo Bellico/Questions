@@ -9,13 +9,13 @@ export const ResponseSchema = z.object({
 })
 
 export const QuestionSchema = z.object({
-    id: z.string(),
+    id: z.string().optional(),
     subject: z.string(),
     responses: z.array(ResponseSchema)
 })
 
 export const QuestionGroupSchema = z.object({
-    id: z.string(),
+    id: z.string().optional(),
     name: z.string().max(50),
     questions: z.array(QuestionSchema)
 })

@@ -20,8 +20,11 @@ export default function SubscribeForm() {
         resolver: zodResolver(SignInSchema)
     })
 
-    const { handleSubmit, register, setError, formState, } = form;
-    const { isSubmitting, isSubmitSuccessful, errors } = formState;
+    const { handleSubmit,
+        register,
+        setError,
+        formState: { isSubmitting, isSubmitSuccessful, errors },
+    } = form;
 
     const signWithEmail = async (data: SignInSchemaType) => {
         var response = await signIn('email', { email: data.email, redirect: false });
@@ -34,7 +37,7 @@ export default function SubscribeForm() {
         <>
             <form noValidate className="flex space-x-2" onSubmit={handleSubmit(signWithEmail)}>
                 <Input placeholder="Enter your email" type="email" {...register('email')} />
-                <Button type="submit" disabled={formState.isSubmitting} >
+                <Button type="submit" disabled={isSubmitting} >
                     {isSubmitting && <Loader2 className="animate-spin -ml-1 mr-3" />}
                     Sign In
                 </Button>

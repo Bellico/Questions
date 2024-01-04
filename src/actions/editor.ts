@@ -3,6 +3,8 @@
 import prisma from "@/lib/prisma";
 import { QuestionGroupSchema, QuestionGroupType } from "@/lib/schema";
 import { ActionErrorType, ZparseOrError } from "@/lib/utils";
+import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
 
 export const createQuestionGroup = async (data: QuestionGroupType): Promise<string | ActionErrorType> => {
     const errors = ZparseOrError(QuestionGroupSchema, data)
@@ -18,12 +20,10 @@ export const createQuestionGroup = async (data: QuestionGroupType): Promise<stri
                         return {
                             subject: q.subject,
                             responses: {
-                                create: q.responses.map(r => {
-                                    return {
-                                        isCorrect: r.isCorrect,
-                                        text: r.text
-                                    }
-                                })
+                                create: q.responses.map(r => ({
+                                    isCorrect: r.isCorrect,
+                                    text: r.text
+                                }))
                             }
                         }
                     })
@@ -31,7 +31,8 @@ export const createQuestionGroup = async (data: QuestionGroupType): Promise<stri
             },
         });
 
-        return group.id
+        revalidatePath('/board')
+        return redirect('/board')
     }
     catch (error: any) {
         console.log(error)
@@ -40,3 +41,11 @@ export const createQuestionGroup = async (data: QuestionGroupType): Promise<stri
         };
     }
 }
+
+// const totest = (value: any) => {
+//     const validatedFields = QuestionGroupSchema.safeParse(value);
+
+//     if (!validatedFields.success) {
+//         var test = validatedFields.error.issues
+//     }
+// }

@@ -1,39 +1,69 @@
 import { QuestionType } from '@/lib/schema';
+import { enableMapSet, produce } from "immer";
 import { v4 } from 'uuid';
 import { create } from 'zustand';
 
+enableMapSet()
+
 export type QuestionsEditorProps = {
-    id: string,
+    id?: string,
     name: string,
-    questions: Set<QuestionType>,
+    questionsMap: Map<string, QuestionType>,
 }
 
 export type QuestionsEditorState = QuestionsEditorProps & {
     addNewQuestion: () => void,
-    getArrayQuestions(): QuestionType[],
+    updateGroupName: (name: string) => void,
+    updateQuestion: (id: string, question: QuestionType) => void
 }
 
 const defaultQuestion: Omit<QuestionType, 'id'> = {
-    subject: 'Write here your question',
+    subject: '',
     responses: [{
-        text: 'Write here your first response',
+        text: '',
         isCorrect: true
     }]
 }
 
+function createDefaultQuestionsMap(): Map<string, QuestionType> {
+    return new Map([
+        [v4(), { ...defaultQuestion }],
+        [v4(), { ...defaultQuestion }],
+    ])
+}
+
 export const createQuestionsEditorStore = (initProps?: Partial<QuestionsEditorProps>) => {
     const DEFAULT_PROPS: QuestionsEditorProps = {
-        id: v4(),
-        name: 'My Quiz',
-        questions: new Set<QuestionType>().add({ id: v4(), ...defaultQuestion })
+        name: 'My new questions set',
+        questionsMap: createDefaultQuestionsMap()
     }
 
     return create<QuestionsEditorState>()((set, get) => ({
         ...DEFAULT_PROPS,
         ...initProps,
 
-        addNewQuestion: () => set((state) => ({ questions: new Set(state.questions).add({ id: v4(), ...defaultQuestion }) })),
+        addNewQuestion: () => set(produce((state: QuestionsEditorState) => {
+            state.questionsMap.set(v4(), { ...defaultQuestion })
+        })),
 
-        getArrayQuestions: () => Array.from(get().questions)
+        updateGroupName: (name: string) => set((state) => ({ name: name })),
+
+        // updateQuestion: (id: string, question: QuestionType) => set(produce((state: QuestionsEditorState) => {
+        //     state.questionsMap.set(id, { ...defaultQuestion })
+        // })),
+
+        updateQuestion: (id: string, question: QuestionType) => set((state) => {
+            const newMap = new Map(state.questionsMap)
+
+            if (question.responses.every(r => !!r.text)) {
+                question.responses.push({
+                    text: '',
+                    isCorrect: false
+                })
+            }
+
+            newMap.set(id, question)
+            return { questionsMap: newMap }
+        }),
     }))
 }
