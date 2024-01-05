@@ -55,6 +55,7 @@ This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-opti
 npx prisma validate
 npx prisma migrate dev --name init
 (npx prisma generate)
+(npx prisma db push)
 ```
 
 ## Learn More

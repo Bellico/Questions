@@ -4,6 +4,7 @@ import prisma from "@/lib/prisma";
 import { QuestionGroupSchema, QuestionGroupType } from "@/lib/schema";
 import { ActionErrorType, ZparseOrError } from "@/lib/utils";
 import { revalidatePath } from "next/cache";
+import z from "zod";
 
 export const createQuestionGroup = async (data: QuestionGroupType): Promise<string | ActionErrorType> => {
     const errors = ZparseOrError(QuestionGroupSchema, data)
@@ -36,7 +37,7 @@ export const createQuestionGroup = async (data: QuestionGroupType): Promise<stri
     }
     catch (error: any) {
         return {
-            message: "Database Error: Failed to Create questions: " + error.message,
+            message: "Database Error: Failed to create questions group: " + error.message,
         };
     }
 }
@@ -49,7 +50,7 @@ export const updateQuestionGroup = async (data: QuestionGroupType): Promise<bool
         await prisma.$transaction(async (tx) => {
 
             // 1. Update group
-            const group = await prisma.questionGroup.update({
+            await prisma.questionGroup.update({
                 where: {
                     id: data.id!,
                 },
@@ -58,10 +59,23 @@ export const updateQuestionGroup = async (data: QuestionGroupType): Promise<bool
                 },
             });
 
-            // 2. Update Questions Or Create With Responses
+            // 2. Delete old Questions
+            const questionIdToKeep = data.questions.filter(q => !!q.id).map(q => q.id!)
+            await prisma.question.deleteMany({
+                where: {
+                    id: {
+                        notIn: questionIdToKeep
+                    },
+                    groupId: {
+                        equals: data.id!
+                    }
+                },
+            })
+
+            // 3. Update existing Questions Or Create New With Responses
             for (let i = 0; i < data.questions.length; i++) {
                 const q = data.questions[i];
-                console.log(q)
+
                 await prisma.question.upsert({
                     where: {
                         id: q.id || 'xxx'
@@ -81,11 +95,20 @@ export const updateQuestionGroup = async (data: QuestionGroupType): Promise<bool
                     }
                 });
 
-                // 3. Create / Update Responses for Updated Questions
+                // 4. Create / Update / Delete Responses for Updated Questions
                 const updatedQuestion = data.questions.filter(q => !!q.id)
                 for (let i = 0; i < updatedQuestion.length; i++) {
 
                     const q = updatedQuestion[i];
+                    // Delete
+                    await prisma.response.deleteMany({
+                        where: {
+                            id: {
+                                notIn: q.responses.filter(r => !!r.id).map(r => r.id!)
+                            }
+                        }
+                    })
+
                     for (let j = 0; j < q.responses.length; j++) {
 
                         const r = q.responses[j];
@@ -103,7 +126,7 @@ export const updateQuestionGroup = async (data: QuestionGroupType): Promise<bool
                             update: {
                                 text: r.text,
                                 isCorrect: r.isCorrect
-                            }
+                            },
                         });
                     }
                 }
@@ -116,15 +139,29 @@ export const updateQuestionGroup = async (data: QuestionGroupType): Promise<bool
     }
     catch (error: any) {
         return {
-            message: "Database Error: Failed to Update questions: " + error.message,
+            message: "Database Error: Failed to update questions group: " + error.message,
         };
     }
 }
 
-// const totest = (value: any) => {
-//     const validatedFields = QuestionGroupSchema.safeParse(value);
+export const deleteQuestionGroup = async (id: string): Promise<boolean | ActionErrorType> => {
+    const errors = ZparseOrError(z.string(), id)
+    if (errors) return errors
 
-//     if (!validatedFields.success) {
-//         var test = validatedFields.error.issues
-//     }
-// }
+    try {
+        await prisma.questionGroup.delete({
+            where: {
+                id: id
+            }
+        })
+
+        revalidatePath('/board')
+
+        return true
+    }
+    catch (error: any) {
+        return {
+            message: "Database Error: Failed to delete questions group: " + error.message,
+        };
+    }
+}

@@ -16,7 +16,13 @@ export default async function EditorPage({ params }: { params: { id: string } })
         select: {
           id: true,
           subject: true,
-          responses: true
+          responses: {
+            select: {
+              id: true,
+              text: true,
+              isCorrect: true
+            }
+          }
         }
       }
     }

@@ -1,5 +1,8 @@
-import { Button } from "@/components/ui/button"
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
+"use client";
+
+import { deleteQuestionGroup } from "@/actions/editor";
+import { Button } from "@/components/ui/button";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import {
   Table,
   TableBody,
@@ -7,10 +10,10 @@ import {
   TableHead,
   TableHeader,
   TableRow
-} from "@/components/ui/table"
-import { QuestionGroup } from "@prisma/client"
-import { Mail, MoreHorizontal } from "lucide-react"
-import Link from "next/link"
+} from "@/components/ui/table";
+import { QuestionGroup } from "@prisma/client";
+import { Mail, MoreHorizontal } from "lucide-react";
+import Link from "next/link";
 
 type QuestionsTableProps = {
   questionGroups: QuestionGroup[]
@@ -49,7 +52,7 @@ export function QuestionsTable({ questionGroups }: QuestionsTableProps) {
                   <DropdownMenuSeparator />
                   <Link href={`/editor/${invoice.id}`}><DropdownMenuItem>Edit</DropdownMenuItem></Link>
                   <DropdownMenuItem>Duplicate</DropdownMenuItem>
-                  <DropdownMenuItem>Delete</DropdownMenuItem>
+                  <Link href="/" onClick={() => deleteQuestionGroup(invoice.id)}><DropdownMenuItem>Delete</DropdownMenuItem></Link>
                 </DropdownMenuContent>
               </DropdownMenu>
             </TableCell>

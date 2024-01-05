@@ -19,7 +19,7 @@ type QuestionGroupEditorProps = {
 function _QuestionGroupEditor({ saveGroupAction }: QuestionGroupEditorProps) {
 
   const [groupId, groupName, questionsMap, addNewQuestion, updateName] = useQuestionsEditorContext(
-    useShallow((s) => [s.id, s.name, s.questionsMap, s.addNewQuestion, s.updateGroupName]),
+    useShallow((s) => [s.id, s.name, s.questionsMap, s.addQuestion, s.updateGroupName]),
   )
 
   const updateNameDebounced = useDebounce((value) => {
@@ -27,10 +27,17 @@ function _QuestionGroupEditor({ saveGroupAction }: QuestionGroupEditorProps) {
   }, 300)
 
   const onSubmitEditor = async () => {
+    const questionsToSave = mapToArray(questionsMap).filter(q => !!q.subject);
+
+    if (questionsToSave.length === 0) {
+      console.log('empty')
+      return
+    }
+
     const result = await saveGroupAction({
       id: groupId,
       name: groupName,
-      questions: mapToArray(questionsMap)
+      questions: questionsToSave
     })
 
     console.log('Saved', result)
@@ -38,6 +45,7 @@ function _QuestionGroupEditor({ saveGroupAction }: QuestionGroupEditorProps) {
 
   console.log('render list')
 
+  let index = 1;
   return (
     <>
       <div className="flex justify-end">
@@ -58,13 +66,14 @@ function _QuestionGroupEditor({ saveGroupAction }: QuestionGroupEditorProps) {
         />
       </label>
 
-      {[...questionsMap].map(([key, value]) => <QuestionEditorCard key={key} keyMap={key} question={value} />)}
+      {[...questionsMap].map(([key, value]) => <QuestionEditorCard key={key} keyMap={key} indexQuestion={index++} question={value} />)}
 
       <Button onClick={() => addNewQuestion()} className="w-full">Add</Button>
 
-      <form action={onSubmitEditor}>
-        <Button className="w-full">Save</Button>
-      </form>
+      {questionsMap.size > 0 &&
+        <form action={onSubmitEditor}>
+          <Button className="w-full">Save</Button>
+        </form>}
     </>
   )
 }

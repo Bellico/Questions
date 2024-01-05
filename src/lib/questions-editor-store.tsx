@@ -1,9 +1,7 @@
 import { QuestionType } from '@/lib/schema';
-import { enableMapSet, produce } from "immer";
+import { randomSwName } from '@/lib/utils';
 import { v4 } from 'uuid';
 import { create } from 'zustand';
-
-enableMapSet()
 
 export type QuestionsEditorProps = {
     id: string | null,
@@ -12,9 +10,12 @@ export type QuestionsEditorProps = {
 }
 
 export type QuestionsEditorState = QuestionsEditorProps & {
-    addNewQuestion: () => void,
     updateGroupName: (name: string) => void,
-    updateQuestion: (id: string, question: QuestionType) => void
+    addQuestion: () => void,
+    removeQuestion: (keyMap: string) => void,
+    updateQuestion: (keyMap: string, question: QuestionType) => void,
+    addResponse: (keyMap: string) => void,
+    removeResponse: (keyMap: string, index: number) => void,
 }
 
 const defaultQuestion: QuestionType = {
@@ -24,6 +25,11 @@ const defaultQuestion: QuestionType = {
         id: null,
         text: '',
         isCorrect: true
+    },
+    {
+        id: null,
+        text: '',
+        isCorrect: false
     }]
 }
 
@@ -37,7 +43,7 @@ function createDefaultQuestionsMap(): Map<string, QuestionType> {
 export const createQuestionsEditorStore = (initProps?: Partial<QuestionsEditorProps>) => {
     const DEFAULT_PROPS: QuestionsEditorProps = {
         id: null,
-        name: 'My new questions set',
+        name: randomSwName() + '\'s questions',
         questionsMap: createDefaultQuestionsMap()
     }
 
@@ -45,17 +51,29 @@ export const createQuestionsEditorStore = (initProps?: Partial<QuestionsEditorPr
         ...DEFAULT_PROPS,
         ...initProps,
 
-        addNewQuestion: () => set(produce((state: QuestionsEditorState) => {
-            state.questionsMap.set(v4(), { ...defaultQuestion })
-        })),
-
         updateGroupName: (name: string) => set((state) => ({ name: name })),
+
+        // addQuestion: () => set(produce((state: QuestionsEditorState) => {
+        //     state.questionsMap.set(v4(), { ...defaultQuestion })
+        // })),
+
+        addQuestion: () => set((state) => {
+            const newMap = new Map(state.questionsMap)
+            newMap.set(v4(), { ...defaultQuestion })
+            return { questionsMap: newMap }
+        }),
+
+        removeQuestion: (keyMap: string) => set((state) => {
+            const newMap = new Map(state.questionsMap)
+            newMap.delete(keyMap)!
+            return { questionsMap: newMap }
+        }),
 
         // updateQuestion: (id: string, question: QuestionType) => set(produce((state: QuestionsEditorState) => {
         //     state.questionsMap.set(id, { ...defaultQuestion })
         // })),
 
-        updateQuestion: (id: string, question: QuestionType) => set((state) => {
+        updateQuestion: (keyMap: string, question: QuestionType) => set((state) => {
             const newMap = new Map(state.questionsMap)
 
             if (question.responses.every(r => !!r.text)) {
@@ -66,7 +84,28 @@ export const createQuestionsEditorStore = (initProps?: Partial<QuestionsEditorPr
                 })
             }
 
-            newMap.set(id, question)
+            newMap.set(keyMap, question)
+            return { questionsMap: newMap }
+        }),
+
+        addResponse: (keyMap: string) => set((state) => {
+            const newMap = new Map(state.questionsMap)
+            const question = newMap.get(keyMap)!
+            question.responses = [...question.responses, {
+                id: null,
+                text: '',
+                isCorrect: false
+            }]
+
+            newMap.set(keyMap, question)
+            return { questionsMap: newMap }
+        }),
+
+        removeResponse: (keyMap: string, index: number) => set((state) => {
+            const newMap = new Map(state.questionsMap)
+            const question = newMap.get(keyMap)!
+            question.responses = [...question.responses.filter((r, i) => i !== index)]
+            newMap.set(keyMap, question)
             return { questionsMap: newMap }
         }),
     }))

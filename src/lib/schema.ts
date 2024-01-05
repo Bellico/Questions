@@ -4,14 +4,14 @@ import * as z from "zod";
 
 export const ResponseSchema = z.object({
     id: z.string().nullable(),
-    text: z.string().min(3).or(z.literal('')),
+    text: z.string().min(2, 'At least 2 characters expected').or(z.literal('')),
     isCorrect: z.boolean()
 })
 
 export const QuestionSchema = z.object({
     id: z.string().nullable(),
-    subject: z.string().min(10),
-    responses: z.array(ResponseSchema)
+    subject: z.string().min(10, 'At least 10 characters expected'),
+    responses: z.array(ResponseSchema).min(2)
 })
 
 export const QuestionGroupSchema = z.object({
