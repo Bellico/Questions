@@ -76,13 +76,13 @@ export const createQuestionsEditorStore = (initProps?: Partial<QuestionsEditorPr
         updateQuestion: (keyMap: string, question: QuestionType) => set((state) => {
             const newMap = new Map(state.questionsMap)
 
-            if (question.responses.every(r => !!r.text)) {
-                question.responses.push({
-                    id: null,
-                    text: '',
-                    isCorrect: false
-                })
-            }
+            // if (question.responses.every(r => !!r.text)) {
+            //     question.responses.push({
+            //         id: null,
+            //         text: '',
+            //         isCorrect: false
+            //     })
+            // }
 
             newMap.set(keyMap, question)
             return { questionsMap: newMap }

@@ -2,24 +2,25 @@
 
 import { QuestionEditorCard } from "@/components/editor/question-editor-card";
 import { QuestionsEditorProvider, useQuestionsEditorContext } from "@/components/providers/questions-editor-provider";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useDebounce } from "@/hooks/utils";
 import { QuestionGroupType } from "@/lib/schema";
-import { ActionErrorType, mapToArray } from "@/lib/utils";
+import { ActionResultType, mapToArray } from "@/lib/utils";
 import { Mail, MailIcon } from "lucide-react";
 import Link from "next/link";
 import { useShallow } from 'zustand/react/shallow';
 
 type QuestionGroupEditorProps = {
   questionGroup?: QuestionGroupType,
-  saveGroupAction: (values: QuestionGroupType) => Promise<string | boolean | ActionErrorType>;
+  saveGroupAction: (values: QuestionGroupType) => Promise<ActionResultType<string | void>>;
 };
 
 function _QuestionGroupEditor({ saveGroupAction }: QuestionGroupEditorProps) {
 
-  const [groupId, groupName, questionsMap, addNewQuestion, updateName] = useQuestionsEditorContext(
-    useShallow((s) => [s.id, s.name, s.questionsMap, s.addQuestion, s.updateGroupName]),
+  const [groupId, groupName, questionsMap, addNewQuestion, updateName, removeQuestion] = useQuestionsEditorContext(
+    useShallow((s) => [s.id, s.name, s.questionsMap, s.addQuestion, s.updateGroupName, s.removeQuestion]),
   )
 
   const updateNameDebounced = useDebounce((value) => {
@@ -66,7 +67,21 @@ function _QuestionGroupEditor({ saveGroupAction }: QuestionGroupEditorProps) {
         />
       </label>
 
-      {[...questionsMap].map(([key, value]) => <QuestionEditorCard key={key} keyMap={key} indexQuestion={index++} question={value} />)}
+      <Accordion type="multiple" defaultValue={[questionsMap.entries().next()?.value[0]]}>
+        {[...questionsMap].map(([key, value]) => (
+          <AccordionItem key={key} value={key}>
+
+            <AccordionTrigger>Question {index}</AccordionTrigger>
+            <span>{value.responses.length} responses </span>
+            <Button variant="link" onClick={() => removeQuestion(key)}>Remove</Button>
+
+            <AccordionContent>
+              <QuestionEditorCard keyMap={key} indexQuestion={index++} question={value} />
+            </AccordionContent>
+
+          </AccordionItem>
+        ))}
+      </Accordion>
 
       <Button onClick={() => addNewQuestion()} className="w-full">Add</Button>
 

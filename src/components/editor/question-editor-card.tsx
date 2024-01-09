@@ -2,14 +2,15 @@
 
 import { useQuestionsEditorContext } from "@/components/providers/questions-editor-provider"
 import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader } from "@/components/ui/card"
+import { Card, CardContent } from "@/components/ui/card"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { useDebounce } from "@/hooks/utils"
 import { QuestionSchema, QuestionType } from "@/lib/schema"
+import { cn } from "@/lib/utils"
 import { zodResolver } from "@hookform/resolvers/zod"
+import { useEffect, useRef } from "react"
 import { useFieldArray, useForm } from "react-hook-form"
 
 type QuestionEditorCardProps = {
@@ -20,12 +21,13 @@ type QuestionEditorCardProps = {
 
 export function QuestionEditorCard({
   keyMap,
-  indexQuestion,
   question: { id, subject, responses }
 }: QuestionEditorCardProps) {
 
-  const [removeQuestion, updateQuestion, addResponse, removeResponse]
-    = useQuestionsEditorContext((s) => [s.removeQuestion, s.updateQuestion, s.addResponse, s.removeResponse])
+  const canAutoAddResponse = useRef<boolean>(false);
+
+  const [updateQuestion, removeStoreResponse]
+    = useQuestionsEditorContext((s) => [s.updateQuestion, s.removeResponse])
 
   console.log('render card', keyMap, subject)
 
@@ -37,13 +39,32 @@ export function QuestionEditorCard({
 
   const { getValues, control, formState: { isValid } } = form;
 
-  const { fields: responseFields } = useFieldArray({
+  const { fields: responseFields, append, remove } = useFieldArray({
     control,
     name: "responses",
   });
 
+  // Auto add new empty response
+  useEffect(() => {
+    if (!isValid) return;
+    if (!canAutoAddResponse.current) return;
+
+    if (responseFields.every(r => !!r.text)) {
+      append({
+        id: null,
+        text: '',
+        isCorrect: false
+      }, {
+        shouldFocus: false,
+      })
+    }
+  }, [append, responseFields, isValid])
+
+  // Send new values to store
   const updateQuestionDebounced = useDebounce(() => {
     if (!isValid) return;
+
+    canAutoAddResponse.current = true
 
     const newValues = getValues();
 
@@ -59,12 +80,29 @@ export function QuestionEditorCard({
 
   }, 800);
 
+  const addResponse = () => {
+    append({
+      id: null,
+      text: '',
+      isCorrect: false
+    }, {
+      shouldFocus: true,
+    })
+  }
+
+  const removeResponse = (index: number) => {
+    canAutoAddResponse.current = false
+
+    const newValues = getValues();
+    if (newValues.responses[index].text !== '') {
+      removeStoreResponse(keyMap, index)
+    } else {
+      remove(index)
+    }
+  }
+
   return (
-    <Card className="rounded-lg shadow-md my-7">
-      <CardHeader className="p-4">
-        <Label htmlFor="title-2" className="text-lg">Question {indexQuestion}</Label>
-        <Button variant="link" onClick={() => removeQuestion(keyMap)}>Remove</Button>
-      </CardHeader>
+    <Card className={cn("rounded-lg shadow-md my-7", { "border-red-400": !isValid })}>
       <CardContent className="p-4">
         <Form {...form}>
           <form className="space-y-4" onChange={() => updateQuestionDebounced()}>
@@ -96,24 +134,16 @@ export function QuestionEditorCard({
                       <Input placeholder="Your next answer..." {...field} />
                     </FormControl>
                     <FormMessage />
-                    <Button variant="ghost" onClick={(e) => { e.preventDefault(); removeResponse(keyMap, index) }} disabled={!isValid || responseFields.length <= 2}>Remove</Button>
+                    <Button variant="ghost" onClick={(e) => { e.preventDefault(); removeResponse(index) }} disabled={responseFields.filter(r => !!r.text).length <= 2}>Remove</Button>
                   </FormItem>
                 )}
               />
             ))}
 
-            {/* {responseFields.map((item, index) => (
-              <div className="space-y-2" key={index}>
-                <Label htmlFor="input-1">Input 1</Label>
-                <Input placeholder="Your next answer..." {...register(`responses.${index}.text`)} />
-                <Button variant="ghost" onClick={(e) => { e.preventDefault(); removeResponse(keyMap, index) }}>Remove</Button>
-              </div>
-            ))} */}
-
           </form>
         </Form>
 
-        <Button variant="link" onClick={() => addResponse(keyMap)} disabled={!isValid}>Add</Button>
+        <Button variant="link" onClick={addResponse} disabled={!isValid}>Add</Button>
       </CardContent>
     </Card>
   )

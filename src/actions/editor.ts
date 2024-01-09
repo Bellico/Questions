@@ -2,11 +2,11 @@
 
 import prisma from "@/lib/prisma";
 import { QuestionGroupSchema, QuestionGroupType } from "@/lib/schema";
-import { ActionErrorType, ZparseOrError } from "@/lib/utils";
+import { ActionResultType, ZparseOrError } from "@/lib/utils";
 import { revalidatePath } from "next/cache";
 import z from "zod";
 
-export const createQuestionGroup = async (data: QuestionGroupType): Promise<string | ActionErrorType> => {
+export const createQuestionGroup = async (data: QuestionGroupType): Promise<ActionResultType<string>> => {
     const errors = ZparseOrError(QuestionGroupSchema, data)
     if (errors) return errors
 
@@ -33,16 +33,20 @@ export const createQuestionGroup = async (data: QuestionGroupType): Promise<stri
 
         revalidatePath('/board')
 
-        return group.id
+        return {
+            success: true,
+            data: group.id
+        }
     }
     catch (error: any) {
         return {
+            success: false,
             message: "Database Error: Failed to create questions group: " + error.message,
         };
     }
 }
 
-export const updateQuestionGroup = async (data: QuestionGroupType): Promise<boolean | ActionErrorType> => {
+export const updateQuestionGroup = async (data: QuestionGroupType): Promise<ActionResultType<void>> => {
     const errors = ZparseOrError(QuestionGroupSchema, data)
     if (errors) return errors
 
@@ -78,7 +82,7 @@ export const updateQuestionGroup = async (data: QuestionGroupType): Promise<bool
 
                 await prisma.question.upsert({
                     where: {
-                        id: q.id || 'xxx'
+                        id: q.id || '0'
                     },
                     create: {
                         groupId: data.id!,
@@ -105,6 +109,9 @@ export const updateQuestionGroup = async (data: QuestionGroupType): Promise<bool
                         where: {
                             id: {
                                 notIn: q.responses.filter(r => !!r.id).map(r => r.id!)
+                            },
+                            questionId: {
+                                equals: q.id!
                             }
                         }
                     })
@@ -116,7 +123,7 @@ export const updateQuestionGroup = async (data: QuestionGroupType): Promise<bool
 
                         await prisma.response.upsert({
                             where: {
-                                id: r.id || 'xxx'
+                                id: r.id || '0'
                             },
                             create: {
                                 questionId: q.id!,
@@ -135,16 +142,19 @@ export const updateQuestionGroup = async (data: QuestionGroupType): Promise<bool
 
         revalidatePath('/board/')
 
-        return true;
+        return {
+            success: true
+        };
     }
     catch (error: any) {
         return {
+            success: false,
             message: "Database Error: Failed to update questions group: " + error.message,
         };
     }
 }
 
-export const deleteQuestionGroup = async (id: string): Promise<boolean | ActionErrorType> => {
+export const deleteQuestionGroup = async (id: string): Promise<ActionResultType<void>> => {
     const errors = ZparseOrError(z.string(), id)
     if (errors) return errors
 
@@ -157,10 +167,13 @@ export const deleteQuestionGroup = async (id: string): Promise<boolean | ActionE
 
         revalidatePath('/board')
 
-        return true
+        return {
+            success: true
+        };
     }
     catch (error: any) {
         return {
+            success: false,
             message: "Database Error: Failed to delete questions group: " + error.message,
         };
     }

@@ -9,20 +9,25 @@ export function cn(...inputs: ClassValue[]) {
 
 export const sleep = (s: number) => new Promise((r) => setTimeout(r, s * 1000));
 
-export type ActionErrorType = {
-  message: string,
+export type ActionResultType<T> = {
+  success: boolean,
+  message?: string,
+  data?: T,
   errors?: unknown,
+  errorFormat?: unknown,
   issues?: unknown
 }
 
-export const ZparseOrError = <T extends ZodType>(schema: T, value: unknown): void | ActionErrorType => {
+export const ZparseOrError = <T extends ZodType>(schema: T, value: unknown): void | ActionResultType<any> => {
   const validatedFields = schema.safeParse(value);
 
   if (!validatedFields.success) {
     return {
+      success: false,
       message: "Failed to parse data",
       errors: validatedFields.error.flatten().fieldErrors,
-      issues: validatedFields.error.issues
+      errorFormat: validatedFields.error.format(),
+      issues: validatedFields.error.issues,
     };
   }
 }

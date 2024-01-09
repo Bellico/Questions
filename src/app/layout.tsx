@@ -4,8 +4,9 @@ import { Inter } from 'next/font/google'
 import React from 'react'
 import './globals.css'
 
-const inter = Inter({ subsets: ['latin'] })
-console.log(inter)
+const inter = Inter({
+  subsets: ['latin']
+})
 
 export const metadata: Metadata = {
   title: 'Questions App',
@@ -18,7 +19,7 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en" suppressHydrationWarning={true}>
+    <html lang="en" suppressHydrationWarning={true} className={inter.className}>
       <body>
         <ThemeProvider
           attribute="class"
