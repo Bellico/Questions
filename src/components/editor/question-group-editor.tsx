@@ -30,11 +30,6 @@ function _QuestionGroupEditor({ saveGroupAction }: QuestionGroupEditorProps) {
   const onSubmitEditor = async () => {
     const questionsToSave = mapToArray(questionsMap).filter(q => !!q.subject);
 
-    if (questionsToSave.length === 0) {
-      console.log('empty')
-      return
-    }
-
     const result = await saveGroupAction({
       id: groupId,
       name: groupName,
@@ -43,8 +38,6 @@ function _QuestionGroupEditor({ saveGroupAction }: QuestionGroupEditorProps) {
 
     console.log('Saved', result)
   }
-
-  console.log('render list')
 
   let index = 1;
   return (
@@ -73,7 +66,8 @@ function _QuestionGroupEditor({ saveGroupAction }: QuestionGroupEditorProps) {
 
             <AccordionTrigger>Question {index}</AccordionTrigger>
             <span>{value.responses.length} responses </span>
-            <Button variant="link" onClick={() => removeQuestion(key)}>Remove</Button>
+
+            {questionsMap.size > 1 && <Button variant="link" onClick={() => removeQuestion(key)}>Remove</Button>}
 
             <AccordionContent>
               <QuestionEditorCard keyMap={key} indexQuestion={index++} question={value} />

@@ -14,6 +14,7 @@ export type QuestionsEditorState = QuestionsEditorProps & {
     addQuestion: () => void,
     removeQuestion: (keyMap: string) => void,
     updateQuestion: (keyMap: string, question: QuestionType) => void,
+    updateSubject: (keyMap: string, subject: string) => void,
     addResponse: (keyMap: string) => void,
     removeResponse: (keyMap: string, index: number) => void,
 }
@@ -76,13 +77,14 @@ export const createQuestionsEditorStore = (initProps?: Partial<QuestionsEditorPr
         updateQuestion: (keyMap: string, question: QuestionType) => set((state) => {
             const newMap = new Map(state.questionsMap)
 
-            // if (question.responses.every(r => !!r.text)) {
-            //     question.responses.push({
-            //         id: null,
-            //         text: '',
-            //         isCorrect: false
-            //     })
-            // }
+            newMap.set(keyMap, question)
+            return { questionsMap: newMap }
+        }),
+
+        updateSubject: (keyMap: string, subject: string) => set((state) => {
+            const newMap = new Map(state.questionsMap)
+            const question = newMap.get(keyMap)!
+            question.subject = subject
 
             newMap.set(keyMap, question)
             return { questionsMap: newMap }

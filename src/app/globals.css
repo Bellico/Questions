@@ -1,12 +1,13 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+@import '../../node_modules/@mdxeditor/editor/dist/style.css';
 
 @layer base {
   :root {
     --background: 210 20% 98%;
     --foreground: 221 39% 11%;
-    --card: 0 0% 100%;
+    --card: 210 20% 98%;
     --card-foreground: 0 0% 3.9%;
     --popover: 0 0% 100%;
     --popover-foreground: 0 0% 3.9%;
@@ -27,9 +28,9 @@
   }
 
   .dark {
-    --background: 0 0% 3.9%;
+    --background: 0 0% 7%;
     --foreground: 0 0% 98%;
-    --card: 0 0% 3.9%;
+    --card: 0 0% 7%;
     --card-foreground: 0 0% 98%;
     --popover: 0 0% 3.9%;
     --popover-foreground: 0 0% 98%;
@@ -56,4 +57,54 @@
   body {
     @apply bg-background text-foreground;
   }
+}
+
+.q-editor-markdown {
+  font-family: '__Inter_e66fe9', '__Inter_Fallback_e66fe9';
+  font-size: 0.90rem;
+}
+.q-editor-markdown h1{
+  font-size: 2.25em;
+  font-weight: 800
+}
+.q-editor-markdown h2{
+  font-size: 1.5em;
+  font-weight: 700
+}
+.q-editor-markdown h3{
+  font-size: 1.25em;
+  font-weight: 600;
+}
+.q-editor-markdown ol{
+  list-style: auto;
+  padding-left: 1.625em
+}
+.q-editor-markdown ul{
+  list-style: outside;
+  padding-left: 1.625em
+}
+.q-editor-markdown li{
+  padding-left: 0.625em
+}
+.q-editor-markdown blockquote{
+  font-weight: 500;
+  font-style: italic;
+  border-left-width: 0.25rem;
+  border-left-color: #e5e7eb;
+  padding-left: 1em;
+}
+.q-editor-markdown code{
+  background-color: hsl(210 16.7% 97.6%);
+  color: hsl(322 75% 46%);
+  font-family: 'Courier New', Courier, monospace;
+  padding-left: 0.25rem;
+  padding-right: 0.25rem;
+}
+ .q-editor-markdown{
+  background-color: hsl(var(--background));
+  color: hsl(var(--foreground));
+}
+ ._toolbarRoot_11eqz_145 {
+  background-color: hsl(var(--background));
+  color: hsl(var(--foreground));
 }

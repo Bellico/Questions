@@ -17,7 +17,7 @@ export const QuestionSchema = z.object({
 export const QuestionGroupSchema = z.object({
     id: z.string().nullable(),
     name: z.string().max(50),
-    questions: z.array(QuestionSchema)
+    questions: z.array(QuestionSchema).min(1)
 })
 
 export type ResponseType = z.infer<typeof ResponseSchema>;

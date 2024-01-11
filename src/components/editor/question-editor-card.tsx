@@ -1,15 +1,16 @@
 "use client"
 
+import { QEditorMarkdown } from "@/components/editor/q-editorMarkdown"
 import { useQuestionsEditorContext } from "@/components/providers/questions-editor-provider"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
-import { Textarea } from "@/components/ui/textarea"
 import { useDebounce } from "@/hooks/utils"
 import { QuestionSchema, QuestionType } from "@/lib/schema"
 import { cn } from "@/lib/utils"
 import { zodResolver } from "@hookform/resolvers/zod"
+import { MDXEditorMethods } from "@mdxeditor/editor"
 import { useEffect, useRef } from "react"
 import { useFieldArray, useForm } from "react-hook-form"
 
@@ -25,11 +26,12 @@ export function QuestionEditorCard({
 }: QuestionEditorCardProps) {
 
   const canAutoAddResponse = useRef<boolean>(false);
+  const qEditorMarkdownRef = useRef<MDXEditorMethods>(null);
 
-  const [updateQuestion, removeStoreResponse]
-    = useQuestionsEditorContext((s) => [s.updateQuestion, s.removeResponse])
+  const [updateQuestion, updateSubject, removeStoreResponse]
+    = useQuestionsEditorContext((s) => [s.updateQuestion, s.updateSubject, s.removeResponse])
 
-  console.log('render card', keyMap, subject)
+  console.log('render card', keyMap)
 
   const form = useForm<QuestionType>({
     resolver: zodResolver(QuestionSchema),
@@ -37,7 +39,8 @@ export function QuestionEditorCard({
     mode: "onBlur"
   })
 
-  const { getValues, control, formState: { isValid } } = form;
+  const { getValues, setValue, control, formState: { isValid } } = form;
+  const subjectFormValue = getValues('subject')
 
   const { fields: responseFields, append, remove } = useFieldArray({
     control,
@@ -60,12 +63,16 @@ export function QuestionEditorCard({
     }
   }, [append, responseFields, isValid])
 
+  useEffect(() => {
+    if (!isValid) return;
+    updateSubject(keyMap, subjectFormValue)
+  }, [updateSubject, isValid, keyMap, subjectFormValue])
+
   // Send new values to store
   const updateQuestionDebounced = useDebounce(() => {
     if (!isValid) return;
 
     canAutoAddResponse.current = true
-
     const newValues = getValues();
 
     updateQuestion(keyMap, {
@@ -80,7 +87,12 @@ export function QuestionEditorCard({
 
   }, 800);
 
-  const addResponse = () => {
+  const qEditorMarkdownChange = useDebounce(() => {
+    const value = qEditorMarkdownRef.current?.getMarkdown()
+    if (value) setValue('subject', value, { shouldValidate: true })
+  }, 300);
+
+  function addResponse() {
     append({
       id: null,
       text: '',
@@ -90,7 +102,7 @@ export function QuestionEditorCard({
     })
   }
 
-  const removeResponse = (index: number) => {
+  function removeResponse(index: number) {
     canAutoAddResponse.current = false
 
     const newValues = getValues();
@@ -114,7 +126,12 @@ export function QuestionEditorCard({
               render={({ field }) => (
                 <FormItem className="w-full">
                   <FormControl>
-                    <Textarea className="min-h-[100px]" id="description-1" placeholder="Write your next question here..." {...field} />
+                    {/* <Textarea className="min-h-[100px]" placeholder="Write your next question here..." {...field} /> */}
+                    <QEditorMarkdown className="rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground"
+                      markdown={subject}
+                      editorRef={qEditorMarkdownRef}
+                      onChange={qEditorMarkdownChange}
+                      placeholder="Write your next question here..." />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
