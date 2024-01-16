@@ -1,32 +1,11 @@
-import { updateQuestionGroup } from "@/actions/editor";
+import { updateQuestionGroup } from "@/actions/editor-actions";
+import { getEditorQuery } from "@/actions/queries";
 import QuestionGroupEditor from "@/components/editor/question-group-editor";
-import prisma from "@/lib/prisma";
 import { notFound } from "next/navigation";
 
 export default async function EditorPage({ params }: { params: { id: string } }) {
 
-  const questionGroup = await prisma.questionGroup.findUnique({
-    where: {
-      id: params.id
-    },
-    select: {
-      id: true,
-      name: true,
-      questions: {
-        select: {
-          id: true,
-          subject: true,
-          responses: {
-            select: {
-              id: true,
-              text: true,
-              isCorrect: true
-            }
-          }
-        }
-      }
-    }
-  })
+  const questionGroup = await getEditorQuery(params.id)
 
   if (!questionGroup) {
     notFound()

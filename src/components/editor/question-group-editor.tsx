@@ -1,15 +1,21 @@
 "use client";
 
-import { QuestionEditorCard } from "@/components/editor/question-editor-card";
+import { OverloadSpinner } from "@/components/commons/spinner";
+import { QuestionEditorSection } from "@/components/editor/question-editor-section";
 import { QuestionsEditorProvider, useQuestionsEditorContext } from "@/components/providers/questions-editor-provider";
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import { Accordion, AccordionContent, AccordionItem } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { useToast } from "@/components/ui/use-toast";
+import { useAccordionState } from "@/hooks/useAccordionState";
 import { useDebounce } from "@/hooks/utils";
 import { QuestionGroupType } from "@/lib/schema";
 import { ActionResultType, mapToArray } from "@/lib/utils";
-import { Mail, MailIcon } from "lucide-react";
+import { motion } from "framer-motion";
+import { ArrowBigLeft, ArrowDownToLine, ChevronsDownUp, ChevronsUpDown, Pencil } from "lucide-react";
 import Link from "next/link";
+import { redirect } from "next/navigation";
+import { useEffect, useState, useTransition } from "react";
 import { useShallow } from 'zustand/react/shallow';
 
 type QuestionGroupEditorProps = {
@@ -23,66 +29,105 @@ function _QuestionGroupEditor({ saveGroupAction }: QuestionGroupEditorProps) {
     useShallow((s) => [s.id, s.name, s.questionsMap, s.addQuestion, s.updateGroupName, s.removeQuestion]),
   )
 
+  const [accordionState, toggleExpand, expandAll, collapseAll] = useAccordionState(questionsMap)
+
+  const { toast } = useToast()
+  const [isPending, startTransition] = useTransition();
+
   const updateNameDebounced = useDebounce((value) => {
     updateName(value)
   }, 300)
 
+  // Strange ! ->  https://nextjs.org/docs/messages/react-hydration-error
+  const [isClient, setIsClient] = useState(false)
+  useEffect(() => {
+    setIsClient(true)
+  }, [])
+
   const onSubmitEditor = async () => {
     const questionsToSave = mapToArray(questionsMap).filter(q => !!q.subject);
 
-    const result = await saveGroupAction({
-      id: groupId,
-      name: groupName,
-      questions: questionsToSave
-    })
+    startTransition(async () => {
+      const result = await saveGroupAction({
+        id: groupId,
+        name: groupName,
+        questions: questionsToSave
+      })
 
-    console.log('Saved', result)
+      if (result.success) {
+        toast({
+          variant: "success",
+          title: "Group " + (result.data ? "created !" : "updated !"),
+        })
+
+        redirect('/board')
+      } else {
+        toast({
+          variant: "destructive",
+          title: "Error action",
+          description: result.message,
+        })
+      }
+    })
   }
 
   let index = 1;
   return (
     <>
-      <div className="flex justify-end">
-        <Link href="/board">
-          <Button><Mail className="mr-2 h-4 w-4" />Back</Button>
-        </Link>
+      <div className="container">
+        <div className="my-12 flex justify-end">
+          {questionsMap.size > 0 &&
+            <form action={onSubmitEditor}>
+              <Button className="mr-2"><ArrowDownToLine className="mr-2 h-4 w-4" />Save</Button>
+            </form>}
+          <Link href="/board">
+            <Button variant="secondary"><ArrowBigLeft className="mr-2 h-4 w-4" />Back</Button>
+          </Link>
+        </div>
+
+        <label htmlFor="email" className="relative block xl:w-9/12 mx-auto m-16">
+          <Pencil className="w-5 h-5 absolute top-1/2 transform -translate-y-1/2 right-3" />
+          <Input
+            className="border-0 p-3 text-xl mb-4 text-center"
+            id="email"
+            placeholder="Enter a name for this group"
+            type="text"
+            defaultValue={groupName}
+            onChange={(e) => updateNameDebounced(e.target.value)}
+          />
+        </label>
       </div>
 
-      <label htmlFor="email" className="relative block w-6/12 m-auto">
-        <MailIcon className="w-8 h-8 absolute top-1/2 transform -translate-y-1/2 right-3" />
-        <Input
-          className="border-t-0 border-l-0 border-r-0 border-b-1 p-3 text-xl mb-4 text-center"
-          id="email"
-          placeholder="Enter your text here"
-          type="text"
-          defaultValue={groupName}
-          onChange={(e) => updateNameDebounced(e.target.value)}
-        />
-      </label>
-
-      <Accordion type="multiple" defaultValue={[questionsMap.entries().next()?.value[0]]}>
+      <Accordion type="multiple" value={accordionState}>
         {[...questionsMap].map(([key, value]) => (
-          <AccordionItem key={key} value={key}>
+          <AccordionItem key={key} id={'q-' + key} value={key}>
 
-            <AccordionTrigger>Question {index}</AccordionTrigger>
-            <span>{value.responses.length} responses </span>
-
-            {questionsMap.size > 1 && <Button variant="link" onClick={() => removeQuestion(key)}>Remove</Button>}
+            <div className="py-4 font-medium bg-accent border-solid border-t-2 cursor-default">
+              <div className="container flex items-center">
+                <div>
+                  <span className="mr-1">Question {index}</span>
+                  <span className="text-xs text-gray-500 dark:text-gray-400"> - {value.responses.length} response(s)</span>
+                </div>
+                {isClient &&
+                  <div className="flex-1 text-right">
+                    {questionsMap.size > 1 && <Button className="mr-2" variant="destructive" onClick={() => removeQuestion(key)}>Remove</Button>}
+                    <Button className="mr-2" variant="outline" onClick={() => toggleExpand(key)}>{accordionState.includes(key) ? 'Hide' : 'Show'}</Button>
+                    <Button className="mr-2" variant="ghost" onClick={() => expandAll()}><ChevronsUpDown className="h-3 w-3" /></Button>
+                    <Button variant="ghost" onClick={() => collapseAll()}><ChevronsDownUp className="h-3 w-3" /></Button>
+                  </div>}
+              </div>
+            </div>
 
             <AccordionContent>
-              <QuestionEditorCard keyMap={key} indexQuestion={index++} question={value} />
+              <QuestionEditorSection keyMap={key} indexQuestion={index++} question={value} />
             </AccordionContent>
 
           </AccordionItem>
         ))}
       </Accordion>
 
-      <Button onClick={() => addNewQuestion()} className="w-full">Add</Button>
-
-      {questionsMap.size > 0 &&
-        <form action={onSubmitEditor}>
-          <Button className="w-full">Save</Button>
-        </form>}
+      <Button variant="secondary" onClick={() => addNewQuestion()} className="w-full">Add new question</Button>
+      {isPending && <OverloadSpinner />}
     </>
   )
 }
@@ -90,9 +135,14 @@ function _QuestionGroupEditor({ saveGroupAction }: QuestionGroupEditorProps) {
 export default function QuestionGroupEditor({ questionGroup, saveGroupAction }: QuestionGroupEditorProps) {
   return (
     <>
-      <QuestionsEditorProvider value={questionGroup}>
-        <_QuestionGroupEditor saveGroupAction={saveGroupAction} />
-      </QuestionsEditorProvider>
+      <motion.div
+        initial={{ y: 20, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ ease: "easeInOut", duration: 0.75 }}>
+        <QuestionsEditorProvider value={questionGroup}>
+          <_QuestionGroupEditor saveGroupAction={saveGroupAction} />
+        </QuestionsEditorProvider>
+      </motion.div>
     </>
   )
 }

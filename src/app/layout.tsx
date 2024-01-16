@@ -9,7 +9,7 @@ const inter = Inter({
 })
 
 export const metadata: Metadata = {
-  title: 'Questions App',
+  title: 'Questions Editor',
   description: 'A personal questionnaire application',
 }
 

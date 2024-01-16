@@ -7,7 +7,7 @@
   :root {
     --background: 210 20% 98%;
     --foreground: 221 39% 11%;
-    --card: 210 20% 98%;
+    --card: 228 20% 95%;
     --card-foreground: 0 0% 3.9%;
     --popover: 0 0% 100%;
     --popover-foreground: 0 0% 3.9%;
@@ -17,20 +17,21 @@
     --secondary-foreground: 210 20% 98%;
     --muted: 0 0% 96.1%;
     --muted-foreground: 0 0% 45.1%;
-    --accent: 0 0% 96.1%;
+    --accent: 228 20% 95%;
     --accent-foreground: 0 0% 9%;
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
     --border: 0 0% 89.8%;
     --input: 0 0% 89.8%;
     --ring: 0 72.2% 50.6%;
+    --spinner: 168 67% 53%;
     --radius: 0.3rem;
   }
 
   .dark {
     --background: 0 0% 7%;
     --foreground: 0 0% 98%;
-    --card: 0 0% 7%;
+    --card: 0 0% 8%;
     --card-foreground: 0 0% 98%;
     --popover: 0 0% 3.9%;
     --popover-foreground: 0 0% 98%;
@@ -40,13 +41,14 @@
     --secondary-foreground: 0 0% 98%;
     --muted: 0 0% 14.9%;
     --muted-foreground: 0 0% 63.9%;
-    --accent: 0 0% 14.9%;
+    --accent: 0 0% 8%;
     --accent-foreground: 0 0% 98%;
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 0 0% 98%;
     --border: 0 0% 14.9%;
     --input: 0 0% 14.9%;
     --ring: 0 72.2% 50.6%;
+    --spinner: 127 45% 22%;
   }
 }
 
@@ -54,57 +56,90 @@
   * {
     @apply border-border;
   }
+
   body {
     @apply bg-background text-foreground;
   }
+
+  .spinner {
+    @apply w-[85px] h-[85px] rounded-full inline-block border-4 border-spinner animate-spinner
+  }
+
+  .page-spinner {
+    @apply w-[200px] h-[200px] border-[10px]
+  }
+}
+
+.q-card {
+  transition-property: all;
+  transition-timing-function: cubic-bezier(.4, 0, .2, 1);
+  transition-duration: .15s;
+}
+
+.q-card:hover {
+  border-color: hsl(var(--foreground));
 }
 
 .q-editor-markdown {
   font-family: '__Inter_e66fe9', '__Inter_Fallback_e66fe9';
   font-size: 0.90rem;
 }
-.q-editor-markdown h1{
+
+.q-editor-markdown h1 {
   font-size: 2.25em;
   font-weight: 800
 }
-.q-editor-markdown h2{
+
+.q-editor-markdown h2 {
   font-size: 1.5em;
   font-weight: 700
 }
-.q-editor-markdown h3{
+
+.q-editor-markdown h3 {
   font-size: 1.25em;
   font-weight: 600;
 }
-.q-editor-markdown ol{
+
+.q-editor-markdown ol {
   list-style: auto;
   padding-left: 1.625em
 }
-.q-editor-markdown ul{
+
+.q-editor-markdown ul {
   list-style: outside;
   padding-left: 1.625em
 }
-.q-editor-markdown li{
+
+.q-editor-markdown li {
   padding-left: 0.625em
 }
-.q-editor-markdown blockquote{
+
+.q-editor-markdown blockquote {
   font-weight: 500;
   font-style: italic;
   border-left-width: 0.25rem;
   border-left-color: #e5e7eb;
   padding-left: 1em;
 }
-.q-editor-markdown code{
+
+.q-editor-markdown code {
   background-color: hsl(210 16.7% 97.6%);
   color: hsl(322 75% 46%);
   font-family: 'Courier New', Courier, monospace;
   padding-left: 0.25rem;
   padding-right: 0.25rem;
 }
- .q-editor-markdown{
+
+.q-editor-markdown {
   background-color: hsl(var(--background));
   color: hsl(var(--foreground));
 }
- ._toolbarRoot_11eqz_145 {
+
+._toolbarRoot_11eqz_145 {
   background-color: hsl(var(--background));
   color: hsl(var(--foreground));
+}
+
+._popupContainer_11eqz_1170 {
+  border: none;
 }

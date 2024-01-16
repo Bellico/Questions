@@ -3,12 +3,10 @@
 import { QEditorMarkdown } from "@/components/editor/q-editorMarkdown"
 import { useQuestionsEditorContext } from "@/components/providers/questions-editor-provider"
 import { Button } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { useDebounce } from "@/hooks/utils"
 import { QuestionSchema, QuestionType } from "@/lib/schema"
-import { cn } from "@/lib/utils"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { MDXEditorMethods } from "@mdxeditor/editor"
 import { useEffect, useRef } from "react"
@@ -20,8 +18,9 @@ type QuestionEditorCardProps = {
   question: QuestionType
 }
 
-export function QuestionEditorCard({
+export function QuestionEditorSection({
   keyMap,
+  indexQuestion,
   question: { id, subject, responses }
 }: QuestionEditorCardProps) {
 
@@ -114,10 +113,14 @@ export function QuestionEditorCard({
   }
 
   return (
-    <Card className={cn("rounded-lg shadow-md my-7", { "border-red-400": !isValid })}>
-      <CardContent className="p-4">
+    <section className="py-12 min-h-[calc(100vh-75px)] bg-gray-100 dark:bg-accent">
+      <div className="container mx-auto">
+
         <Form {...form}>
           <form className="space-y-4" onChange={() => updateQuestionDebounced()}>
+
+            {/* Name (index) */}
+            <h1 className="text-5xl mb-12 text-center font-semibold text-gray-500 dark:text-gray-400">Question {indexQuestion}</h1>
 
             {/* Subject */}
             <FormField
@@ -161,7 +164,7 @@ export function QuestionEditorCard({
         </Form>
 
         <Button variant="link" onClick={addResponse} disabled={!isValid}>Add</Button>
-      </CardContent>
-    </Card>
+      </div>
+    </section>
   )
 }

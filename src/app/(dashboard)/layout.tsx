@@ -1,4 +1,5 @@
 import { DashboardHeader } from "@/components/dashboard-layout/header";
+import { Toaster } from "@/components/ui/toaster";
 import { auth } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import React from "react";
@@ -18,9 +19,11 @@ export default async function DashboardLayout({
     <>
       <DashboardHeader />
 
-      <main className="mx-auto p-8">
+      <main>
         {children}
       </main>
+
+      <Toaster />
     </>
   )
 }

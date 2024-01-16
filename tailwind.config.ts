@@ -12,16 +12,28 @@ const config = {
   theme: {
     container: {
       center: true,
-      padding: "2rem",
       screens: {
-        "2xl": "1400px",
+        // sm: '600px',
+        // md: '1284px',
+        lg: '1284px',
+        xl: '1675px',
+        '2xl': '2000px'
       },
+      padding: {
+        DEFAULT: '1rem',
+        // sm: '2rem',
+        // lg: '4rem',
+        // xl: '5rem',
+        // '2xl': '6rem',
+      }
     },
     extend: {
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
+        success: "hsl(var(--spinner))",
+        spinner: "hsl(var(--spinner)) hsl(var(--spinner)) transparent",
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
         primary: {
@@ -63,6 +75,11 @@ const config = {
           from: { "opacity": "0" },
           to: { "opacity": "1" },
         },
+        spinner: {
+          "0%": { "transform": "rotate(0deg) scale(1)" },
+          "50%": { "transform": "rotate(180deg) scale(0.8)" },
+          "100%": { "transform": "rotate(360deg) scale(1)" },
+        },
         "accordion-down": {
           from: { height: "0" },
           to: { height: "var(--radix-accordion-content-height)" },
@@ -76,6 +93,7 @@ const config = {
         "wiggle": 'wiggle 0.1s ease-in-out',
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
+        "spinner": "0.75s linear 0s infinite normal both running spinner",
       },
     },
   },

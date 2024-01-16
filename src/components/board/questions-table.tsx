@@ -1,6 +1,6 @@
 "use client";
 
-import { deleteQuestionGroup } from "@/actions/editor";
+import { deleteQuestionGroup } from "@/actions/editor-actions";
 import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import {
