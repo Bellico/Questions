@@ -4,7 +4,7 @@ import { BoxIcon, DollarSignIcon } from "lucide-react";
 export const BoardStats = async () => {
   return (
     <section className="py-12">
-      <div className="container mx-auto">
+      <div className="container">
         <h1 className="text-3xl mb-12 text-center font-semibold">Stats</h1>
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4 my-5">
           <Card>

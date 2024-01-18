@@ -5,7 +5,7 @@ import Link from "next/link";
 
 export const DashboardHeader = () => (
   <header className="border-b">
-    <div className="container mx-auto flex items-center h-16 px-8">
+    <div className="container flex items-center h-16 px-8">
       <nav className="flex flex-row gap-6 text-sm font-medium items-center md:gap-5">
         <Link className="flex items-center gap-2 text-lg font-semibold" href="#">
           <LayoutDashboardIcon className="w-6 h-6" />

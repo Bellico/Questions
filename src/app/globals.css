@@ -141,5 +141,8 @@
 }
 
 ._popupContainer_11eqz_1170 {
-  border: none;
+  display: none
+}
+._popupContainer_11eqz_1170:has(div) {
+  display: block
 }

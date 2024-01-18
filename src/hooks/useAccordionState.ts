@@ -1,8 +1,15 @@
-import { useState } from "react"
+import { useEffect, useState } from "react";
 
-export function useAccordionState(entries: Map<string, unknown>) {
+export function useAccordionState(entries: Map<string, unknown>, lastAddedKey?: string) {
 
-    const [accordionState, setAccordionState] = useState<string[]>([entries.entries().next()?.value[0]])
+    const defaultValue = entries.size == 1 ? [entries.entries().next()?.value[0]] : [];
+    const [accordionState, setAccordionState] = useState<string[]>(defaultValue)
+
+    useEffect(() => {
+        if (lastAddedKey) {
+            setAccordionState([lastAddedKey])
+        }
+    }, [lastAddedKey])
 
     const expandAll = () => {
         setAccordionState([...entries.keys()])

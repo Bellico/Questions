@@ -9,7 +9,7 @@ export const Spinner = () => {
 export const SectionSpinner = ({ title }: { title: string }) => {
   return (
     <section className="py-12">
-      <div className="container mx-auto">
+      <div className="container">
         <h1 className="text-3xl mb-12 text-center font-semibold">{title}</h1>
         <Spinner />
       </div>

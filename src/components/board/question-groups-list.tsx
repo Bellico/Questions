@@ -3,15 +3,19 @@ import { QuestionGroupsListOptions } from "@/components/board/question-groups-li
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { DropdownMenu, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { auth } from "@/lib/auth";
 import { Group, MoreHorizontal, Pencil, Play, Plus } from "lucide-react";
 import Link from "next/link";
 
 export async function QuestionGroupsList() {
-  const questionGroups = await getGroupsListQuery();
+
+  const session = await auth();
+
+  const questionGroups = await getGroupsListQuery(session?.user.id!);
 
   return (
     <section className="py-12">
-      <div className="container mx-auto">
+      <div className="container">
         <h1 className="text-3xl mb-12 text-center font-semibold">Question groups</h1>
 
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4 my-5">
@@ -19,10 +23,10 @@ export async function QuestionGroupsList() {
             <Card className="q-card" key={group.id}>
               <CardHeader className="flex flex-row items-center mb-4 text-xl font-bold">
                 <div><Group className="mr-2 h-8 w-8" /></div>
-                <div>{group.name}</div>
+                <div>{group.name} <span className="text-xs">(v{group.version})</span></div>
               </CardHeader>
               <CardContent>
-                <div>4 questions</div>
+                <div>{group._count.questions} questions</div>
                 <div>10 try</div>
                 <div>9 success</div>
                 <div className="mt-8">

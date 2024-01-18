@@ -10,6 +10,7 @@ export type QuestionsEditorProps = {
 }
 
 export type QuestionsEditorState = QuestionsEditorProps & {
+    lastQuestionAdded?: string,
     updateGroupName: (name: string) => void,
     addQuestion: () => void,
     removeQuestion: (keyMap: string) => void,
@@ -21,6 +22,7 @@ export type QuestionsEditorState = QuestionsEditorProps & {
 
 const defaultQuestion: QuestionType = {
     id: null,
+    order: 1,
     subject: '',
     responses: [{
         id: null,
@@ -36,7 +38,6 @@ const defaultQuestion: QuestionType = {
 
 function createDefaultQuestionsMap(): Map<string, QuestionType> {
     return new Map([
-        [v4(), { ...defaultQuestion }],
         [v4(), { ...defaultQuestion }],
     ])
 }
@@ -60,8 +61,10 @@ export const createQuestionsEditorStore = (initProps?: Partial<QuestionsEditorPr
 
         addQuestion: () => set((state) => {
             const newMap = new Map(state.questionsMap)
-            newMap.set(v4(), { ...defaultQuestion })
-            return { questionsMap: newMap }
+            const newKey = v4()
+            const maxOrder = [...state.questionsMap].map(([_, value]) => value.order).reduce((a, b) => Math.max(a, b))
+            newMap.set(newKey, { ...defaultQuestion, order: maxOrder + 1 })
+            return { questionsMap: newMap, lastQuestionAdded: newKey }
         }),
 
         removeQuestion: (keyMap: string) => set((state) => {

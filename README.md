@@ -56,6 +56,7 @@ npx prisma validate
 npx prisma migrate dev --name init
 (npx prisma generate)
 (npx prisma db push)
+(npx prisma migrate reset)
 ```
 
 ## Learn More

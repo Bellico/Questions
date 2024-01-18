@@ -1,8 +1,8 @@
 import { createQuestionGroup } from "@/actions/editor-actions";
-import QuestionGroupEditor from "@/components/editor/question-group-editor";
+import QuestionsEditor from "@/components/editor/questions-editor";
 
 export default async function EditorPage() {
   return (
-    <QuestionGroupEditor saveGroupAction={createQuestionGroup} />
+    <QuestionsEditor saveGroupAction={createQuestionGroup} />
   )
 }
