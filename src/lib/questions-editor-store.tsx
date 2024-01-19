@@ -1,7 +1,9 @@
 import { QuestionType } from '@/lib/schema';
 import { randomSwName } from '@/lib/utils';
+import superjson from 'superjson'; //  can use anything: serialize-javascript, devalue, etc.
 import { v4 } from 'uuid';
 import { create } from 'zustand';
+import { PersistStorage, persist } from 'zustand/middleware';
 
 export type QuestionsEditorProps = {
     id: string | null,
@@ -42,14 +44,26 @@ function createDefaultQuestionsMap(): Map<string, QuestionType> {
     ])
 }
 
+const storage: PersistStorage<QuestionsEditorState> = {
+    getItem: (name) => {
+        const str = localStorage.getItem(name)
+        if (!str) return null
+        return superjson.parse(str)
+    },
+    setItem: (name, value) => {
+        localStorage.setItem(name, superjson.stringify(value))
+    },
+    removeItem: (name) => localStorage.removeItem(name),
+}
+
 export const createQuestionsEditorStore = (initProps?: Partial<QuestionsEditorProps>) => {
     const DEFAULT_PROPS: QuestionsEditorProps = {
         id: null,
-        name: randomSwName() + '\'s questions',
+        name: '',
         questionsMap: createDefaultQuestionsMap()
     }
 
-    return create<QuestionsEditorState>()((set, get) => ({
+    return create<QuestionsEditorState>()(persist((set, get) => ({
         ...DEFAULT_PROPS,
         ...initProps,
 
@@ -113,5 +127,9 @@ export const createQuestionsEditorStore = (initProps?: Partial<QuestionsEditorPr
             newMap.set(keyMap, question)
             return { questionsMap: newMap }
         }),
+    }), {
+        name: 'q-editor',
+        storage,
+        skipHydration: true,
     }))
 }

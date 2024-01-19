@@ -10,13 +10,13 @@ export const DashboardHeader = () => (
         <Link className="flex items-center gap-2 text-lg font-semibold" href="#">
           <LayoutDashboardIcon className="w-6 h-6" />
         </Link>
-        <Link className="font-bold" href="#">
+        <Link className="font-bold" href="/board">
           Questions Editor
         </Link>
-        <Link className="text-gray-500 dark:text-gray-400" href="#">
+        <Link className="text-gray-500 dark:text-gray-400 hidden" href="#">
           Statistics
         </Link>
-        <Link className="text-gray-500 dark:text-gray-400" href="#">
+        <Link className="text-gray-500 dark:text-gray-400 hidden" href="#">
           Settings
         </Link>
       </nav>

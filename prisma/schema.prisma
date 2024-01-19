@@ -69,7 +69,7 @@ model QuestionGroup {
 
 model Question {
   id           String   @id @default(cuid())
-  title        String?   @db.VarChar(100)
+  title        String?  @db.VarChar(100)
   subject      String
   groupId      String
   order        Int

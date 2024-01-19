@@ -16,6 +16,10 @@ export function useQuestionsEditorContext<T>(selector: (state: QuestionsEditorSt
     return useStore(store, selector)
 }
 
+export function useQuestionsEditorPersist() {
+    return useContext(QuestionsEditorContext)?.persist
+}
+
 export function QuestionsEditorProvider({ value, children }: PropsWithChildren<{ value?: QuestionGroupType }>) {
     const storeRef = useRef<QuestionsEditorStore>()
     let storeValue: QuestionsEditorProps | undefined = undefined;

@@ -7,7 +7,6 @@ import { Label } from "@/components/ui/label"
 import { Switch } from "@/components/ui/switch"
 import { useDebounce } from "@/hooks/utils"
 import { QuestionFormSchema, QuestionFormType, QuestionType } from "@/lib/schema"
-import { cn } from "@/lib/utils"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { MDXEditorMethods } from "@mdxeditor/editor"
 import { Pencil, Trash2 } from "lucide-react"
@@ -134,16 +133,16 @@ export function QuestionsEditorSection({
                 <FormItem >
                   <FormControl>
                     <label className="relative block xl:w-6/12 mx-auto">
+                      <FormMessage className="text-center" />
                       <Pencil className="w-5 h-5 absolute top-1/2 transform -translate-y-1/2 right-3" />
                       <Input
-                        className="border-0 text-xl sm:text-5xl mb-12 sm:py-7 text-center bg-transparent font-semibold hover:ring-1 hover:ring-secondary"
+                        className="border-0 text-xl sm:text-5xl mb-12 sm:py-7 text-center bg-transparent font-medium hover:ring-1 hover:ring-secondary"
                         placeholder={title || 'Question ' + indexQuestion}
                         type="text"
                         {...field}
                       />
                     </label>
                   </FormControl>
-                  <FormMessage />
                 </FormItem>
               )}
             />

@@ -4,7 +4,7 @@ import * as z from "zod";
 
 export const ResponseSchema = z.object({
     id: z.string().nullable(),
-    text: z.string().min(2, 'At least 2 characters expected').or(z.literal('')),
+    text: z.string().min(2, 'At least 2 characters expected').max(250).or(z.literal('')),
     isCorrect: z.boolean()
 })
 
@@ -26,7 +26,7 @@ export const QuestionFormSchema = z.object({
 
 export const QuestionGroupSchema = z.object({
     id: z.string().nullable(),
-    name: z.string().max(50),
+    name: z.string().min(2).max(50),
     questions: z.array(QuestionSchema).min(1)
 })
 

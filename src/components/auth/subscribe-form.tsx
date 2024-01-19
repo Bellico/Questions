@@ -43,26 +43,6 @@ export default function SubscribeForm() {
                 </Button>
             </form>
 
-            {/* <Form {...form}>
-                <form onSubmit={handleSubmit(signWithEmail)} className="flex space-x-2">
-                    <FormField
-                        control={control}
-                        name="email"
-                        render={({ field }) => (
-                            <FormItem className="w-full">
-                                <FormControl>
-                                    <Input placeholder="Enter your email" {...field} />
-                                </FormControl>
-                            </FormItem>
-                        )}
-                    />
-                    <Button type="submit" disabled={formState.isSubmitting} >
-                        {isSubmitting && <Loader2 className="animate-spin -ml-1 mr-3" />}
-                        Subscribe
-                    </Button>
-                </form>
-            </Form> */}
-
             {isSubmitSuccessful && !isSubmitting &&
                 <p className="animate-wiggle text-green-700 font-semibold">
                     <MailCheck className="inline mr-2" />Check your mail to sign in
