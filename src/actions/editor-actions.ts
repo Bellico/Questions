@@ -11,10 +11,10 @@ export const createQuestionGroup = async (data: QuestionGroupType): Promise<Acti
     const errors = ZparseOrError(QuestionGroupSchema, data)
     if (errors) return errors
 
-    const session = await auth();
+    const session = await auth()
 
     if (!session) {
-        throw new Error('401 Unauthorized');
+        throw new Error('401 Unauthorized')
     }
 
     try {
@@ -41,7 +41,7 @@ export const createQuestionGroup = async (data: QuestionGroupType): Promise<Acti
                     })
                 }
             },
-        });
+        })
 
         revalidatePath('/board')
 
@@ -54,7 +54,7 @@ export const createQuestionGroup = async (data: QuestionGroupType): Promise<Acti
         return {
             success: false,
             message: "Database Error: Failed to create questions group: " + error.message,
-        };
+        }
     }
 }
 
@@ -62,10 +62,10 @@ export const updateQuestionGroup = async (data: QuestionGroupType): Promise<Acti
     const errors = ZparseOrError(QuestionGroupSchema, data)
     if (errors) return errors
 
-    const session = await auth();
+    const session = await auth()
 
     if (!session) {
-        throw new Error('401 Unauthorized');
+        throw new Error('401 Unauthorized')
     }
 
     var isOwner = await prisma.questionGroup.count({
@@ -76,7 +76,7 @@ export const updateQuestionGroup = async (data: QuestionGroupType): Promise<Acti
     })
 
     if (isOwner == 0) {
-        throw new Error('404 Forbidden');
+        throw new Error('403 Forbidden')
     }
 
     try {
@@ -92,7 +92,7 @@ export const updateQuestionGroup = async (data: QuestionGroupType): Promise<Acti
                     updateDate: new Date(),
                     version: { increment: 1 }
                 },
-            });
+            })
 
             // 2. Delete old Questions
             const questionIdToKeep = data.questions.filter(q => !!q.id).map(q => q.id!)
@@ -132,7 +132,7 @@ export const updateQuestionGroup = async (data: QuestionGroupType): Promise<Acti
                         order: q.order,
                         subject: q.subject
                     }
-                });
+                })
             }
 
             // 4. Create / Update / Delete Responses for Updated Questions
@@ -187,7 +187,7 @@ export const updateQuestionGroup = async (data: QuestionGroupType): Promise<Acti
         return {
             success: false,
             message: "Database Error: Failed to update questions group: " + error.message,
-        };
+        }
     }
 }
 
@@ -195,10 +195,10 @@ export const deleteQuestionGroup = async (id: string): Promise<ActionResultType<
     const errors = ZparseOrError(z.string(), id)
     if (errors) return errors
 
-    const session = await auth();
+    const session = await auth()
 
     if (!session) {
-        throw new Error('401 Unauthorized');
+        throw new Error('401 Unauthorized')
     }
 
     var isOwner = await prisma.questionGroup.count({
@@ -209,7 +209,7 @@ export const deleteQuestionGroup = async (id: string): Promise<ActionResultType<
     })
 
     if (isOwner == 0) {
-        throw new Error('404 Forbidden');
+        throw new Error('403 Forbidden')
     }
 
     try {
@@ -231,4 +231,45 @@ export const deleteQuestionGroup = async (id: string): Promise<ActionResultType<
             message: "Database Error: Failed to delete questions group: " + error.message,
         };
     }
+}
+
+export const duplicateQuestionGroup = async (id: string): Promise<ActionResultType<string>> => {
+    const errors = ZparseOrError(z.string(), id)
+    if (errors) return errors
+
+    const session = await auth()
+
+    if (!session) {
+        throw new Error('401 Unauthorized')
+    }
+
+    const source = await prisma.questionGroup.findUniqueOrThrow({
+        where: {
+            id: id,
+            authorId: session.user.id!,
+        },
+        select: {
+            id: true,
+            name: true,
+            questions: {
+                select: {
+                    id: true,
+                    title: true,
+                    subject: true,
+                    order: true,
+                    responses: {
+                        select:
+                        {
+                            id: true,
+                            text: true,
+                            isCorrect: true
+                        }
+                    }
+                }
+            }
+        },
+    })
+
+    source.name = 'Copy of ' + source.name
+    return await createQuestionGroup(source)
 }

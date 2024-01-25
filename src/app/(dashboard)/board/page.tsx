@@ -8,7 +8,7 @@ import { Suspense } from "react";
 export default async function BoardPage() {
   return (
     <>
-      <Suspense fallback={<SectionSpinner title="Stats" />}>
+      <Suspense fallback={<SectionSpinner />}>
         <BoardStats />
       </Suspense>
 

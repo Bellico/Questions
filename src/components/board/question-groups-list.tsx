@@ -1,5 +1,5 @@
 import { getGroupsListQuery } from "@/actions/queries";
-import { QuestionGroupsListOptions } from "@/components/board/question-groups-list-options";
+import { QuestionGroupsListActions } from "@/components/board/question-groups-list-actions";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { DropdownMenu, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
@@ -11,7 +11,22 @@ export async function QuestionGroupsList() {
 
   const session = await auth();
 
-  const questionGroups = await getGroupsListQuery(session?.user.id!);
+  const questionGroups = await getGroupsListQuery(session?.user.id!)
+
+  if (questionGroups.length == 0) {
+    return (
+      <section className="py-12">
+        <div className="container">
+          <h1 className="text-3xl mb-12 text-center font-semibold">Question groups</h1>
+          <div className="h-16 border-2 border-slate-700 border-dashed rounded-lg hover:border-solid">
+            <Link href="/editor">
+              <div className="flex items-center justify-center h-full text-sm text-gray-500 dark:text-gray-400 hover:underline">Add your first group of questions</div>
+            </Link>
+          </div>
+        </div>
+      </section>
+    )
+  }
 
   return (
     <section className="py-12">
@@ -30,8 +45,8 @@ export async function QuestionGroupsList() {
                 <div>10 try</div>
                 <div>9 success</div>
                 <div className="mt-8">
-                  <Link href="/runner">
-                    <Button className="mr-4"><Play className="mr-2 h-4 w-4" />Run</Button>
+                  <Link href="/run">
+                    <Button className="mr-4"><Play className="mr-2 h-4 w-4" />Start</Button>
                   </Link>
                   <Link href={`/editor/${group.id}`}>
                     <Button className="mr-4" variant="secondary"><Pencil className="mr-2 h-4 w-4" />Edit</Button>
@@ -43,7 +58,7 @@ export async function QuestionGroupsList() {
                         <MoreHorizontal className="h-5 w-5" />
                       </Button>
                     </DropdownMenuTrigger>
-                    <QuestionGroupsListOptions groupId={group.id} />
+                    <QuestionGroupsListActions groupId={group.id} />
                   </DropdownMenu>
                 </div>
               </CardContent>

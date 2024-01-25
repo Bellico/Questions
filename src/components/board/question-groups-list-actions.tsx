@@ -1,6 +1,6 @@
 "use client"
 
-import { deleteQuestionGroup } from "@/actions/editor-actions";
+import { deleteQuestionGroup, duplicateQuestionGroup } from "@/actions/editor-actions";
 import { OverloadSpinner } from "@/components/commons/spinner";
 import { DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator } from "@/components/ui/dropdown-menu";
 import { useToast } from "@/components/ui/use-toast";
@@ -11,7 +11,7 @@ type QuestionsTableProps = {
   groupId: string
 };
 
-export function QuestionGroupsListOptions({ groupId }: QuestionsTableProps) {
+export function QuestionGroupsListActions({ groupId }: QuestionsTableProps) {
 
   const { toast } = useToast()
   const [isPending, startTransition] = useTransition();
@@ -30,6 +30,25 @@ export function QuestionGroupsListOptions({ groupId }: QuestionsTableProps) {
     })
   }
 
+  const onDuplicateAction = async () => {
+    startTransition(async () => {
+      const result = await duplicateQuestionGroup(groupId)
+
+      if (result.success) {
+        toast({
+          variant: "success",
+          title: "Group duplicated",
+        })
+      } else {
+        toast({
+          variant: "destructive",
+          title: "Error action",
+          description: result.message,
+        })
+      }
+    })
+  }
+
   return (
     <>
       <DropdownMenuContent align="end">
@@ -37,7 +56,7 @@ export function QuestionGroupsListOptions({ groupId }: QuestionsTableProps) {
         <DropdownMenuItem>See results</DropdownMenuItem>
         <DropdownMenuItem>Share</DropdownMenuItem>
         <DropdownMenuSeparator />
-        <DropdownMenuItem>Duplicate</DropdownMenuItem>
+        <Link href="/" onClick={() => onDuplicateAction()}><DropdownMenuItem>Duplicate</DropdownMenuItem></Link>
         <Link href="/" onClick={() => onDeleteAction()}><DropdownMenuItem>Delete</DropdownMenuItem></Link>
       </DropdownMenuContent>
       {isPending && <OverloadSpinner />}

@@ -10,14 +10,7 @@ export const HomeHeader = () => (
           </a>
         </div>
         <div className="lg:flex items-center ml-auto">
-          <nav className="text-sm leading-6 font-semibold text-slate-700 dark:text-slate-200">
-            <ul className="flex space-x-8">
-              <li>
-                <a className="transition-colors hover:text-foreground/80 text-foreground/60" href="#">Home</a>
-              </li>
-            </ul>
-          </nav>
-          <ThemeToggle className="ml-6" />
+          <ThemeToggle />
         </div>
       </div>
     </div>

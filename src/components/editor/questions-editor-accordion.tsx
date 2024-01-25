@@ -21,6 +21,8 @@ export function QuestionsEditorAccordion() {
     setIsClient(true)
   }, [])
 
+  console.log('render list')
+
   let index = 1;
   return (
     <>

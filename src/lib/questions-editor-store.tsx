@@ -1,5 +1,4 @@
 import { QuestionType } from '@/lib/schema';
-import { randomSwName } from '@/lib/utils';
 import superjson from 'superjson'; //  can use anything: serialize-javascript, devalue, etc.
 import { v4 } from 'uuid';
 import { create } from 'zustand';
@@ -16,7 +15,7 @@ export type QuestionsEditorState = QuestionsEditorProps & {
     updateGroupName: (name: string) => void,
     addQuestion: () => void,
     removeQuestion: (keyMap: string) => void,
-    updateQuestion: (keyMap: string, question: QuestionType) => void,
+    updateQuestion: (keyMap: string, question: Omit<QuestionType, 'id' | 'order'>) => void,
     updateSubject: (keyMap: string, subject: string) => void,
     addResponse: (keyMap: string) => void,
     removeResponse: (keyMap: string, index: number) => void,
@@ -91,8 +90,12 @@ export const createQuestionsEditorStore = (initProps?: Partial<QuestionsEditorPr
         //     state.questionsMap.set(id, { ...defaultQuestion })
         // })),
 
-        updateQuestion: (keyMap: string, question: QuestionType) => set((state) => {
+        updateQuestion: (keyMap: string, newValues: Omit<QuestionType, 'id' | 'order'>) => set((state) => {
             const newMap = new Map(state.questionsMap)
+            const question = newMap.get(keyMap)!
+            question.subject = newValues.subject
+            question.responses = newValues.responses
+            question.title = newValues.title
 
             newMap.set(keyMap, question)
             return { questionsMap: newMap }

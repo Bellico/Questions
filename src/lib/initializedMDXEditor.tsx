@@ -3,13 +3,11 @@ import {
     BoldItalicUnderlineToggles,
     CodeToggle,
     InsertTable,
+    InsertThematicBreak,
     ListsToggle,
     MDXEditor,
-    codeBlockPlugin,
-    frontmatterPlugin,
     headingsPlugin,
     listsPlugin,
-    markdownShortcutPlugin,
     quotePlugin,
     tablePlugin,
     thematicBreakPlugin,
@@ -29,22 +27,14 @@ const PLUGINS = [
                 <ListsToggle />
                 <BlockTypeSelect />
                 <InsertTable />
+                <InsertThematicBreak />
             </>)
     }),
     listsPlugin(),
     quotePlugin(),
     headingsPlugin({ allowedHeadingLevels: [1, 2, 3] }),
-    // linkPlugin(),
-    // imagePlugin({
-    //     imageAutocompleteSuggestions: ['https://via.placeholder.com/150', 'https://via.placeholder.com/150'],
-    //     imageUploadHandler: async () => Promise.resolve('https://picsum.photos/200/300')
-    // }),
     tablePlugin(),
-    thematicBreakPlugin(),
-    frontmatterPlugin(),
-    codeBlockPlugin({ defaultCodeBlockLanguage: 'txt' }),
-    // codeMirrorPlugin({ codeBlockLanguages: { js: 'JavaScript', css: 'CSS', txt: 'text', tsx: 'TypeScript' } }),
-    markdownShortcutPlugin()
+    thematicBreakPlugin()
 ]
 
 export default function InitializedMDXEditor({

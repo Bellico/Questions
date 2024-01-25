@@ -87,17 +87,28 @@
 
 .q-editor-markdown h1 {
   font-size: 2.25em;
-  font-weight: 800
+  font-weight: 800;
+  margin-top: 1.25em;
+  margin-bottom: 1.25em;
 }
 
 .q-editor-markdown h2 {
   font-size: 1.5em;
-  font-weight: 700
+  font-weight: 700;
+  margin-top: 1.25em;
+  margin-bottom: 1.25em;
 }
 
 .q-editor-markdown h3 {
   font-size: 1.25em;
   font-weight: 600;
+  margin-top: 1.25em;
+  margin-bottom: 1.25em;
+}
+
+.q-editor-markdown p {
+  margin-top: 1.25em;
+  margin-bottom: 1.25em;
 }
 
 .q-editor-markdown ol {

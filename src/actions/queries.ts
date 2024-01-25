@@ -46,3 +46,21 @@ export const getEditorQuery = async (groupId: string, userId: string) => {
         },
     })
 }
+
+export const getStatsQuery = async (userId: string) => {
+    const groupCount = await prisma.questionGroup.count({
+        where: {
+            authorId: userId,
+        }
+    })
+
+    const questionCount = await prisma.question.count({
+        where: {
+            group: {
+                authorId: userId
+            }
+        }
+    })
+
+    return { groupCount, questionCount }
+}

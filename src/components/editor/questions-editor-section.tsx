@@ -23,7 +23,7 @@ type QuestionsEditorSectionProps = {
 export function QuestionsEditorSection({
   keyMap,
   indexQuestion,
-  question: { id, title, subject, order, responses }
+  question: { id, title, subject, responses }
 }: QuestionsEditorSectionProps) {
 
   const canAutoAddResponse = useRef<boolean>(false);
@@ -79,8 +79,6 @@ export function QuestionsEditorSection({
     const newValues = getValues();
 
     updateQuestion(keyMap, {
-      id: newValues.id,
-      order: order,
       title: newValues.title,
       subject: newValues.subject,
       responses: newValues.responses.map(r => ({
@@ -137,7 +135,7 @@ export function QuestionsEditorSection({
                       <Pencil className="w-5 h-5 absolute top-1/2 transform -translate-y-1/2 right-3" />
                       <Input
                         className="border-0 text-xl sm:text-5xl mb-12 sm:py-7 text-center bg-transparent font-medium hover:ring-1 hover:ring-secondary"
-                        placeholder={title || 'Question ' + indexQuestion}
+                        placeholder={'Question ' + indexQuestion}
                         type="text"
                         {...field}
                       />

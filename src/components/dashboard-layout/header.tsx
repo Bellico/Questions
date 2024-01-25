@@ -7,10 +7,8 @@ export const DashboardHeader = () => (
   <header className="border-b">
     <div className="container flex items-center h-16 px-8">
       <nav className="flex flex-row gap-6 text-sm font-medium items-center md:gap-5">
-        <Link className="flex items-center gap-2 text-lg font-semibold" href="#">
+        <Link className="flex items-center gap-2 font-bold" href="/board">
           <LayoutDashboardIcon className="w-6 h-6" />
-        </Link>
-        <Link className="font-bold" href="/board">
           Questions Editor
         </Link>
         <Link className="text-gray-500 dark:text-gray-400 hidden" href="#">
