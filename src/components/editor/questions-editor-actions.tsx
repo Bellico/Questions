@@ -53,8 +53,8 @@ export function QuestionsEditorActions({ useDraft, saveGroupAction }: QuestionsE
             } else {
                 toast({
                     variant: "destructive",
-                    title: "Error action",
-                    description: result.message,
+                    title: "Error save",
+                    description: result.message + ' ' + JSON.stringify(result.errors),
                 })
             }
         })

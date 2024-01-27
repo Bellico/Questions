@@ -1,4 +1,5 @@
 import { getGroupsListQuery } from "@/actions/queries";
+import { AlertDraft } from "@/components/board/alert-draft";
 import { QuestionGroupsListActions } from "@/components/board/question-groups-list-actions";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
@@ -17,7 +18,6 @@ export async function QuestionGroupsList() {
     return (
       <section className="py-12">
         <div className="container">
-          <h1 className="text-3xl mb-12 text-center font-semibold">Question groups</h1>
           <div className="h-16 border-2 border-slate-700 border-dashed rounded-lg hover:border-solid">
             <Link href="/editor">
               <div className="flex items-center justify-center h-full text-sm text-gray-500 dark:text-gray-400 hover:underline">Add your first group of questions</div>
@@ -28,10 +28,14 @@ export async function QuestionGroupsList() {
     )
   }
 
+
   return (
     <section className="py-12">
+
       <div className="container">
-        <h1 className="text-3xl mb-12 text-center font-semibold">Question groups</h1>
+        <h1 className="text-3xl mb-12 text-center font-semibold">My questions groups</h1>
+
+        <AlertDraft />
 
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4 my-5">
           {questionGroups.map((group) => (

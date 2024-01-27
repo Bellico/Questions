@@ -42,7 +42,6 @@ export function QuestionsEditorSection({
   })
 
   const { getValues, setValue, control, formState: { isValid } } = form;
-  const subjectFormValue = getValues('subject')
 
   const { fields: responseFields, append, remove } = useFieldArray({
     control,
@@ -65,22 +64,22 @@ export function QuestionsEditorSection({
     }
   }, [append, responseFields, isValid])
 
-  // EFFECT : Send new subject values to store
+
+  // Sync markdown with form
   useEffect(() => {
-    if (!isValid) return;
-    updateSubject(keyMap, subjectFormValue)
-  }, [updateSubject, isValid, keyMap, subjectFormValue])
+    if (subject !== '')
+      setValue('subject', subject, { shouldValidate: true })
+  }, [setValue, subject])
 
   // Send new state values to store
   const updateQuestionDebounced = useDebounce(() => {
-    if (!isValid) return;
-
+    // if (!isValid) return;
     canAutoAddResponse.current = true
     const newValues = getValues();
 
     updateQuestion(keyMap, {
       title: newValues.title,
-      subject: newValues.subject,
+      subject: qEditorMarkdownRef.current?.getMarkdown()!,
       responses: newValues.responses.map(r => ({
         id: r.id,
         isCorrect: r.isCorrect,
@@ -88,12 +87,12 @@ export function QuestionsEditorSection({
       }))
     })
 
-  }, 800);
+  }, 800)
 
-  const qEditorMarkdownChange = useDebounce(() => {
-    const value = qEditorMarkdownRef.current?.getMarkdown()
-    if (value) setValue('subject', value, { shouldValidate: true })
-  }, 300);
+  // const qEditorMarkdownChange = useDebounce(() => {
+  //   const value = qEditorMarkdownRef.current?.getMarkdown()
+  //   if (value) setValue('subject', value, { shouldValidate: true })
+  // }, 300)
 
   function addResponse() {
     append({
@@ -156,7 +155,7 @@ export function QuestionsEditorSection({
                     <QEditorMarkdown className="rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground"
                       markdown={subject}
                       editorRef={qEditorMarkdownRef}
-                      onChange={qEditorMarkdownChange}
+                      onChange={updateQuestionDebounced}
                       placeholder="Write your next question here..." />
                   </FormControl>
                   <FormMessage />

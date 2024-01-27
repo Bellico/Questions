@@ -43,7 +43,7 @@ export function QuestionGroupsListActions({ groupId }: QuestionsTableProps) {
         toast({
           variant: "destructive",
           title: "Error action",
-          description: result.message,
+          description: result.message + ' ' + JSON.stringify(result.errors)
         })
       }
     })

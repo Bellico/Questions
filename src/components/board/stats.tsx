@@ -14,7 +14,7 @@ export const BoardStats = async () => {
   }
 
   return (
-    <section className="py-12">
+    <section className="py-12 bg-accent shadow-md">
       <div className="container">
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4 my-5">
           <Card>

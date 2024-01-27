@@ -13,7 +13,11 @@ import {
     thematicBreakPlugin,
     toolbarPlugin,
     type MDXEditorMethods,
-    type MDXEditorProps
+    type MDXEditorProps,
+    linkPlugin,
+    CreateLink,
+    linkDialogPlugin,
+    UndoRedo
 } from '@mdxeditor/editor'
 import type { ForwardedRef } from 'react'
 
@@ -22,10 +26,12 @@ const PLUGINS = [
         toolbarContents: () => (
             <>
                 {' '}
+                <UndoRedo />
                 <BoldItalicUnderlineToggles />
                 <CodeToggle />
                 <ListsToggle />
                 <BlockTypeSelect />
+                <CreateLink />
                 <InsertTable />
                 <InsertThematicBreak />
             </>)
@@ -33,6 +39,8 @@ const PLUGINS = [
     listsPlugin(),
     quotePlugin(),
     headingsPlugin({ allowedHeadingLevels: [1, 2, 3] }),
+    linkPlugin(),
+    linkDialogPlugin(),
     tablePlugin(),
     thematicBreakPlugin()
 ]
