@@ -1,11 +1,17 @@
-import { updateQuestionGroup } from "@/actions/editor-actions";
-import { getEditorQuery } from "@/actions/queries";
-import { QuestionsEditor } from "@/components/editor/questions-editor";
-import { auth } from "@/lib/auth";
-import { notFound } from "next/navigation";
+import { updateQuestionGroup } from '@/actions/editor-actions'
+import { getEditorQuery } from '@/actions/queries'
+import { QuestionsEditor } from '@/components/editor/questions-editor'
+import { auth } from '@/lib/auth'
+import { notFound } from 'next/navigation'
 
-export default async function EditorPage({ params, searchParams }: { params: { id: string }, searchParams: { useDraft: boolean } }) {
-  const session = await auth();
+export default async function EditorPage({
+  params,
+  searchParams,
+}: {
+  params: { id: string }
+  searchParams: { useDraft: boolean }
+}) {
+  const session = await auth()
 
   const useDraft = Boolean(searchParams.useDraft)
 
@@ -20,6 +26,9 @@ export default async function EditorPage({ params, searchParams }: { params: { i
   }
 
   return (
-    <QuestionsEditor questionGroup={questionGroup} saveGroupAction={updateQuestionGroup} />
+    <QuestionsEditor
+      questionGroup={questionGroup}
+      saveGroupAction={updateQuestionGroup}
+    />
   )
 }

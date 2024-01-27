@@ -1,8 +1,8 @@
-import { QuestionType } from '@/lib/schema';
-import superjson from 'superjson'; //  can use anything: serialize-javascript, devalue, etc.
-import { v4 } from 'uuid';
-import { create } from 'zustand';
-import { PersistStorage, persist } from 'zustand/middleware';
+import { QuestionType } from '@/lib/schema'
+import superjson from 'superjson' //  can use anything: serialize-javascript, devalue, etc.
+import { v4 } from 'uuid'
+import { create } from 'zustand'
+import { PersistStorage, persist } from 'zustand/middleware'
 
 export type QuestionsEditorProps = {
     id: string | null,
@@ -22,117 +22,117 @@ export type QuestionsEditorState = QuestionsEditorProps & {
 }
 
 const defaultQuestion: QuestionType = {
+  id: null,
+  order: 1,
+  subject: '',
+  responses: [{
     id: null,
-    order: 1,
-    subject: '',
-    responses: [{
-        id: null,
-        text: '',
-        isCorrect: true
-    },
-    {
-        id: null,
-        text: '',
-        isCorrect: false
-    }]
+    text: '',
+    isCorrect: true
+  },
+  {
+    id: null,
+    text: '',
+    isCorrect: false
+  }]
 }
 
 function createDefaultQuestionsMap(): Map<string, QuestionType> {
-    return new Map([
-        [v4(), { ...defaultQuestion }],
-    ])
+  return new Map([
+    [v4(), { ...defaultQuestion }],
+  ])
 }
 
 const storage: PersistStorage<QuestionsEditorState> = {
-    getItem: (name) => {
-        const str = localStorage.getItem(name)
-        if (!str) return null
-        return superjson.parse(str)
-    },
-    setItem: (name, value) => {
-        localStorage.setItem(name, superjson.stringify(value))
-    },
-    removeItem: (name) => localStorage.removeItem(name),
+  getItem: (name) => {
+    const str = localStorage.getItem(name)
+    if (!str) return null
+    return superjson.parse(str)
+  },
+  setItem: (name, value) => {
+    localStorage.setItem(name, superjson.stringify(value))
+  },
+  removeItem: (name) => localStorage.removeItem(name),
 }
 
 export const createQuestionsEditorStore = (initProps?: Partial<QuestionsEditorProps>) => {
-    const DEFAULT_PROPS: QuestionsEditorProps = {
-        id: null,
-        name: '',
-        questionsMap: createDefaultQuestionsMap()
-    }
+  const DEFAULT_PROPS: QuestionsEditorProps = {
+    id: null,
+    name: '',
+    questionsMap: createDefaultQuestionsMap()
+  }
 
-    return create<QuestionsEditorState>()(persist((set, get) => ({
-        ...DEFAULT_PROPS,
-        ...initProps,
+  return create<QuestionsEditorState>()(persist((set, get) => ({
+    ...DEFAULT_PROPS,
+    ...initProps,
 
-        updateGroupName: (name: string) => set((state) => ({ name: name })),
+    updateGroupName: (name: string) => set((state) => ({ name: name })),
 
-        // addQuestion: () => set(produce((state: QuestionsEditorState) => {
-        //     state.questionsMap.set(v4(), { ...defaultQuestion })
-        // })),
+    // addQuestion: () => set(produce((state: QuestionsEditorState) => {
+    //     state.questionsMap.set(v4(), { ...defaultQuestion })
+    // })),
 
-        addQuestion: () => set((state) => {
-            const newMap = new Map(state.questionsMap)
-            const newKey = v4()
-            const maxOrder = [...state.questionsMap].map(([_, value]) => value.order).reduce((a, b) => Math.max(a, b))
-            newMap.set(newKey, { ...defaultQuestion, order: maxOrder + 1 })
-            return { questionsMap: newMap, lastQuestionAdded: newKey }
-        }),
+    addQuestion: () => set((state) => {
+      const newMap = new Map(state.questionsMap)
+      const newKey = v4()
+      const maxOrder = [...state.questionsMap].map(([_, value]) => value.order).reduce((a, b) => Math.max(a, b))
+      newMap.set(newKey, { ...defaultQuestion, order: maxOrder + 1 })
+      return { questionsMap: newMap, lastQuestionAdded: newKey }
+    }),
 
-        removeQuestion: (keyMap: string) => set((state) => {
-            const newMap = new Map(state.questionsMap)
+    removeQuestion: (keyMap: string) => set((state) => {
+      const newMap = new Map(state.questionsMap)
             newMap.delete(keyMap)!
             return { questionsMap: newMap }
-        }),
+    }),
 
-        // updateQuestion: (id: string, question: QuestionType) => set(produce((state: QuestionsEditorState) => {
-        //     state.questionsMap.set(id, { ...defaultQuestion })
-        // })),
+    // updateQuestion: (id: string, question: QuestionType) => set(produce((state: QuestionsEditorState) => {
+    //     state.questionsMap.set(id, { ...defaultQuestion })
+    // })),
 
-        updateQuestion: (keyMap: string, newValues: Omit<QuestionType, 'id' | 'order'>) => set((state) => {
-            const newMap = new Map(state.questionsMap)
-            const question = newMap.get(keyMap)!
-            question.subject = newValues.subject
-            question.responses = newValues.responses
-            question.title = newValues.title
+    updateQuestion: (keyMap: string, newValues: Omit<QuestionType, 'id' | 'order'>) => set((state) => {
+      const newMap = new Map(state.questionsMap)
+      const question = newMap.get(keyMap)!
+      question.subject = newValues.subject
+      question.responses = newValues.responses
+      question.title = newValues.title
 
-            newMap.set(keyMap, question)
-            return { questionsMap: newMap }
-        }),
+      newMap.set(keyMap, question)
+      return { questionsMap: newMap }
+    }),
 
-        updateSubject: (keyMap: string, subject: string) => set((state) => {
-            const newMap = new Map(state.questionsMap)
-            const question = newMap.get(keyMap)!
-            question.subject = subject
+    updateSubject: (keyMap: string, subject: string) => set((state) => {
+      const newMap = new Map(state.questionsMap)
+      const question = newMap.get(keyMap)!
+      question.subject = subject
 
-            newMap.set(keyMap, question)
-            return { questionsMap: newMap }
-        }),
+      newMap.set(keyMap, question)
+      return { questionsMap: newMap }
+    }),
 
-        addResponse: (keyMap: string) => set((state) => {
-            const newMap = new Map(state.questionsMap)
-            const question = newMap.get(keyMap)!
-            question.responses = [...question.responses, {
-                id: null,
-                text: '',
-                isCorrect: false
-            }]
+    addResponse: (keyMap: string) => set((state) => {
+      const newMap = new Map(state.questionsMap)
+      const question = newMap.get(keyMap)!
+      question.responses = [...question.responses, {
+        id: null,
+        text: '',
+        isCorrect: false
+      }]
 
-            newMap.set(keyMap, question)
-            return { questionsMap: newMap }
-        }),
+      newMap.set(keyMap, question)
+      return { questionsMap: newMap }
+    }),
 
-        removeResponse: (keyMap: string, index: number) => set((state) => {
-            const newMap = new Map(state.questionsMap)
-            const question = newMap.get(keyMap)!
-            question.responses = [...question.responses.filter((r, i) => i !== index)]
-            newMap.set(keyMap, question)
-            return { questionsMap: newMap }
-        }),
-    }), {
-        name: 'q-editor',
-        storage,
-        skipHydration: true,
-    }))
+    removeResponse: (keyMap: string, index: number) => set((state) => {
+      const newMap = new Map(state.questionsMap)
+      const question = newMap.get(keyMap)!
+      question.responses = [...question.responses.filter((r, i) => i !== index)]
+      newMap.set(keyMap, question)
+      return { questionsMap: newMap }
+    }),
+  }), {
+    name: 'q-editor',
+    storage,
+    skipHydration: true,
+  }))
 }

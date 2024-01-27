@@ -1,18 +1,18 @@
-import { QEditorMarkdown } from "@/components/editor/q-editorMarkdown"
-import { useQuestionsEditorContext } from "@/components/providers/questions-editor-provider"
-import { Button } from "@/components/ui/button"
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Switch } from "@/components/ui/switch"
-import { useDebounce } from "@/hooks/utils"
-import { QuestionFormSchema, QuestionFormType, QuestionType } from "@/lib/schema"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { MDXEditorMethods } from "@mdxeditor/editor"
-import { Pencil, Trash2 } from "lucide-react"
-import { useEffect, useRef } from "react"
-import { useFieldArray, useForm } from "react-hook-form"
-import { useShallow } from "zustand/react/shallow"
+import { QEditorMarkdown } from '@/components/editor/q-editorMarkdown'
+import { useQuestionsEditorContext } from '@/components/providers/questions-editor-provider'
+import { Button } from '@/components/ui/button'
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { Switch } from '@/components/ui/switch'
+import { useDebounce } from '@/hooks/utils'
+import { QuestionFormSchema, QuestionFormType, QuestionType } from '@/lib/schema'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { MDXEditorMethods } from '@mdxeditor/editor'
+import { Pencil, Trash2 } from 'lucide-react'
+import { useEffect, useRef } from 'react'
+import { useFieldArray, useForm } from 'react-hook-form'
+import { useShallow } from 'zustand/react/shallow'
 
 type QuestionsEditorSectionProps = {
   keyMap: string,
@@ -26,8 +26,8 @@ export function QuestionsEditorSection({
   question: { id, title, subject, responses }
 }: QuestionsEditorSectionProps) {
 
-  const canAutoAddResponse = useRef<boolean>(false);
-  const qEditorMarkdownRef = useRef<MDXEditorMethods>(null);
+  const canAutoAddResponse = useRef<boolean>(false)
+  const qEditorMarkdownRef = useRef<MDXEditorMethods>(null)
 
   const [updateQuestion, updateSubject, removeStoreResponse] = useQuestionsEditorContext(
     useShallow((s) => [s.updateQuestion, s.updateSubject, s.removeResponse]),
@@ -38,20 +38,20 @@ export function QuestionsEditorSection({
   const form = useForm<QuestionFormType>({
     resolver: zodResolver(QuestionFormSchema),
     values: { id, subject, responses, title: title || '' },
-    mode: "onBlur"
+    mode: 'onBlur'
   })
 
-  const { getValues, setValue, control, formState: { isValid } } = form;
+  const { getValues, setValue, control, formState: { isValid } } = form
 
   const { fields: responseFields, append, remove } = useFieldArray({
     control,
-    name: "responses",
-  });
+    name: 'responses',
+  })
 
   // EFFECT : Auto add new empty response
   useEffect(() => {
-    if (!isValid) return;
-    if (!canAutoAddResponse.current) return;
+    if (!isValid) return
+    if (!canAutoAddResponse.current) return
 
     if (responseFields.every(r => !!r.text)) {
       append({
@@ -75,7 +75,7 @@ export function QuestionsEditorSection({
   const updateQuestionDebounced = useDebounce(() => {
     // if (!isValid) return;
     canAutoAddResponse.current = true
-    const newValues = getValues();
+    const newValues = getValues()
 
     updateQuestion(keyMap, {
       title: newValues.title,
@@ -107,7 +107,7 @@ export function QuestionsEditorSection({
   function removeResponse(index: number) {
     canAutoAddResponse.current = false
 
-    const newValues = getValues();
+    const newValues = getValues()
     if (newValues.responses[index].text !== '') {
       removeStoreResponse(keyMap, index)
     } else {
@@ -116,7 +116,7 @@ export function QuestionsEditorSection({
   }
 
   return (
-    <section className="py-12 min-h-[calc(100vh-75px)] bg-gray-100 dark:bg-accent">
+    <section className="min-h-[calc(100vh-75px)] bg-gray-100 py-12 dark:bg-accent">
       <div className="container">
 
         <Form {...form}>
@@ -129,11 +129,11 @@ export function QuestionsEditorSection({
               render={({ field }) => (
                 <FormItem >
                   <FormControl>
-                    <label className="relative block xl:w-6/12 mx-auto">
+                    <label className="relative mx-auto block xl:w-6/12">
                       <FormMessage className="text-center" />
-                      <Pencil className="w-5 h-5 absolute top-1/2 transform -translate-y-1/2 right-3" />
+                      <Pencil className="absolute right-3 top-1/2 size-5 -translate-y-1/2" />
                       <Input
-                        className="border-0 text-xl sm:text-5xl mb-12 sm:py-7 text-center bg-transparent font-medium hover:ring-1 hover:ring-secondary"
+                        className="mb-12 border-0 bg-transparent text-center text-xl font-medium hover:ring-1 hover:ring-secondary sm:py-7 sm:text-5xl"
                         placeholder={'Question ' + indexQuestion}
                         type="text"
                         {...field}
@@ -165,17 +165,18 @@ export function QuestionsEditorSection({
 
             {/* Responses */}
             {responseFields.map((item, index) => (
-              <div key={index} className="space-y-2 w-full">
+              <div key={index} className="w-full space-y-2">
                 <FormLabel>Response {index + 1}</FormLabel>
-                <div className="flex border items-center rounded-xl p-2 has-[.bad]:bg-destructive/5 has-[.good]:bg-success/5">
+                <div className="flex items-center rounded-xl border p-2 has-[.bad]:bg-destructive/5 has-[.good]:bg-success/5">
 
                   <FormField
                     control={control}
                     name={`responses.${index}.isCorrect`}
                     render={({ field }) => (
+                      // eslint-disable-next-line tailwindcss/no-custom-classname
                       <FormItem className={field.value ? 'good' : 'bad'}>
                         <FormControl>
-                          <div className="flex items-center space-x-2 mr-2">
+                          <div className="mr-2 flex items-center space-x-2">
                             <Switch id="isCorrect" checked={field.value} onCheckedChange={field.onChange} />
                             <Label htmlFor="isCorrect">{field.value ? 'Good' : 'Bad'}</Label>
                           </div>

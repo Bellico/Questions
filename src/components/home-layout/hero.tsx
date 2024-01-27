@@ -1,9 +1,9 @@
-import SubscribeForm from "@/components/auth/subscribe-form";
-import Link from "next/link";
+import SubscribeForm from '@/components/auth/subscribe-form'
+import Link from 'next/link'
 
 export const HomeHero = () => (
-  <section className="w-full h-screen py-12 md:py-24 lg:py-32 xl:py-48">
-    <div className="container px-4 md:px-6 h-full flex items-center justify-center">
+  <section className="h-screen w-full py-12 md:py-24 lg:py-32 xl:py-48">
+    <div className="container flex h-full items-center justify-center px-4 md:px-6">
       <div className="flex flex-col items-center space-y-4 text-center">
         <div className="space-y-2">
           <h1 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl lg:text-6xl">
@@ -14,7 +14,6 @@ export const HomeHero = () => (
           </p>
         </div>
         <div className="w-full max-w-sm space-y-2">
-
           <SubscribeForm />
 
           <p className="text-xs text-gray-500 dark:text-gray-400">
@@ -28,4 +27,3 @@ export const HomeHero = () => (
     </div>
   </section>
 )
-

@@ -1,28 +1,28 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState } from 'react'
 
 export function useAccordionState(entries: Map<string, unknown>, lastAddedKey?: string) {
 
-    const defaultValue = entries.size == 1 ? [entries.entries().next()?.value[0]] : [];
-    const [accordionState, setAccordionState] = useState<string[]>(defaultValue)
+  const defaultValue = entries.size == 1 ? [entries.entries().next()?.value[0]] : []
+  const [accordionState, setAccordionState] = useState<string[]>(defaultValue)
 
-    useEffect(() => {
-        if (lastAddedKey) {
-            setAccordionState([lastAddedKey])
-        }
-    }, [lastAddedKey])
-
-    const expandAll = () => {
-        setAccordionState([...entries.keys()])
+  useEffect(() => {
+    if (lastAddedKey) {
+      setAccordionState([lastAddedKey])
     }
+  }, [lastAddedKey])
 
-    const toggleExpand = (key: string) => {
-        if (accordionState.includes(key)) setAccordionState(accordionState.filter(c => c !== key))
-        else setAccordionState([...accordionState, key])
-    }
+  const expandAll = () => {
+    setAccordionState([...entries.keys()])
+  }
 
-    const collapseAll = () => {
-        setAccordionState([])
-    }
+  const toggleExpand = (key: string) => {
+    if (accordionState.includes(key)) setAccordionState(accordionState.filter(c => c !== key))
+    else setAccordionState([...accordionState, key])
+  }
 
-    return [accordionState, toggleExpand, expandAll, collapseAll] as const;
+  const collapseAll = () => {
+    setAccordionState([])
+  }
+
+  return [accordionState, toggleExpand, expandAll, collapseAll] as const
 }

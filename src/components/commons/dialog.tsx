@@ -8,15 +8,14 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from "@/components/ui/alert-dialog"
-import { Button } from "@/components/ui/button"
+} from '@/components/ui/alert-dialog'
+import { Button } from '@/components/ui/button'
 
 export const AlertDialogDemo = () => {
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>
         <Button variant="outline">Show Dialog</Button>
-
       </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>

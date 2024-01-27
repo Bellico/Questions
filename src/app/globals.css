@@ -125,6 +125,11 @@
   padding-left: 0.625em
 }
 
+.q-editor-markdown a {
+  text-decoration: underline;
+  cursor: pointer
+}
+
 .q-editor-markdown blockquote {
   font-weight: 500;
   font-style: italic;

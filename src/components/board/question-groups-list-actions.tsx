@@ -1,11 +1,11 @@
-"use client"
+'use client'
 
-import { deleteQuestionGroup, duplicateQuestionGroup } from "@/actions/editor-actions";
-import { OverloadSpinner } from "@/components/commons/spinner";
-import { DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator } from "@/components/ui/dropdown-menu";
-import { useToast } from "@/components/ui/use-toast";
-import Link from "next/link";
-import { useTransition } from "react";
+import { deleteQuestionGroup, duplicateQuestionGroup } from '@/actions/editor-actions'
+import { OverloadSpinner } from '@/components/commons/spinner'
+import { DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator } from '@/components/ui/dropdown-menu'
+import { useToast } from '@/components/ui/use-toast'
+import Link from 'next/link'
+import { useTransition } from 'react'
 
 type QuestionsTableProps = {
   groupId: string
@@ -14,7 +14,7 @@ type QuestionsTableProps = {
 export function QuestionGroupsListActions({ groupId }: QuestionsTableProps) {
 
   const { toast } = useToast()
-  const [isPending, startTransition] = useTransition();
+  const [isPending, startTransition] = useTransition()
 
   const onDeleteAction = async () => {
     startTransition(async () => {
@@ -22,8 +22,8 @@ export function QuestionGroupsListActions({ groupId }: QuestionsTableProps) {
 
       if (!result.success) {
         toast({
-          variant: "destructive",
-          title: "Error action",
+          variant: 'destructive',
+          title: 'Error action',
           description: result.message,
         })
       }
@@ -36,13 +36,13 @@ export function QuestionGroupsListActions({ groupId }: QuestionsTableProps) {
 
       if (result.success) {
         toast({
-          variant: "success",
-          title: "Group duplicated",
+          variant: 'success',
+          title: 'Group duplicated',
         })
       } else {
         toast({
-          variant: "destructive",
-          title: "Error action",
+          variant: 'destructive',
+          title: 'Error action',
           description: result.message + ' ' + JSON.stringify(result.errors)
         })
       }

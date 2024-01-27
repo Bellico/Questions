@@ -37,26 +37,25 @@ var html = `
         </div>
     </body>
 </html>
-`;
+`
 
 export async function sendVerificationAuthToken(email: string, url: string) {
-    const response = await fetch("https://api.resend.com/emails", {
+  const response = await fetch('https://api.resend.com/emails', {
+    body: JSON.stringify({
+      to: [email],
+      from: 'noreply@resend.dev',
+      subject: 'Sign in link - Questions editor',
+      html: html.replace('[Url]', url),
+    }),
+    headers: {
+      Authorization: `Bearer ${process.env.RESEND_API_KEY}`,
+      'Content-Type': 'application/json',
+    },
+    method: 'POST',
+  })
 
-        body: JSON.stringify({
-            to: [email],
-            from: "noreply@resend.dev",
-            subject: "Sign in link - Questions editor",
-            html: html.replace('[Url]', url)
-        }),
-        headers: {
-            "Authorization": `Bearer ${process.env.RESEND_API_KEY}`,
-            "Content-Type": "application/json",
-        },
-        method: "POST",
-    })
-
-    if (!response.ok) {
-        const { errors } = await response.json()
-        throw new Error(JSON.stringify(errors))
-    }
+  if (!response.ok) {
+    const { errors } = await response.json()
+    throw new Error(JSON.stringify(errors))
+  }
 }
