@@ -15,6 +15,11 @@ export const BoardStats = async () => {
   return (
     <section className="bg-accent py-12 shadow-md">
       <div className="container">
+
+        <h1 className="mb-12 text-center text-5xl font-extrabold">
+          Board stats
+        </h1>
+
         <div className="my-5 grid gap-4 md:grid-cols-2 lg:grid-cols-4">
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -24,7 +29,7 @@ export const BoardStats = async () => {
               <BoxIcon className="size-4 text-gray-500 dark:text-gray-400" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{groupCount}</div>
+              <div className="text-2xl font-bold text-primary">{groupCount}</div>
               {/* <p className="text-xs text-gray-500 dark:text-gray-400">+10.1% from last month</p> */}
             </CardContent>
           </Card>
@@ -36,7 +41,7 @@ export const BoardStats = async () => {
               <FileQuestion className="size-4 text-gray-500 dark:text-gray-400" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{questionCount}</div>
+              <div className="text-2xl font-bold text-primary">{questionCount}</div>
             </CardContent>
           </Card>
           <Card>
@@ -45,7 +50,7 @@ export const BoardStats = async () => {
               <ThumbsUp className="size-4 text-gray-500 dark:text-gray-400" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">?</div>
+              <div className="text-2xl font-bold text-primary">?</div>
             </CardContent>
           </Card>
           <Card>
@@ -54,7 +59,7 @@ export const BoardStats = async () => {
               <ThumbsDown className="size-4 text-gray-500 dark:text-gray-400" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">?</div>
+              <div className="text-2xl font-bold text-primary">?</div>
             </CardContent>
           </Card>
         </div>

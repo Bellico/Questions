@@ -1,15 +1,16 @@
 'use client'
 
 import { deleteQuestionGroup, duplicateQuestionGroup } from '@/actions/editor-actions'
+import { YesNoDialogAction } from '@/components/commons/dialog'
 import { OverloadSpinner } from '@/components/commons/spinner'
+import { AlertDialogTrigger } from '@/components/ui/alert-dialog'
 import { DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator } from '@/components/ui/dropdown-menu'
 import { useToast } from '@/components/ui/use-toast'
-import Link from 'next/link'
 import { useTransition } from 'react'
 
 type QuestionsTableProps = {
   groupId: string
-};
+}
 
 export function QuestionGroupsListActions({ groupId }: QuestionsTableProps) {
 
@@ -51,14 +52,18 @@ export function QuestionGroupsListActions({ groupId }: QuestionsTableProps) {
 
   return (
     <>
-      <DropdownMenuContent align="end">
-        <DropdownMenuLabel>Actions</DropdownMenuLabel>
-        <DropdownMenuItem>See results</DropdownMenuItem>
-        <DropdownMenuItem>Share</DropdownMenuItem>
-        <DropdownMenuSeparator />
-        <Link href="/" onClick={() => onDuplicateAction()}><DropdownMenuItem>Duplicate</DropdownMenuItem></Link>
-        <Link href="/" onClick={() => onDeleteAction()}><DropdownMenuItem>Delete</DropdownMenuItem></Link>
-      </DropdownMenuContent>
+      <YesNoDialogAction action={onDeleteAction} titleDialog='Are you absolutely sure?' descDialog='This will permanently delete your account and remove your data from our servers.'>
+        <DropdownMenuContent align="end">
+          <DropdownMenuLabel>Actions</DropdownMenuLabel>
+          <DropdownMenuItem>See results</DropdownMenuItem>
+          <DropdownMenuItem>Share</DropdownMenuItem>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem onClick={() => onDuplicateAction()}>Duplicate</DropdownMenuItem>
+          <AlertDialogTrigger asChild>
+            <DropdownMenuItem>Delete</DropdownMenuItem>
+          </AlertDialogTrigger>
+        </DropdownMenuContent>
+      </YesNoDialogAction>
       {isPending && <OverloadSpinner />}
     </>
   )

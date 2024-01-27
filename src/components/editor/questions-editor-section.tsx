@@ -1,4 +1,3 @@
-import { QEditorMarkdown } from '@/components/editor/q-editorMarkdown'
 import { useQuestionsEditorContext } from '@/components/providers/questions-editor-provider'
 import { Button } from '@/components/ui/button'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
@@ -10,9 +9,14 @@ import { QuestionFormSchema, QuestionFormType, QuestionType } from '@/lib/schema
 import { zodResolver } from '@hookform/resolvers/zod'
 import { MDXEditorMethods } from '@mdxeditor/editor'
 import { Pencil, Trash2 } from 'lucide-react'
+import dynamic from 'next/dynamic'
 import { useEffect, useRef } from 'react'
 import { useFieldArray, useForm } from 'react-hook-form'
 import { useShallow } from 'zustand/react/shallow'
+
+const QEditorMarkdown = dynamic(() => import('../../lib/initializedMDXEditor'), {
+  ssr: false
+})
 
 type QuestionsEditorSectionProps = {
   keyMap: string,

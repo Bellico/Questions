@@ -1,3 +1,5 @@
+import { cn } from '@/lib/utils'
+
 export const Spinner = () => {
   return (
     <div className="flex items-center justify-center">
@@ -6,12 +8,14 @@ export const Spinner = () => {
   )
 }
 
-export const SectionSpinner = ({ title }: { title?: string }) => {
+export const SectionSpinner = ({ title, className}: { title?: string, className?: string }) => {
   return (
-    <section className="py-12">
+    <section className={cn('py-12', className)}>
       <div className="container">
         {title && (
-          <h1 className="mb-12 text-center text-3xl font-semibold">{title}</h1>
+          <h1 className="mb-12 text-center text-5xl font-extrabold">
+            {title}
+          </h1>
         )}
         <Spinner />
       </div>

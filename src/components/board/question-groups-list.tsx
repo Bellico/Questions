@@ -20,6 +20,11 @@ export async function QuestionGroupsList() {
     return (
       <section className="py-12">
         <div className="container">
+
+          <h1 className="mb-12 text-center text-5xl font-extrabold">
+            Questions
+          </h1>
+
           <div className="h-16 rounded-lg border-2 border-dashed border-slate-700 hover:border-solid">
             <Link href="/editor">
               <div className="flex h-full items-center justify-center text-sm text-gray-500 hover:underline dark:text-gray-400">
@@ -35,8 +40,9 @@ export async function QuestionGroupsList() {
   return (
     <section className="py-12">
       <div className="container">
-        <h1 className="mb-12 text-center text-3xl font-semibold">
-          My questions groups
+
+        <h1 className="mb-12 text-center text-5xl font-extrabold">
+         Questions
         </h1>
 
         <AlertDraft />
@@ -44,20 +50,20 @@ export async function QuestionGroupsList() {
         <div className="my-5 grid gap-4 md:grid-cols-2 lg:grid-cols-4">
           {questionGroups.map((group) => (
             <Card className="q-card" key={group.id}>
-              <CardHeader className="mb-4 flex flex-row items-center text-xl font-bold">
+              <CardHeader className="flex flex-row items-center text-xl font-bold">
                 <div>
                   <Group className="mr-2 size-8" />
                 </div>
                 <div>
-                  {group.name}{' '}
+                  {group.name}
                   <span className="text-xs">(v{group.version})</span>
                 </div>
               </CardHeader>
               <CardContent>
-                <div>{group._count.questions} questions</div>
-                <div>10 try</div>
-                <div>9 success</div>
-                <div className="mt-8">
+                <div className='text-sm'>{group._count.questions} questions</div>
+                <div className='text-sm'>10 try</div>
+                <div className='text-sm'>9 success</div>
+                <div className="mt-4">
                   <Link href="/run">
                     <Button className="mr-4">
                       <Play className="mr-2 size-4" />

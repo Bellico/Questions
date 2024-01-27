@@ -61,7 +61,6 @@ export const createQuestionGroup = async (data: QuestionGroupType): Promise<Acti
 export const updateQuestionGroup = async (data: QuestionGroupType): Promise<ActionResultType<void>> => {
   const errors = ZparseOrError(QuestionGroupSchema, data)
   if (errors) return errors
-
   const session = await auth()
 
   if (!session) {
@@ -259,11 +258,11 @@ export const duplicateQuestionGroup = async (id: string): Promise<ActionResultTy
           order: true,
           responses: {
             select:
-                        {
-                          id: true,
-                          text: true,
-                          isCorrect: true
-                        }
+            {
+              id: true,
+              text: true,
+              isCorrect: true
+            }
           }
         }
       }

@@ -4,7 +4,7 @@ import { LayoutDashboardIcon } from 'lucide-react'
 import Link from 'next/link'
 
 export const DashboardHeader = () => (
-  <header className="border-b">
+  <header className="bg-accent">
     <div className="container flex h-16 items-center px-8">
       <nav className="flex flex-row items-center gap-6 text-sm font-medium md:gap-5">
         <Link className="flex items-center gap-2 font-bold" href="/board">

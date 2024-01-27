@@ -6,28 +6,37 @@ import {
   AlertDialogDescription,
   AlertDialogFooter,
   AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
+  AlertDialogTitle
 } from '@/components/ui/alert-dialog'
-import { Button } from '@/components/ui/button'
+import { PropsWithChildren } from 'react'
 
-export const AlertDialogDemo = () => {
+type YesNoDialogActionProps ={
+  titleDialog : string,
+  descDialog? : string,
+  action: () => void | Promise<unknown>
+}
+
+export const YesNoDialogAction = ({
+  titleDialog,
+  descDialog,
+  action,
+  children
+}: PropsWithChildren<YesNoDialogActionProps>) => {
   return (
     <AlertDialog>
-      <AlertDialogTrigger asChild>
-        <Button variant="outline">Show Dialog</Button>
-      </AlertDialogTrigger>
+      {children}
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-          <AlertDialogDescription>
+          <AlertDialogTitle>{titleDialog}</AlertDialogTitle>
+          {descDialog && <AlertDialogDescription>
             This action cannot be undone. This will permanently delete your
             account and remove your data from our servers.
           </AlertDialogDescription>
+          }
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel>Cancel</AlertDialogCancel>
-          <AlertDialogAction>Continue</AlertDialogAction>
+          <AlertDialogAction onClick={() => action()}>Continue</AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
