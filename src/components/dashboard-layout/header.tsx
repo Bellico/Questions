@@ -1,5 +1,6 @@
 import SignOutButton from '@/components/auth/signout-button'
 import { ThemeToggle } from '@/components/theme/theme-toogle'
+import { Button } from '@/components/ui/button'
 import { LayoutDashboardIcon } from 'lucide-react'
 import Link from 'next/link'
 
@@ -20,6 +21,24 @@ export const DashboardHeader = () => (
       </nav>
       <div className="ml-auto flex w-auto gap-2">
         <SignOutButton />
+        <ThemeToggle />
+      </div>
+    </div>
+  </header>
+)
+
+export const RoomHeader = () => (
+  <header className="border-b">
+    <div className="container flex h-16 items-center px-8">
+      <div className="mr-auto flex  flex-1 gap-2">
+        <Button variant="outline">Save</Button>
+      </div>
+      <div className="flex flex-auto items-center justify-center gap-2 text-sm font-bold">
+        <LayoutDashboardIcon className="size-6" />
+            Questions Editor
+      </div>
+      <div className="ml-0 flex flex-1 justify-end gap-2">
+        <Button variant="outline">Close</Button>
         <ThemeToggle />
       </div>
     </div>

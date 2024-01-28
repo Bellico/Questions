@@ -38,7 +38,7 @@ export async function QuestionGroupsList() {
   }
 
   return (
-    <section className="py-12">
+    <section className="animate-zoomInEditor py-12">
       <div className="container">
 
         <h1 className="mb-12 text-center text-5xl font-extrabold">
@@ -64,7 +64,7 @@ export async function QuestionGroupsList() {
                 <div className='text-sm'>10 try</div>
                 <div className='text-sm'>9 success</div>
                 <div className="mt-4">
-                  <Link href="/run">
+                  <Link href={`/start/${group.id}`}>
                     <Button className="mr-4">
                       <Play className="mr-2 size-4" />
                       Start

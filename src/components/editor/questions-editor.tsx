@@ -6,7 +6,6 @@ import { QuestionsEditorHeader } from '@/components/editor/questions-editor-head
 import { QuestionsEditorProvider } from '@/components/providers/questions-editor-provider'
 import { QuestionGroupType } from '@/lib/schema'
 import { ActionResultType } from '@/lib/utils'
-import { motion } from 'framer-motion'
 
 type QuestionsEditorProps = {
   questionGroup?: QuestionGroupType,
@@ -16,23 +15,16 @@ type QuestionsEditorProps = {
 
 export function QuestionsEditor(props: QuestionsEditorProps) {
   return (
-    <>
-      <motion.div
-        initial={{ y: 20, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ ease: 'easeInOut', duration: 0.75 }}>
+    <div className='animate-zoomInEditor'>
+      <QuestionsEditorProvider value={props.questionGroup}>
+        <div className="container">
+          <QuestionsEditorActions {...props} />
+          <QuestionsEditorHeader />
+        </div>
 
-        <QuestionsEditorProvider value={props.questionGroup}>
-          <div className="container">
-            <QuestionsEditorActions {...props} />
-            <QuestionsEditorHeader />
-          </div>
+        <QuestionsEditorAccordion />
 
-          <QuestionsEditorAccordion />
-
-        </QuestionsEditorProvider>
-
-      </motion.div>
-    </>
+      </QuestionsEditorProvider>
+    </div>
   )
 }

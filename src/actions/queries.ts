@@ -64,3 +64,17 @@ export const getStatsQuery = async (userId: string) => {
 
   return { groupCount, questionCount }
 }
+
+export const getGroupForStart = async (groupId: string, userId: string) => {
+  return await prisma.questionGroup.findUnique({
+    where: {
+      id: groupId,
+      authorId: userId,
+    },
+    include: {
+      _count: {
+        select: { questions: true },
+      },
+    }
+  })
+}

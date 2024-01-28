@@ -32,8 +32,8 @@ const config = {
         border: 'hsl(var(--border))',
         input: 'hsl(var(--input))',
         ring: 'hsl(var(--ring))',
-        success: 'hsl(var(--spinner))',
-        spinner: 'hsl(var(--spinner)) hsl(var(--spinner)) transparent',
+        success: 'hsl(var(--success))',
+        spinner: 'hsl(var(--primary)) hsl(var(--primary)) transparent',
         background: 'hsl(var(--background))',
         foreground: 'hsl(var(--foreground))',
         primary: {
@@ -87,13 +87,28 @@ const config = {
         'accordion-up': {
           from: { height: 'var(--radix-accordion-content-height)' },
           to: { height: '0' },
-        }
+        },
+        'zoomIn': {
+          from: { opacity: '0', 'transform': 'scale3d(0.3, 0.3, 0.3)' },
+          '100%': { opacity: '1' },
+        },
+        'zoomInEditor': {
+          from: { translateY: '20', opacity: '0' },
+          to: { translateY: '0', opacity: '1'},
+        },
+        'moveToLeft': {
+          from: { 'transform': 'translateX(100%)' },
+          to: { 'transform': 'translateX(0)' },
+        },
       },
       animation: {
         'wiggle': 'wiggle 0.1s ease-in-out',
         'accordion-down': 'accordion-down 0.2s ease-out',
         'accordion-up': 'accordion-up 0.2s ease-out',
         'spinner': '0.75s linear 0s infinite normal both running spinner',
+        'zoomIn': 'zoomIn 0.2s ease-in-out',
+        'zoomInEditor': 'zoomInEditor 0.75s ease-in-out',
+        'moveToLeft': 'moveToLeft .6s ease both',
       },
     },
   },
