@@ -1,13 +1,7 @@
-import { getGroupForStart } from '@/actions/queries'
-import { Button } from '@/components/ui/button'
+import { getActiveRoom, getGroupForStart, getLastSettingsRoom } from '@/actions/queries'
+import { RoomSettings } from '@/components/room/room-settings'
 import { auth } from '@/lib/auth'
-import dynamic from 'next/dynamic'
-import Link from 'next/link'
 import { notFound, redirect } from 'next/navigation'
-
-const EditorComp = dynamic(() => import('../../../../components/room/markdown-reader'), {
-  ssr: false,
-})
 
 export default async function StartPage({
   params
@@ -15,16 +9,21 @@ export default async function StartPage({
 params: { id: string }
 }) {
   const session = await auth()
-
   if (!session) {
     redirect('/')
   }
 
   const group = await getGroupForStart(params.id, session.user.id!)
-
   if (!group) {
     notFound()
   }
+
+  const activeRoom = await getActiveRoom(group.id, session.user.id!)
+  if(activeRoom){
+    redirect(`/room/${activeRoom.id}`)
+  }
+
+  const lastSettings = await getLastSettingsRoom(group.id, session.user.id!)
 
   return (
     <section className="animate-moveToLeft py-12">
@@ -38,25 +37,7 @@ params: { id: string }
           {group._count.questions} questions
         </p>
 
-        <h3 className="text-center text-lg font-semibold">Configuration</h3>
-
-        <p>Affichage Vertical / Horizontal</p>
-        <p>Chronometrer</p>
-        <p>Question aleatoire</p>
-        <p>Affichier les bonne reponse  ou a la fin</p>
-        <p>resultate ? z</p>
-
-        <button>S'entrainer</button>
-        <button>S'évaluer</button>
-        <button>Commencer</button>
-        <button>Partager cette configuration</button>
-
-        <Link href={`/session/${group.id}`}>
-          <Button className="mr-4" variant="secondary">
-            Start Session
-          </Button>
-        </Link>
-
+        <RoomSettings {...lastSettings} />
       </div>
     </section>
   )

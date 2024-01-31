@@ -127,3 +127,13 @@ const swNames = [
 ]
 export const randomSwName = () =>
   swNames[Math.floor(Math.random() * swNames.length)]
+
+
+export function randomNextOrder(all: number[], excluded: number[]) {
+  const available = []
+  for(let i = 0; i < all.length; i++){
+    if(!excluded.includes(all[i])) available.push(all[i])
+  }
+
+  return available[Math.floor(Math.random() * available.length)]
+}

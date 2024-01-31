@@ -1,4 +1,30 @@
+import { auth } from '@/lib/auth'
 import prisma from '@/lib/prisma'
+
+export const getSessionUserId = async (): Promise<string> => {
+  const session = await auth()
+
+  if (!session) {
+    throw new Error('401 Unauthorized')
+  }
+
+  return session.user.id!
+}
+
+export const isGroupOwner = async (groupId: string, userId: string): Promise<boolean> => {
+  var isOwner = await prisma.questionGroup.count({
+    where: {
+      id: groupId,
+      authorId: userId
+    }
+  })
+
+  if (isOwner == 0) {
+    throw new Error('403 Forbidden')
+  }
+
+  return true
+}
 
 export const getGroupsListQuery = async (userId: string) => {
   return await prisma.questionGroup.findMany({
@@ -75,6 +101,103 @@ export const getGroupForStart = async (groupId: string, userId: string) => {
       _count: {
         select: { questions: true },
       },
+    }
+  })
+}
+
+export const getLastSettingsRoom = async (groupId: string, userId: string) => {
+  const settings =  await prisma.room.findFirst({
+    where: {
+      groupId: groupId,
+      userId: userId,
+    },
+    orderBy:{
+      dateStart: 'desc'
+    },
+    select:{
+      display: true,
+      mode: true,
+      withTimer: true,
+      withRandom: true,
+      withCorrection: true,
+      withResults: true
+    }
+  })
+
+  if(!settings) return {
+    groupId: groupId,
+    display : 'Vertical' as 'Vertical' | 'Horizontal',
+    mode: 'Training' as 'Training' | 'Rating',
+    withTimer: false,
+    withRandom: false,
+    withCorrection: false,
+    withResults: false,
+  }
+
+  return {...settings, groupId}
+}
+
+export const getActiveRoom = async (groupId: string, userId: string) => {
+  return await prisma.room.findFirst({
+    where: {
+      groupId: groupId,
+      userId: userId,
+      dateEnd: null,
+      dateStart: {
+        gte: new Date(new Date().getTime() - 3600 * 1000),
+      }
+    },
+    select: {
+      id: true
+    }
+  })
+}
+
+export const getNextQuestionToAnswer = async (roomId: string) => {
+  return await prisma.answer.findFirst({
+    where: {
+      roomId: roomId,
+      dateEnd: null,
+    },
+    select: {
+      question:{
+        select: {
+          id: true,
+          title: true,
+          subject: true,
+          responses:{
+            select:{
+              id: true,
+              text: true
+            }
+          }
+        }
+      }
+    }
+  })
+}
+
+export const canPlayRoom = async (roomId: string, userId: string, shareLink?: string) => {
+  return await prisma.room.findFirst({
+    where: {
+      id: roomId,
+      dateEnd: null,
+      AND: [
+        {
+          OR: [
+            {
+              userId: userId,
+            },
+            {
+              shareLink: shareLink,
+            },
+          ],
+        },
+      ]
+    },
+    select: {
+      id: true,
+      display: true,
     }
   })
 }

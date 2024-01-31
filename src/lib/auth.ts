@@ -35,6 +35,9 @@ export const authOptions: NextAuthOptions = {
       },
     }),
   ],
+  pages: {
+    error: '/'
+  },
   callbacks: {
     session({ session, user }) {
       if (!session?.user) return session

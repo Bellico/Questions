@@ -19,6 +19,7 @@ model User {
   accounts            Account[]
   sessions            Session[]
   questionGroups      QuestionGroup[]
+  rooms               Room[]
 }
 
 model Account {
@@ -65,6 +66,7 @@ model QuestionGroup {
   questions    Question[]
   authorId     String
   author       User     @relation(fields: [authorId], references: [id])
+  rooms        Room[]
 }
 
 model Question {
@@ -75,6 +77,7 @@ model Question {
   order        Int
   group        QuestionGroup @relation(fields: [groupId], references: [id], onDelete: Cascade)
   responses    Response[]
+  answers      Answer[]
 }
 
 model Response {
@@ -83,4 +86,47 @@ model Response {
   questionId   String
   question     Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
   isCorrect    Boolean
+  answers      Answer[]
+}
+
+model Room {
+  id                String   @id @default(cuid())
+  groupId           String?
+  group             QuestionGroup? @relation(fields: [groupId], references: [id])
+  userId            String
+  user              User @relation(fields: [userId], references: [id])
+  shareLink         String?
+  display           RoomDisplay
+  mode              RoomMode
+  withTimer         Boolean
+  withRandom        Boolean
+  withCorrection    Boolean
+  withResults       Boolean
+  dateStart         DateTime?
+  dateEnd           DateTime?
+  answers           Answer[]
+}
+
+model Answer {
+  id               String   @id @default(cuid())
+  roomId           String
+  room             Room @relation(fields: [roomId], references: [id])
+  responseId       String?
+  response         Response? @relation(fields: [responseId], references: [id])
+  questionId       String?
+  question         Question? @relation(fields: [questionId], references: [id])
+  dateStart        DateTime
+  dateEnd          DateTime?
+  order            Int
+  isCorrect        Boolean?
+}
+
+enum RoomDisplay {
+  Horizontal
+  Vertical
+}
+
+enum RoomMode {
+  Training
+  Rating
 }

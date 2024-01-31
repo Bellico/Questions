@@ -33,8 +33,8 @@ export function QuestionsEditorSection({
   const canAutoAddResponse = useRef<boolean>(false)
   const qEditorMarkdownRef = useRef<MDXEditorMethods>(null)
 
-  const [updateQuestion, updateSubject, removeStoreResponse] = useQuestionsEditorContext(
-    useShallow((s) => [s.updateQuestion, s.updateSubject, s.removeResponse]),
+  const [updateQuestion, removeStoreResponse] = useQuestionsEditorContext(
+    useShallow((s) => [s.updateQuestion, s.removeResponse]),
   )
 
   console.log('render card', keyMap)
@@ -91,7 +91,7 @@ export function QuestionsEditorSection({
       }))
     })
 
-  }, 800)
+  }, 500)
 
   // const qEditorMarkdownChange = useDebounce(() => {
   //   const value = qEditorMarkdownRef.current?.getMarkdown()
@@ -181,7 +181,7 @@ export function QuestionsEditorSection({
                       <FormItem className={field.value ? 'good' : 'bad'}>
                         <FormControl>
                           <div className="mr-2 flex items-center space-x-2">
-                            <Switch id="isCorrect" checked={field.value} onCheckedChange={field.onChange} />
+                            <Switch id="isCorrect" checked={field.value} onCheckedChange={field.onChange} className='data-[state=checked]:bg-success' />
                             <Label htmlFor="isCorrect">{field.value ? 'Good' : 'Bad'}</Label>
                           </div>
                         </FormControl>

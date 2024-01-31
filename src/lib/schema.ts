@@ -1,3 +1,4 @@
+import { RoomDisplay, RoomMode } from '@prisma/client'
 import * as z from 'zod'
 
 // See schema.prisma
@@ -30,7 +31,18 @@ export const QuestionGroupSchema = z.object({
   questions: z.array(QuestionSchema).min(1),
 })
 
+export const RoomSettingsSchema = z.object({
+  groupId: z.string(),
+  display: z.nativeEnum(RoomDisplay),
+  mode: z.nativeEnum(RoomMode),
+  withTimer: z.boolean(),
+  withRandom: z.boolean(),
+  withCorrection: z.boolean(),
+  withResults: z.boolean(),
+})
+
 export type ResponseType = z.infer<typeof ResponseSchema>
 export type QuestionType = z.infer<typeof QuestionSchema>
 export type QuestionGroupType = z.infer<typeof QuestionGroupSchema>
 export type QuestionFormType = z.infer<typeof QuestionFormSchema>
+export type RoomSettingsType = z.infer<typeof RoomSettingsSchema>
