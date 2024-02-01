@@ -33,7 +33,7 @@ export const OverloadSpinner = () => {
 
 export const MainSpinner = () => {
   return (
-    <main className="fixed inset-0 z-50 flex items-center justify-center">
+    <main className="absolute inset-0 z-50 flex items-center justify-center">
       <span className="spinner page-spinner"></span>
     </main>
   )

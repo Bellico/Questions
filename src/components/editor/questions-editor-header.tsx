@@ -1,6 +1,6 @@
 import { useQuestionsEditorContext } from '@/components/providers/questions-editor-provider'
 import { Input } from '@/components/ui/input'
-import { useDebounce } from '@/hooks/utils'
+import { useDebounce } from '@/hooks/useDebounce'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Pencil } from 'lucide-react'
 import { useForm } from 'react-hook-form'

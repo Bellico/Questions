@@ -27,7 +27,7 @@ export const ZparseOrError = <T extends ZodType>(
   if (!validatedFields.success) {
     return {
       success: false,
-      message: 'Failed to parse data',
+      message: 'Validation failed',
       errors: validatedFields.error.flatten().fieldErrors,
       errorFormat: validatedFields.error.format(),
       issues: validatedFields.error.issues,

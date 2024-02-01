@@ -1,9 +1,9 @@
 'use server'
 
-import { getSessionUserId, isGroupOwner } from '@/actions/queries'
+import { computeNextQuestion, getSessionUserId, isGroupOwner } from '@/actions/queries'
 import prisma from '@/lib/prisma'
 import { RoomSettingsSchema, RoomSettingsType } from '@/lib/schema'
-import { ActionResultType, ZparseOrError, randomNextOrder } from '@/lib/utils'
+import { ActionResultType, ZparseOrError } from '@/lib/utils'
 import { revalidatePath } from 'next/cache'
 
 export const startRoom = async (data: RoomSettingsType): Promise<ActionResultType<string>> => {
@@ -13,30 +13,10 @@ export const startRoom = async (data: RoomSettingsType): Promise<ActionResultTyp
   const userId = await getSessionUserId()
   await isGroupOwner(data.groupId, userId)
 
-  const allOrderQuetion = await prisma.question.findMany({
-    where: {
-      groupId: data.groupId
-    },
-    select:{
-      id: true,
-      order: true
-    },
-    orderBy:{
-      order: 'asc'
-    }
-  })
-
-  let questionId = allOrderQuetion[0].id
-
-  if(data.withRandom){
-    const orders = allOrderQuetion.map(o => o.order)
-    const firstOrderQuestion = randomNextOrder(orders, [])
-    questionId = allOrderQuetion.find(o => o.order === firstOrderQuestion)?.id!
-  }
+  const newtQuestionId = await computeNextQuestion(data.groupId, data.withRandom)
 
   try {
     const roomId = await prisma.$transaction(async (tx) => {
-
       const room = await prisma.room.create({
         data: {
           groupId: data.groupId,
@@ -56,7 +36,7 @@ export const startRoom = async (data: RoomSettingsType): Promise<ActionResultTyp
           roomId: room.id,
           order: 1,
           dateStart: new Date(),
-          questionId: questionId
+          questionId: newtQuestionId
         }
       })
 

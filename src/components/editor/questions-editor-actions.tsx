@@ -1,12 +1,11 @@
-import { OverloadSpinner } from '@/components/commons/spinner'
 import { useQuestionsEditorContext, useQuestionsEditorPersist } from '@/components/providers/questions-editor-provider'
 import { Button } from '@/components/ui/button'
-import { useToast } from '@/components/ui/use-toast'
+import { useAction } from '@/hooks/useAction'
 import { QuestionGroupType } from '@/lib/schema'
 import { ActionResultType, mapToArray } from '@/lib/utils'
 import { ArrowBigLeft, ArrowDownToLine } from 'lucide-react'
 import { redirect } from 'next/navigation'
-import { useEffect, useTransition } from 'react'
+import { useEffect } from 'react'
 import { useShallow } from 'zustand/react/shallow'
 
 type QuestionsEditorActionsProps = {
@@ -27,36 +26,23 @@ export function QuestionsEditorActions({ useDraft, saveGroupAction }: QuestionsE
     if (useDraft) persist?.rehydrate()
   }, [persist, useDraft])
 
-  const { toast } = useToast()
-  const [isPending, startTransition] = useTransition()
+  const requestAction = useAction()
 
   const onSubmitEditor = async () => {
     const questionsToSave = mapToArray(questionsMap).filter(q => !!q.subject)
 
-    startTransition(async () => {
-      const result = await saveGroupAction({
+    requestAction(
+      () => saveGroupAction({
         id: groupId,
         name: groupName,
         questions: questionsToSave
-      })
-
-      if (result.success) {
-        toast({
-          variant: 'success',
-          title: 'Group ' + (result.data ? 'created !' : 'updated !'),
-        })
-
+      }),
+      () => {
         persist?.clearStorage()
-
         redirect('/board')
-      } else {
-        toast({
-          variant: 'destructive',
-          title: 'Error save',
-          description: result.message + ' ' + JSON.stringify(result.errors),
-        })
-      }
-    })
+      },
+      'Group ' + (!groupId ? 'created !' : 'updated !')
+    )
   }
 
   const onBack = () => {
@@ -74,8 +60,6 @@ export function QuestionsEditorActions({ useDraft, saveGroupAction }: QuestionsE
       <form action={onBack}>
         <Button variant="secondary"><ArrowBigLeft className="mr-2 size-4" />Back</Button>
       </form>
-
-      {isPending && <OverloadSpinner />}
     </div>
   )
 }

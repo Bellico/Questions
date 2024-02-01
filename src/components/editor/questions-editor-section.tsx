@@ -4,7 +4,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Switch } from '@/components/ui/switch'
-import { useDebounce } from '@/hooks/utils'
+import { useDebounce } from '@/hooks/useDebounce'
 import { QuestionFormSchema, QuestionFormType, QuestionType } from '@/lib/schema'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { MDXEditorMethods } from '@mdxeditor/editor'
@@ -36,8 +36,6 @@ export function QuestionsEditorSection({
   const [updateQuestion, removeStoreResponse] = useQuestionsEditorContext(
     useShallow((s) => [s.updateQuestion, s.removeResponse]),
   )
-
-  console.log('render card', keyMap)
 
   const form = useForm<QuestionFormType>({
     resolver: zodResolver(QuestionFormSchema),

@@ -2,7 +2,7 @@ import { QuestionsEditorSection } from '@/components/editor/questions-editor-sec
 import { useQuestionsEditorContext } from '@/components/providers/questions-editor-provider'
 import { Accordion, AccordionContent, AccordionItem } from '@/components/ui/accordion'
 import { Button } from '@/components/ui/button'
-import { useAccordionState } from '@/hooks/useAccordionState'
+import { useAccordion } from '@/hooks/useAccordion'
 import { ChevronsDownUp, ChevronsUpDown } from 'lucide-react'
 import { useEffect, useState } from 'react'
 
@@ -13,15 +13,13 @@ export function QuestionsEditorAccordion() {
   const addNewQuestion = useQuestionsEditorContext(state => state.addQuestion)
   const removeQuestion = useQuestionsEditorContext(state => state.removeQuestion)
 
-  const [accordionState, toggleExpand, expandAll, collapseAll] = useAccordionState(questionsMap, lastQuestionAdded)
+  const [accordionState, toggleExpand, expandAll, collapseAll] = useAccordion(questionsMap, lastQuestionAdded)
 
   // Strange ! ->  https://nextjs.org/docs/messages/react-hydration-error
   const [isClient, setIsClient] = useState(false)
   useEffect(() => {
     setIsClient(true)
   }, [])
-
-  console.log('render list')
 
   let index = 1
   return (

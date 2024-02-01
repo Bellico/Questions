@@ -1,5 +1,6 @@
 import { auth } from '@/lib/auth'
 import prisma from '@/lib/prisma'
+import { randomNextOrder } from '@/lib/utils'
 
 export const getSessionUserId = async (): Promise<string> => {
   const session = await auth()
@@ -175,6 +176,31 @@ export const getNextQuestionToAnswer = async (roomId: string) => {
       }
     }
   })
+}
+
+export const computeNextQuestion = async (groupId: string, withRandom: boolean) => {
+  const allOrderQuetion = await prisma.question.findMany({
+    where: {
+      groupId: groupId
+    },
+    select:{
+      id: true,
+      order: true
+    },
+    orderBy:{
+      order: 'asc'
+    }
+  })
+
+  let questionId = allOrderQuetion[0].id
+
+  if(withRandom){
+    const orders = allOrderQuetion.map(o => o.order)
+    const firstOrderQuestion = randomNextOrder(orders, [])
+    questionId = allOrderQuetion.find(o => o.order === firstOrderQuestion)?.id!
+  }
+
+  return questionId
 }
 
 export const canPlayRoom = async (roomId: string, userId: string, shareLink?: string) => {

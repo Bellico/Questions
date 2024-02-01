@@ -1,6 +1,6 @@
 'use server'
 
-import { auth } from '@/lib/auth'
+import { getSessionUserId, isGroupOwner } from '@/actions/queries'
 import prisma from '@/lib/prisma'
 import { QuestionGroupSchema, QuestionGroupType } from '@/lib/schema'
 import { ActionResultType, ZparseOrError } from '@/lib/utils'
@@ -11,11 +11,7 @@ export const createQuestionGroup = async (data: QuestionGroupType): Promise<Acti
   const errors = ZparseOrError(QuestionGroupSchema, data)
   if (errors) return errors
 
-  const session = await auth()
-
-  if (!session) {
-    throw new Error('401 Unauthorized')
-  }
+  const userId = await getSessionUserId()
 
   try {
     const group = await prisma.questionGroup.create({
@@ -24,7 +20,7 @@ export const createQuestionGroup = async (data: QuestionGroupType): Promise<Acti
         creationDate: new Date(),
         updateDate: new Date(),
         version: 1,
-        authorId: session.user.id!,
+        authorId: userId,
         questions: {
           create: data.questions.map(q => {
             return {
@@ -61,22 +57,9 @@ export const createQuestionGroup = async (data: QuestionGroupType): Promise<Acti
 export const updateQuestionGroup = async (data: QuestionGroupType): Promise<ActionResultType<void>> => {
   const errors = ZparseOrError(QuestionGroupSchema, data)
   if (errors) return errors
-  const session = await auth()
 
-  if (!session) {
-    throw new Error('401 Unauthorized')
-  }
-
-  var isOwner = await prisma.questionGroup.count({
-    where: {
-      id: data.id!,
-      authorId: session.user.id!
-    }
-  })
-
-  if (isOwner == 0) {
-    throw new Error('403 Forbidden')
-  }
+  const userId = await getSessionUserId()
+  await isGroupOwner(data.id!, userId)
 
   try {
     await prisma.$transaction(async (tx) => {
@@ -194,22 +177,8 @@ export const deleteQuestionGroup = async (id: string): Promise<ActionResultType<
   const errors = ZparseOrError(z.string(), id)
   if (errors) return errors
 
-  const session = await auth()
-
-  if (!session) {
-    throw new Error('401 Unauthorized')
-  }
-
-  var isOwner = await prisma.questionGroup.count({
-    where: {
-      id: id,
-      authorId: session.user.id!
-    }
-  })
-
-  if (isOwner == 0) {
-    throw new Error('403 Forbidden')
-  }
+  const userId = await getSessionUserId()
+  await isGroupOwner(id, userId)
 
   try {
     await prisma.questionGroup.delete({
@@ -236,16 +205,13 @@ export const duplicateQuestionGroup = async (id: string): Promise<ActionResultTy
   const errors = ZparseOrError(z.string(), id)
   if (errors) return errors
 
-  const session = await auth()
-
-  if (!session) {
-    throw new Error('401 Unauthorized')
-  }
+  const userId = await getSessionUserId()
+  await isGroupOwner(id, userId)
 
   const source = await prisma.questionGroup.findUniqueOrThrow({
     where: {
       id: id,
-      authorId: session.user.id!,
+      authorId: userId,
     },
     select: {
       id: true,

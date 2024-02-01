@@ -1,4 +1,4 @@
-import { RoomFooter } from '@/components/dashboard-layout/footer'
+import { Loader } from '@/components/commons/loader'
 import { RoomHeader } from '@/components/dashboard-layout/header'
 import { Toaster } from '@/components/ui/toaster'
 import React from 'react'
@@ -14,8 +14,8 @@ export default async function RoomLayout({
       <main>
         {children}
       </main>
+      <Loader />
       <Toaster />
-      <RoomFooter />
     </>
   )
 }

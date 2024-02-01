@@ -1,3 +1,4 @@
+import { Loader } from '@/components/commons/loader'
 import { DashboardHeader } from '@/components/dashboard-layout/header'
 import { Toaster } from '@/components/ui/toaster'
 import { auth } from '@/lib/auth'
@@ -21,6 +22,7 @@ export default async function DashboardLayout({
       <main>
         {children}
       </main>
+      <Loader />
       <Toaster />
     </>
   )

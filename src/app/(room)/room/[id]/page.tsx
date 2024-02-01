@@ -13,9 +13,7 @@ export default async function SessionPage({
 params: { id: string, shareLink?: string }
 }) {
   const session = await auth()
-
   const room = await canPlayRoom(params.id, session?.user.id!, params.shareLink)
-  console.log(room)
   if(!room){
     redirect('/')
   }

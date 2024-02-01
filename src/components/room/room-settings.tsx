@@ -1,44 +1,32 @@
 'use client'
 
 import { startRoom } from '@/actions/room-actions'
-import { OverloadSpinner } from '@/components/commons/spinner'
 import { Button } from '@/components/ui/button'
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { Switch } from '@/components/ui/switch'
-import { useToast } from '@/components/ui/use-toast'
+import { useAction } from '@/hooks/useAction'
 import { RoomSettingsSchema, RoomSettingsType } from '@/lib/schema'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Play, Share } from 'lucide-react'
 import { redirect } from 'next/navigation'
-import { useTransition } from 'react'
 import { useForm } from 'react-hook-form'
 
 export function RoomSettings(settings: RoomSettingsType) {
-
   const form = useForm<RoomSettingsType>({
     resolver: zodResolver(RoomSettingsSchema),
     values: settings,
   })
 
   const { control, getValues } = form
-  const { toast } = useToast()
-  const [isPending, startTransition] = useTransition()
+
+  const requestAction = useAction()
 
   async function start(){
-    startTransition(async () => {
-      var result =  await startRoom(getValues())
-
-      if (result.success) {
-        redirect(`/room/${result.data}`)
-      }else{
-        toast({
-          variant: 'destructive',
-          title: 'Error for start room',
-          description: result.message + ' ' + JSON.stringify(result.errors),
-        })
-      }
-    })
+    requestAction(
+      () => startRoom(getValues()),
+      (data) => redirect(`/room/${data}`),
+    )
   }
 
   function share(){
@@ -186,7 +174,6 @@ export function RoomSettings(settings: RoomSettingsType) {
           <Button onClick={(e) => { e.preventDefault(); share()}} variant="secondary"><Share className="mr-2" />Get a share link</Button>
         </div>
       </form>
-      {isPending && <OverloadSpinner />}
     </Form>
   )
 }
