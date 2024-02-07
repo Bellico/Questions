@@ -10,17 +10,14 @@ export const HomeHero = () => (
             Welcome to your questions editor
           </h1>
           <p className="mx-auto max-w-[700px] text-gray-500 md:text-xl dark:text-gray-400">
-            Sign up to discover.
+            Create share learn, simply
           </p>
         </div>
         <div className="w-full max-w-sm space-y-2">
           <SubscribeForm />
 
           <p className="text-xs text-gray-500 dark:text-gray-400">
-            For more informations &nbsp;
-            <Link className="underline underline-offset-2" href="#">
-              See here.
-            </Link>
+            Sign up to discover.
           </p>
         </div>
       </div>

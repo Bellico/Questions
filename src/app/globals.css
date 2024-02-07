@@ -8,7 +8,7 @@
     --background: 210 20% 98%;
     --foreground: 204 16% 18%;
     --card: 210 9% 96%;
-    --card-foreground: 204 16% 18%;
+    --card-foreground: 0 0% 0%;
     --popover: 0 0% 100%;
     --popover-foreground: 0 0% 3.9%;
     --primary: 359 88% 37%;
@@ -71,13 +71,12 @@
 }
 
 .q-card {
-  transition-property: all;
-  transition-timing-function: cubic-bezier(.4, 0, .2, 1);
-  transition-duration: .15s;
+  transition: transform 0.2s ease
 }
 
 .q-card:hover {
   border-color: hsl(var(--foreground));
+  transform: scale(1.05);
 }
 
 .q-editor-markdown {
@@ -147,7 +146,6 @@
 }
 
 .q-editor-markdown {
-  background-color: hsl(var(--background));
   color: hsl(var(--foreground));
 }
 

@@ -41,8 +41,24 @@ export const RoomSettingsSchema = z.object({
   withResults: z.boolean(),
 })
 
+export const AnswerRoomSchema = z.object({
+  roomId: z.string(),
+  questionId: z.string(),
+  shareLink: z.string().optional(),
+  choices: z.array( z.string())
+})
+
+export type AnswerRoomReturnType = {
+  order: number,
+  questionId: string,
+  subject: string,
+  title: string | null,
+  responses: { id: string, text: string} []
+}
+
 export type ResponseType = z.infer<typeof ResponseSchema>
 export type QuestionType = z.infer<typeof QuestionSchema>
 export type QuestionGroupType = z.infer<typeof QuestionGroupSchema>
 export type QuestionFormType = z.infer<typeof QuestionFormSchema>
 export type RoomSettingsType = z.infer<typeof RoomSettingsSchema>
+export type AnswerRoomType = z.infer<typeof AnswerRoomSchema>

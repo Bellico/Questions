@@ -88,17 +88,28 @@ const config = {
           from: { height: 'var(--radix-accordion-content-height)' },
           to: { height: '0' },
         },
-        'zoomIn': {
-          from: { opacity: '0', 'transform': 'scale3d(0.3, 0.3, 0.3)' },
+        'fadeIn': {
+          '0%': { opacity: '0' },
           '100%': { opacity: '1' },
         },
+        'fadeOut': {
+          from: { opacity: '1' },
+          '100%': { opacity: '0' },
+        },
         'zoomInEditor': {
-          from: { translateY: '20', opacity: '0' },
-          to: { translateY: '0', opacity: '1'},
+          from: { transform: 'translateY(20px)', opacity: '0' },
+          to: { transform: 'translateY(0)', opacity: '1'},
         },
         'moveToLeft': {
           from: { 'transform': 'translateX(100%)' },
           to: { 'transform': 'translateX(0)' },
+        },
+        'scaleUp': {
+          from: { 'opacity': '0', 'transform' : 'scale(.8)'},
+        },
+        'zoomInEnd': {
+          from: { 'opacity': '0', 'transform' : 'scale3d(0.3, 0.3, 0.3)'},
+          '50%': { 'opacity': '1' },
         },
       },
       animation: {
@@ -106,9 +117,13 @@ const config = {
         'accordion-down': 'accordion-down 0.2s ease-out',
         'accordion-up': 'accordion-up 0.2s ease-out',
         'spinner': '0.75s linear 0s infinite normal both running spinner',
-        'zoomIn': 'zoomIn 0.2s ease-in-out',
+        'fadeIn': 'fadeIn 0.8s forwards ease-in-out',
+        'zoomOutRoom': 'fadeOut 0.8s ease-in-out',
+        'zoomInRoom': 'fadeIn 0.8s ease-in-out',
         'zoomInEditor': 'zoomInEditor 0.75s ease-in-out',
         'moveToLeft': 'moveToLeft .6s ease both',
+        'scaleUp': 'scaleUp .4s ease-out both',
+        'zoomInEnd': 'zoomInEnd .5s ease-out both',
       },
     },
   },
@@ -116,3 +131,4 @@ const config = {
 } satisfies Config
 
 export default config
+

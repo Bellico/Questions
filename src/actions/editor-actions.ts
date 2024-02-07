@@ -1,6 +1,6 @@
 'use server'
 
-import { getSessionUserId, isGroupOwner } from '@/actions/queries'
+import { getSessionUserIdOrThrow, isGroupOwnerOrThrow } from '@/actions/queries'
 import prisma from '@/lib/prisma'
 import { QuestionGroupSchema, QuestionGroupType } from '@/lib/schema'
 import { ActionResultType, ZparseOrError } from '@/lib/utils'
@@ -11,7 +11,7 @@ export const createQuestionGroup = async (data: QuestionGroupType): Promise<Acti
   const errors = ZparseOrError(QuestionGroupSchema, data)
   if (errors) return errors
 
-  const userId = await getSessionUserId()
+  const userId = await getSessionUserIdOrThrow()
 
   try {
     const group = await prisma.questionGroup.create({
@@ -58,8 +58,8 @@ export const updateQuestionGroup = async (data: QuestionGroupType): Promise<Acti
   const errors = ZparseOrError(QuestionGroupSchema, data)
   if (errors) return errors
 
-  const userId = await getSessionUserId()
-  await isGroupOwner(data.id!, userId)
+  const userId = await getSessionUserIdOrThrow()
+  await isGroupOwnerOrThrow(data.id!, userId)
 
   try {
     await prisma.$transaction(async (tx) => {
@@ -177,8 +177,8 @@ export const deleteQuestionGroup = async (id: string): Promise<ActionResultType<
   const errors = ZparseOrError(z.string(), id)
   if (errors) return errors
 
-  const userId = await getSessionUserId()
-  await isGroupOwner(id, userId)
+  const userId = await getSessionUserIdOrThrow()
+  await isGroupOwnerOrThrow(id, userId)
 
   try {
     await prisma.questionGroup.delete({
@@ -205,8 +205,8 @@ export const duplicateQuestionGroup = async (id: string): Promise<ActionResultTy
   const errors = ZparseOrError(z.string(), id)
   if (errors) return errors
 
-  const userId = await getSessionUserId()
-  await isGroupOwner(id, userId)
+  const userId = await getSessionUserIdOrThrow()
+  await isGroupOwnerOrThrow(id, userId)
 
   const source = await prisma.questionGroup.findUniqueOrThrow({
     where: {

@@ -14,7 +14,7 @@ import { useEffect, useRef } from 'react'
 import { useFieldArray, useForm } from 'react-hook-form'
 import { useShallow } from 'zustand/react/shallow'
 
-const QEditorMarkdown = dynamic(() => import('../../lib/initializedMDXEditor'), {
+const QEditorMarkdown = dynamic(() => import('../../lib/mdx-markdown-editor'), {
   ssr: false
 })
 
@@ -135,7 +135,7 @@ export function QuestionsEditorSection({
                       <FormMessage className="text-center" />
                       <Pencil className="absolute right-3 top-1/2 size-5 -translate-y-1/2" />
                       <Input
-                        className="mb-12 border-0 bg-transparent text-center text-xl font-medium hover:ring-1 hover:ring-secondary sm:py-7 sm:text-5xl"
+                        className="mb-12 border-0 bg-transparent text-center text-2xl font-medium hover:ring-1 hover:ring-secondary sm:py-7 sm:text-5xl"
                         placeholder={'Question ' + indexQuestion}
                         type="text"
                         {...field}
@@ -158,7 +158,7 @@ export function QuestionsEditorSection({
                       markdown={subject}
                       editorRef={qEditorMarkdownRef}
                       onChange={updateQuestionDebounced}
-                      placeholder="Write your next question here..." />
+                      placeholder="Write your question..." />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -179,8 +179,8 @@ export function QuestionsEditorSection({
                       <FormItem className={field.value ? 'good' : 'bad'}>
                         <FormControl>
                           <div className="mr-2 flex items-center space-x-2">
-                            <Switch id="isCorrect" checked={field.value} onCheckedChange={field.onChange} className='data-[state=checked]:bg-success' />
-                            <Label htmlFor="isCorrect">{field.value ? 'Good' : 'Bad'}</Label>
+                            <Switch id={'q-' + indexQuestion + 'r-' + index} checked={field.value} onCheckedChange={field.onChange} className='data-[state=checked]:bg-success' />
+                            <Label htmlFor={'q-' + indexQuestion + 'r-' + index}>{field.value ? 'Good' : 'Bad'}</Label>
                           </div>
                         </FormControl>
                         <FormMessage />

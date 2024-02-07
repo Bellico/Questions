@@ -13,7 +13,7 @@ export const BoardStats = async () => {
   }
 
   return (
-    <section className="animate-zoomInEditor bg-accent py-12 shadow-md">
+    <section className="animate-fadeIn bg-accent py-12 shadow-md">
       <div className="container">
 
         <h1 className="mb-12 text-center text-5xl font-extrabold">

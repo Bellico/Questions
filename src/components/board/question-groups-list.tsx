@@ -38,7 +38,7 @@ export async function QuestionGroupsList() {
   }
 
   return (
-    <section className="animate-zoomInEditor py-12">
+    <section className="animate-fadeIn py-12">
       <div className="container">
 
         <h1 className="mb-12 text-center text-5xl font-extrabold">
