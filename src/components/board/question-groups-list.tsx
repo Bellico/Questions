@@ -18,10 +18,10 @@ export async function QuestionGroupsList() {
 
   if (questionGroups.length == 0) {
     return (
-      <section className="py-12">
+      <section>
         <div className="container">
 
-          <h1 className="mb-12 text-center text-5xl font-extrabold">
+          <h1 className="title">
             Questions
           </h1>
 
@@ -38,10 +38,10 @@ export async function QuestionGroupsList() {
   }
 
   return (
-    <section className="animate-fadeIn py-12">
+    <section className="animate-fadeIn">
       <div className="container">
 
-        <h1 className="mb-12 text-center text-5xl font-extrabold">
+        <h1 className="title">
          Questions
         </h1>
 
@@ -60,9 +60,9 @@ export async function QuestionGroupsList() {
                 </div>
               </CardHeader>
               <CardContent>
-                <div className='text-sm'>{group._count.questions} questions</div>
-                <div className='text-sm'>10 try</div>
-                <div className='text-sm'>9 success</div>
+                <div className="text-sm">{group._count.questions} questions</div>
+                <div className="text-sm">10 try</div>
+                <div className="text-sm">9 success</div>
                 <div className="mt-4">
                   <Link href={`/start/${group.id}`}>
                     <Button className="mr-4">
@@ -90,10 +90,10 @@ export async function QuestionGroupsList() {
             </Card>
           ))}
 
-          <div className="rounded-lg border-2 border-dashed border-slate-700 hover:border-solid">
+          <div className="rounded-lg border-2 border-dashed border-gray-300 hover:border-solid dark:border-gray-700/65">
             <Link href="/editor">
               <div className="flex h-full items-center justify-center">
-                <Plus className="size-10" />
+                <Plus className="size-10 text-gray-400" />
               </div>
             </Link>
           </div>

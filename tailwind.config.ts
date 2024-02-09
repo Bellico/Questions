@@ -107,9 +107,13 @@ const config = {
         'scaleUp': {
           from: { 'opacity': '0', 'transform' : 'scale(.8)'},
         },
-        'zoomInEnd': {
+        'room-final': {
           from: { 'opacity': '0', 'transform' : 'scale3d(0.3, 0.3, 0.3)'},
           '50%': { 'opacity': '1' },
+        },
+        'room-progress': {
+          from: { 'width': '0'},
+          '100%': { 'width': '100%' },
         },
       },
       animation: {
@@ -123,7 +127,8 @@ const config = {
         'zoomInEditor': 'zoomInEditor 0.75s ease-in-out',
         'moveToLeft': 'moveToLeft .6s ease both',
         'scaleUp': 'scaleUp .4s ease-out both',
-        'zoomInEnd': 'zoomInEnd .5s ease-out both',
+        'room-final': 'room-final .5s ease-out both',
+        'room-progress': 'room-progress 0.8s forwards ease-in',
       },
     },
   },

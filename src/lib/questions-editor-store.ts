@@ -1,16 +1,16 @@
 import { QuestionType } from '@/lib/schema'
-import superjson from 'superjson' //  can use anything: serialize-javascript, devalue, etc.
+import superjson from 'superjson'
 import { v4 } from 'uuid'
 import { create } from 'zustand'
 import { PersistStorage, persist } from 'zustand/middleware'
 
-export type QuestionsEditorProps = {
+export type QuestionsEditorStateProps = {
     id: string | null,
     name: string,
     questionsMap: Map<string, QuestionType>,
 }
 
-export type QuestionsEditorState = QuestionsEditorProps & {
+export type QuestionsEditorState = QuestionsEditorStateProps & {
     lastQuestionAdded?: string,
     updateGroupName: (name: string) => void,
     addQuestion: () => void,
@@ -55,8 +55,8 @@ const storage: PersistStorage<QuestionsEditorState> = {
   removeItem: (name) => localStorage.removeItem(name),
 }
 
-export const createQuestionsEditorStore = (initProps?: Partial<QuestionsEditorProps>) => {
-  const DEFAULT_PROPS: QuestionsEditorProps = {
+export const createQuestionsEditorStore = (initProps?: Partial<QuestionsEditorStateProps>) => {
+  const DEFAULT_PROPS: QuestionsEditorStateProps = {
     id: null,
     name: '',
     questionsMap: createDefaultQuestionsMap()

@@ -1,8 +1,8 @@
+import { useRoomContext } from '@/components/providers/room-provider'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Form, FormControl, FormField, FormItem } from '@/components/ui/form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Loader2 } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 
@@ -17,13 +17,15 @@ const RoomResponsesSchema = z.object({
 })
 
 type RoomResponsesType = z.infer<typeof RoomResponsesSchema>
+
 type RoomResponsesProps = {
-  submitAnswerChoices: (choices: string[]) => Promise<void>
-} & RoomResponsesType
+  submitAnswerChoices: (choices: string[]) => void
+}
 
-export function RoomResponses({ responses, submitAnswerChoices }: RoomResponsesProps) {
+export function RoomResponses({submitAnswerChoices }: RoomResponsesProps) {
 
-  responses.forEach(r => r.isCorrect = false)
+  const currentQuestion = useRoomContext(state => state.currentQuestion)
+  const responses = currentQuestion.responses.map(r => ({...r, isCorrect : false}))
 
   const form = useForm<RoomResponsesType>({
     resolver: zodResolver(RoomResponsesSchema),
@@ -31,10 +33,10 @@ export function RoomResponses({ responses, submitAnswerChoices }: RoomResponsesP
     mode: 'onChange'
   })
 
-  const { control, formState: { isValid, isSubmitting}  } = form
+  const { control, formState: { isValid, isSubmitted}  } = form
 
-  async function onSubmit(data : RoomResponsesType) {
-    await submitAnswerChoices(
+  function onSubmit(data : RoomResponsesType) {
+    submitAnswerChoices(
       data.responses
         .filter(r => r.isCorrect)
         .map(r =>  r.id)
@@ -53,13 +55,13 @@ export function RoomResponses({ responses, submitAnswerChoices }: RoomResponsesP
                 control={control}
                 name={`responses.${index}.isCorrect`}
                 render={({ field }) => (
-                  <FormItem className='size-full'>
-                    <FormControl className='size-full'>
+                  <FormItem className="size-full">
+                    <FormControl className="size-full">
                       <div className="relative size-full">
                         <label className="flex size-full cursor-pointer items-center justify-start overflow-hidden pl-5" htmlFor={'qr-' + index}>
-                          <span className='md:w-[90%]'>{item.text}</span>
+                          <span className="md:w-[90%]">{item.text}</span>
                         </label>
-                        <Checkbox id={'qr-' + index} onCheckedChange={field.onChange} className='absolute right-5 top-2/4 mt-[-14px] size-7' />
+                        <Checkbox id={'qr-' + index} onCheckedChange={field.onChange} className="absolute right-5 top-2/4 mt-[-14px] size-7" />
                       </div>
                     </FormControl>
                   </FormItem>
@@ -70,8 +72,7 @@ export function RoomResponses({ responses, submitAnswerChoices }: RoomResponsesP
           ))}
         </div>
 
-        <Button className="m-auto block w-full sm:w-32" type="submit" disabled={!isValid || isSubmitting}>
-          {isSubmitting && <Loader2 className="-ml-1 mr-3 animate-spin" />}
+        <Button className="m-auto mt-4 block w-full sm:w-36" type="submit" disabled={!isValid || isSubmitted}>
             Submit
         </Button>
       </form>

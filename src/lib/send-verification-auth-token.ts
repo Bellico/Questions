@@ -1,4 +1,4 @@
-var html = `
+const html = `
 <html>
     <body style="font-family:'Montserrat',sans-serif;margin: 0;">
 

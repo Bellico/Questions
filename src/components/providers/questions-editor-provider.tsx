@@ -1,4 +1,4 @@
-import { QuestionsEditorProps, QuestionsEditorState, createQuestionsEditorStore } from '@/lib/questions-editor-store'
+import { QuestionsEditorState, QuestionsEditorStateProps, createQuestionsEditorStore } from '@/lib/questions-editor-store'
 import { QuestionGroupType } from '@/lib/schema'
 import { arrayToMap } from '@/lib/utils'
 import { PropsWithChildren, createContext, useContext, useRef } from 'react'
@@ -22,7 +22,7 @@ export function useQuestionsEditorPersist() {
 
 export function QuestionsEditorProvider({ value, children }: PropsWithChildren<{ value?: QuestionGroupType }>) {
   const storeRef = useRef<QuestionsEditorStore>()
-  let storeValue: QuestionsEditorProps | undefined = undefined
+  let storeValue: QuestionsEditorStateProps | undefined = undefined
 
   if (value) {
     storeValue = {

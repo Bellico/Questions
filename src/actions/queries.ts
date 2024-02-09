@@ -18,7 +18,7 @@ export const getSessionUserId = async (): Promise<string | undefined> => {
 }
 
 export const isGroupOwnerOrThrow = async (groupId: string, userId: string): Promise<boolean> => {
-  var isOwner = await prisma.questionGroup.count({
+  const isOwner = await prisma.questionGroup.count({
     where: {
       id: groupId,
       authorId: userId
@@ -182,7 +182,7 @@ export const getActiveRoom = async (groupId: string, userId: string) => {
 }
 
 export const getNextQuestionToAnswer = async (roomId: string) => {
-  var result = await prisma.answer.findFirst({
+  const result = await prisma.answer.findFirst({
     where: {
       roomId: roomId,
       dateEnd: null,
@@ -218,8 +218,43 @@ export const getNextQuestionToAnswer = async (roomId: string) => {
   return null
 }
 
+export const getProgressInfosRoom = async (roomId: string, groupId: string) => {
+  const questions = await prisma.question.findMany({
+    where: {
+      groupId: groupId
+    },
+    select: {
+      id: true,
+      title: true
+    },
+    orderBy:{
+      order: 'asc'
+    }
+  })
+
+  const answers = await prisma.answer.findMany({
+    where: {
+      roomId: roomId
+    },
+    select: {
+      questionId: true,
+      achievement: true,
+    }
+  })
+
+  const progress = questions.map((q, i) => {
+    const answer = answers.find(a => a.questionId == q.id)
+    return {
+      ...q,
+      title: q.title || `Question ${i + 1}`,
+      isSuccess : answer?.achievement === 100}
+  })
+
+  return progress
+}
+
 export const canAnswerQuestion = async (roomId: string, questionId: string, userId?: string, shareLink?: string) => {
-  var result = await prisma.answer.findFirstOrThrow({
+  const result = await prisma.answer.findFirstOrThrow({
     where: {
       questionId: questionId,
       dateEnd: null,
@@ -252,6 +287,7 @@ export const canAnswerQuestion = async (roomId: string, questionId: string, user
       question:{
         select: {
           id: true,
+          title: true,
           responses:{
             select:{
               id: true,
@@ -317,6 +353,9 @@ export const canPlayRoom = async (roomId: string, userId?: string, shareLink?: s
     where: {
       id: roomId,
       dateEnd: null,
+      groupId:{
+        not: null
+      },
       AND: [
         {
           OR: [

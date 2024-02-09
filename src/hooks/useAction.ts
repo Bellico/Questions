@@ -18,7 +18,7 @@ export function useAction() {
     successMessage?: string
   ){
     startTransition(async () => {
-      var result =  await action()
+      const result =  await action()
 
       if (result.success) {
         if(successMessage){

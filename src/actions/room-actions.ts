@@ -58,7 +58,7 @@ export const startRoom = async (data: RoomSettingsType): Promise<ActionResultTyp
   }
 }
 
-export const answerRoom = async (data: AnswerRoomType): Promise<ActionResultType<AnswerRoomReturnType | null>> => {
+export const answerRoom = async (data: AnswerRoomType): Promise<ActionResultType<AnswerRoomReturnType>> => {
   const errors = ZparseOrError(AnswerRoomSchema, data)
   if (errors) return errors
 
@@ -118,7 +118,14 @@ export const answerRoom = async (data: AnswerRoomType): Promise<ActionResultType
 
     return {
       success: true,
-      data: nextQuestion
+      data: {
+        next: nextQuestion,
+        result: {
+          id: currentAnswerContext.question?.id!,
+          title : currentAnswerContext.question?.title || `Question ${currentAnswerContext.order}`,
+          isSuccess : true
+        }
+      }
     }
   }
   catch (error: any) {

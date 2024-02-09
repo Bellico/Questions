@@ -31,7 +31,7 @@ export const RoomHeader = () => (
   <header className="border-b">
     <div className="container flex h-16 items-center px-8">
       <div className="mr-auto flex  flex-1 gap-2">
-        <Button variant="outline"><ArrowBigLeftDash className='mr-2' />Prev</Button>
+        <Button variant="outline"><ArrowBigLeftDash className="mr-2" />Prev</Button>
       </div>
       <div className="flex flex-auto items-center justify-center gap-2 text-sm font-bold">
         <LayoutDashboardIcon className="size-6" />

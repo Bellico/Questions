@@ -26,14 +26,14 @@ params: { id: string }
   const lastSettings = await getLastSettingsRoom(group.id, session.user.id!)
 
   return (
-    <section className="animate-moveToLeft py-12">
+    <section className="animate-moveToLeft">
       <div className="container">
 
-        <h1 className="my-12 text-center text-4xl font-extrabold md:text-5xl lg:text-6xl">
+        <h1 className="title">
           {group.name}
         </h1>
 
-        <p className="my-12 text-center text-3xl font-bold text-gray-500 dark:text-gray-400">
+        <p className="mb-6 text-center text-3xl font-bold text-gray-500 lg:mb-12 dark:text-gray-400">
           {group._count.questions} questions
         </p>
 

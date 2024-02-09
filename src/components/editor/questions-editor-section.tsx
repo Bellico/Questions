@@ -118,7 +118,7 @@ export function QuestionsEditorSection({
   }
 
   return (
-    <section className="min-h-[calc(100vh-75px)] bg-gray-100 py-12 dark:bg-accent">
+    <section className="min-h-[calc(100vh-75px)] bg-gray-100 dark:bg-accent">
       <div className="container">
 
         <Form {...form}>
@@ -179,7 +179,7 @@ export function QuestionsEditorSection({
                       <FormItem className={field.value ? 'good' : 'bad'}>
                         <FormControl>
                           <div className="mr-2 flex items-center space-x-2">
-                            <Switch id={'q-' + indexQuestion + 'r-' + index} checked={field.value} onCheckedChange={field.onChange} className='data-[state=checked]:bg-success' />
+                            <Switch id={'q-' + indexQuestion + 'r-' + index} checked={field.value} onCheckedChange={field.onChange} className="data-[state=checked]:bg-success" />
                             <Label htmlFor={'q-' + indexQuestion + 'r-' + index}>{field.value ? 'Good' : 'Bad'}</Label>
                           </div>
                         </FormControl>

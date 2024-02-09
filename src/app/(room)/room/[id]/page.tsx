@@ -1,5 +1,5 @@
-import { canPlayRoom, getNextQuestionToAnswer } from '@/actions/queries'
-import { RoomDisplayVertical } from '@/components/room/room-display'
+import { canPlayRoom, getNextQuestionToAnswer, getProgressInfosRoom } from '@/actions/queries'
+import { Room } from '@/components/room/room'
 import { auth } from '@/lib/auth'
 import { redirect } from 'next/navigation'
 
@@ -10,7 +10,7 @@ params: { id: string, shareLink?: string }
 }) {
   const session = await auth()
 
-  const room = await canPlayRoom(params.id, session?.user.id!, params.shareLink)
+  const room = await canPlayRoom(params.id, session?.user.id, params.shareLink)
   if(!room){
     redirect('/')
   }
@@ -20,9 +20,9 @@ params: { id: string, shareLink?: string }
     redirect(`/results/${room.id}`)
   }
 
+  const progress = await getProgressInfosRoom(room.id, room.groupId!)
+
   return (
-    room.display === 'Vertical' ?
-      <RoomDisplayVertical roomId={room.id} currentQuestion={nextQuestion} /> :
-      null
+    <Room roomId={room.id} currentQuestion={nextQuestion} progress={progress} />
   )
 }

@@ -13,10 +13,10 @@ export const BoardStats = async () => {
   }
 
   return (
-    <section className="animate-fadeIn bg-accent py-12 shadow-md">
+    <section className="hidden animate-fadeIn bg-accent shadow-md lg:block">
       <div className="container">
 
-        <h1 className="mb-12 text-center text-5xl font-extrabold">
+        <h1 className="title">
           Board stats
         </h1>
 

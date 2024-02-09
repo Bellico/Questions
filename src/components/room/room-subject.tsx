@@ -1,3 +1,4 @@
+import { useRoomContext } from '@/components/providers/room-provider'
 import { cn } from '@/lib/utils'
 import { MDXEditorMethods } from '@mdxeditor/editor'
 import dynamic from 'next/dynamic'
@@ -7,22 +8,23 @@ const QReaderMarkdown = dynamic(() => import('../../lib/mdx-markdown-reader'), {
   ssr: false
 })
 
-export function RoomSubject({ title, subject, order} : { title : string | null, subject : string, order: number}) {
+export function RoomSubject() {
+  const currentQuestion = useRoomContext(state => state.currentQuestion)
 
   const qEditorMarkdownRef = useRef<MDXEditorMethods>(null)
-  const shouldCenterSubject = !subject.includes('\n')
+  const shouldCenterSubject = !currentQuestion.subject.includes('\n')
 
   useEffect(() => {
-    qEditorMarkdownRef.current?.setMarkdown(subject)
-  },[subject])
+    qEditorMarkdownRef.current?.setMarkdown(currentQuestion.subject)
+  },[currentQuestion.subject])
 
   return(
     <>
-      {title && <h1 className="text-center text-2xl font-medium sm:text-5xl">{title}</h1>}
-      {!title && <h1 className="text-center text-2xl font-medium sm:text-5xl">Question {order}</h1>}
+      {currentQuestion.title && <h1 className="title">{currentQuestion.title}</h1>}
+      {!currentQuestion.title && <h1 className="title">Question {currentQuestion.order}</h1>}
 
-      <div className={cn('m-5',{ 'text-center': shouldCenterSubject})}>
-        <QReaderMarkdown editorRef={qEditorMarkdownRef} markdown={subject}  />
+      <div className={cn({'text-center': shouldCenterSubject})}>
+        <QReaderMarkdown editorRef={qEditorMarkdownRef} markdown={currentQuestion.subject}  />
       </div>
     </>
   )

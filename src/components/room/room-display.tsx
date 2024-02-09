@@ -1,83 +1,33 @@
-'use client'
-
-import { answerRoom } from '@/actions/room-actions'
 import { Spinner } from '@/components/commons/spinner'
+import { useRoomContext } from '@/components/providers/room-provider'
 import { RoomCompleted } from '@/components/room/room-completed'
 import { RoomProgress } from '@/components/room/room-progress'
 import { RoomResponses } from '@/components/room/room-responses'
 import { RoomSubject } from '@/components/room/room-subject'
-import { AnswerRoomReturnType } from '@/lib/schema'
-import { useEffect, useRef, useState, useTransition } from 'react'
+import { useRoomFader } from '@/hooks/useRoomFader'
 
-type RoomDisPlayProps = {
-  roomId: string
-  currentQuestion: AnswerRoomReturnType
-}
+export function RoomDisplay() {
 
-export function RoomDisplayVertical({roomId, currentQuestion}: RoomDisPlayProps) {
-
-  const valueState = { ...currentQuestion, animation : 'animate-scaleUp'}
-  const [state, setState] = useState(valueState)
-  const [isCompleted, setIsCompleted] = useState(false)
-  const nextQRef = useRef<AnswerRoomReturnType | null>(null)
-  const [isPending, startTransition] = useTransition()
-  const animation = state.animation
-
-  useEffect(()=> {
-    if(!nextQRef.current) return
-
-    const time = setTimeout(() => {
-      setState({...nextQRef.current!, animation: 'animate-zoomInRoom'})
-      nextQRef.current = null
-    }, 700)
-
-    return () => {
-      clearTimeout(time)
-    }
-  }, [animation])
-
-  async function onValidAnswerChoices(choices: string[]){
-    startTransition(async () => {
-      const result = await answerRoom({
-        roomId: roomId,
-        questionId: state.questionId,
-        choices
-      })
-
-      if(result.data){
-        nextQRef.current = result.data
-        setState(s => ({...s, animation: 'animate-zoomOutRoom'}))
-      }
-      else{
-        nextQRef.current = null
-        setIsCompleted(true)
-      }
-    })
-  }
+  const isCompleted = useRoomContext(state => state.isCompleted)
+  const { isPending, animation, validAnswerChoices} = useRoomFader()
 
   if(isCompleted){
-    return (
-      <RoomCompleted />
-    )
+    return <RoomCompleted />
   }
 
   return (
-    <div className="relative min-h-[calc(100vh-65px)] w-full py-12 lg:py-24">
-      <div className="container">
+    <section className="relative min-h-[calc(100vh-65px)] w-full lg:py-24">
+      <div className="container mb-12">
 
-        <div className={state.animation}>
-          <section>
-            <RoomSubject title={state.title} subject={state.subject} order={state.order} />
-          </section>
-          <section>
-            <RoomResponses responses={state.responses} submitAnswerChoices={onValidAnswerChoices} />
-          </section>
-          {isPending && <Spinner />}
+        <div className={animation}>
+          <RoomSubject />
+          <RoomResponses submitAnswerChoices={validAnswerChoices} />
+          {isPending && <Spinner className="mt-8" />}
         </div>
 
       </div>
       <RoomProgress />
-    </div>
+    </section>
   )
 }
 

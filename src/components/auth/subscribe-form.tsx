@@ -27,7 +27,7 @@ export default function SubscribeForm() {
   } = form
 
   const signWithEmail = async (data: SignInSchemaType) => {
-    var response = await signIn('email', { email: data.email, redirect: false })
+    const response = await signIn('email', { email: data.email, redirect: false })
     if (!response?.ok) {
       setError('root.serverError', { type: 'custom', message: 'Error to send mail' })
     }

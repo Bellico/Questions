@@ -169,7 +169,7 @@ export function RoomSettings(settings: RoomSettingsType) {
           )}
         />
 
-        <div className='space-x-4 text-center'>
+        <div className="space-x-4 text-center">
           <Button onClick={(e) => { e.preventDefault(); start()}}><Play className="mr-2" />Start now</Button>
           <Button onClick={(e) => { e.preventDefault(); share()}} variant="secondary"><Share className="mr-2" />Get a share link</Button>
         </div>

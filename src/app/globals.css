@@ -68,20 +68,22 @@
   .page-spinner {
     @apply w-[200px] h-[200px] border-[10px]
   }
-}
 
-.q-card {
-  transition: transform 0.2s ease
-}
+  .q-card{
+    @apply transition-transform lg:hover:scale-105 hover:border-foreground
+  }
 
-.q-card:hover {
-  border-color: hsl(var(--foreground));
-  transform: scale(1.05);
+  section{
+    @apply py-6 lg:py-12
+  }
+
+  h1.title{
+    @apply mb-6 lg:mb-12 text-center text-4xl lg:text-5xl font-extrabold
+  }
 }
 
 .q-editor-markdown {
   font-family: '__Inter_e66fe9', '__Inter_Fallback_e66fe9';
-  font-size: 0.90rem;
 }
 
 .q-editor-markdown h1 {

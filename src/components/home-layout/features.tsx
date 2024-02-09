@@ -1,7 +1,7 @@
 import { FlagIcon } from 'lucide-react'
 
 export const HomeFeatures = () => (
-  <section className="w-full bg-gray-100 py-12 md:py-24 lg:py-32 xl:py-48">
+  <section className="w-full bg-gray-100 md:py-24 lg:py-32 xl:py-48">
     <div className="container px-4 md:px-6">
       <h2 className="mb-12 text-center text-2xl font-bold tracking-tighter sm:text-3xl md:text-4xl lg:text-5xl">
         Our Features

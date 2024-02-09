@@ -37,8 +37,9 @@ export const RoomSettingsSchema = z.object({
   mode: z.nativeEnum(RoomMode),
   withTimer: z.boolean(),
   withRandom: z.boolean(),
-  withCorrection: z.boolean(),
+  withCorrection: z.boolean(), // => Training
   withResults: z.boolean(),
+  // progress
 })
 
 export const AnswerRoomSchema = z.object({
@@ -48,7 +49,14 @@ export const AnswerRoomSchema = z.object({
   choices: z.array( z.string())
 })
 
-export type AnswerRoomReturnType = {
+export type ResponseType = z.infer<typeof ResponseSchema>
+export type QuestionType = z.infer<typeof QuestionSchema>
+export type QuestionGroupType = z.infer<typeof QuestionGroupSchema>
+export type QuestionFormType = z.infer<typeof QuestionFormSchema>
+export type RoomSettingsType = z.infer<typeof RoomSettingsSchema>
+export type AnswerRoomType = z.infer<typeof AnswerRoomSchema>
+
+export type RoomQuestionType = {
   order: number,
   questionId: string,
   subject: string,
@@ -56,9 +64,13 @@ export type AnswerRoomReturnType = {
   responses: { id: string, text: string} []
 }
 
-export type ResponseType = z.infer<typeof ResponseSchema>
-export type QuestionType = z.infer<typeof QuestionSchema>
-export type QuestionGroupType = z.infer<typeof QuestionGroupSchema>
-export type QuestionFormType = z.infer<typeof QuestionFormSchema>
-export type RoomSettingsType = z.infer<typeof RoomSettingsSchema>
-export type AnswerRoomType = z.infer<typeof AnswerRoomSchema>
+export type RoomQuestionResultType = {
+  id: string,
+  title: string,
+  isSuccess: boolean
+}
+
+export type AnswerRoomReturnType = {
+  next: RoomQuestionType | null,
+  result: RoomQuestionResultType
+}

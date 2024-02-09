@@ -1,8 +1,8 @@
 import { cn } from '@/lib/utils'
 
-export const Spinner = () => {
+export const Spinner = ({ className } : { className? : string}) => {
   return (
-    <div className="flex items-center justify-center">
+    <div className={cn(className, 'flex items-center justify-center')}>
       <span className="spinner"></span>
     </div>
   )
@@ -10,10 +10,10 @@ export const Spinner = () => {
 
 export const SectionSpinner = ({ title, className}: { title?: string, className?: string }) => {
   return (
-    <section className={cn('py-12', className)}>
+    <section className={cn(className)}>
       <div className="container">
         {title && (
-          <h1 className="mb-12 text-center text-5xl font-extrabold">
+          <h1 className="title">
             {title}
           </h1>
         )}
