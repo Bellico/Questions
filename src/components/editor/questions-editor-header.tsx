@@ -28,7 +28,7 @@ export function QuestionsEditorHeader() {
   }), 300)
 
   return (
-    <form onChange={() => updateNameDebounced()}>
+    <form id="form-editor-subject" onChange={() => updateNameDebounced()}>
       <label className="relative m-8 mx-auto block xl:w-9/12">
         <Pencil className="absolute right-3 top-1/2 size-5 -translate-y-1/2" />
         <Input

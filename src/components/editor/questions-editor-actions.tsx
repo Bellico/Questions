@@ -53,7 +53,7 @@ export function QuestionsEditorActions({ useDraft, saveGroupAction }: QuestionsE
   return (
     <div className="my-12 flex justify-center">
       {questionsMap.size > 0 &&
-                <form action={onSubmitEditor}>
+                <form id="form-save-editor" action={onSubmitEditor}>
                   <Button className="mr-2"><ArrowDownToLine className="mr-2 size-4" />Save</Button>
                 </form>}
 

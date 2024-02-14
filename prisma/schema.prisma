@@ -86,13 +86,13 @@ model Response {
   questionId   String
   question     Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
   isCorrect    Boolean
-  answers      Answer[]
+  choices      Choices[]
 }
 
 model Room {
   id                String   @id @default(cuid())
-  groupId           String?
-  group             QuestionGroup? @relation(fields: [groupId], references: [id])
+  groupId           String
+  group             QuestionGroup @relation(fields: [groupId], references: [id])
   userId            String
   user              User @relation(fields: [userId], references: [id])
   shareLink         String?
@@ -102,6 +102,7 @@ model Room {
   withRandom        Boolean
   withCorrection    Boolean
   withResults       Boolean
+  withProgress      Boolean
   dateStart         DateTime?
   dateEnd           DateTime?
   answers           Answer[]
@@ -111,14 +112,22 @@ model Answer {
   id               String   @id @default(cuid())
   roomId           String
   room             Room @relation(fields: [roomId], references: [id])
-  responseId       String?
-  response         Response? @relation(fields: [responseId], references: [id])
   questionId       String?
   question         Question? @relation(fields: [questionId], references: [id])
   dateStart        DateTime
   dateEnd          DateTime?
   order            Int
   achievement      Int?
+  choices          Choices[]
+}
+
+model Choices{
+  answerId        String
+  answer          Answer @relation(fields: [answerId], references: [id])
+  responseId      String
+  response        Response @relation(fields: [responseId], references: [id], onDelete: Cascade)
+
+  @@id([answerId, responseId])
 }
 
 enum RoomDisplay {

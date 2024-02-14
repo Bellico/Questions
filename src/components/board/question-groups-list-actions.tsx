@@ -19,6 +19,7 @@ export function QuestionGroupsListActions({ groupId }: QuestionsTableProps) {
     requestAction(
       () => deleteQuestionGroup(groupId),
       () => {},
+      'Group deleted'
     )
   }
 

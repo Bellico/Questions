@@ -168,7 +168,7 @@ export function QuestionsEditorSection({
             {/* Responses */}
             {responseFields.map((item, index) => (
               <div key={index} className="w-full space-y-2">
-                <FormLabel>Response {index + 1}</FormLabel>
+                <FormLabel htmlFor={'qtext-' + indexQuestion + 'r-' + index}>Response {index + 1}</FormLabel>
                 <div className="flex items-center rounded-xl border p-2 has-[.bad]:bg-destructive/5 has-[.good]:bg-success/5">
 
                   <FormField
@@ -179,7 +179,7 @@ export function QuestionsEditorSection({
                       <FormItem className={field.value ? 'good' : 'bad'}>
                         <FormControl>
                           <div className="mr-2 flex items-center space-x-2">
-                            <Switch id={'q-' + indexQuestion + 'r-' + index} checked={field.value} onCheckedChange={field.onChange} className="data-[state=checked]:bg-success" />
+                            <Switch id={'q-' + indexQuestion + 'r-' + index} checked={field.value} onCheckedChange={field.onChange} className="data-[state=checked]:bg-success" name="isChecked" />
                             <Label htmlFor={'q-' + indexQuestion + 'r-' + index}>{field.value ? 'Good' : 'Bad'}</Label>
                           </div>
                         </FormControl>
@@ -194,7 +194,7 @@ export function QuestionsEditorSection({
                     render={({ field }) => (
                       <FormItem className="w-full">
                         <FormControl>
-                          <Input placeholder="Your next answer..." {...field} />
+                          <Input id={'qtext-' + indexQuestion + 'r-' + index} placeholder="Your next answer..." {...field} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>

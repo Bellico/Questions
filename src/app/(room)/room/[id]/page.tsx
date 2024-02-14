@@ -15,9 +15,9 @@ params: { id: string, shareLink?: string }
     redirect('/')
   }
 
-  const nextQuestion = await getNextQuestionToAnswer(room.id)!
+  const nextQuestion = await getNextQuestionToAnswer(room.id)
   if(!nextQuestion){
-    redirect(`/results/${room.id}`)
+    redirect('/')
   }
 
   const progress = await getProgressInfosRoom(room.id, room.groupId!)

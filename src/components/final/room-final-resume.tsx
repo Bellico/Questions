@@ -1,5 +1,5 @@
 
-export function RoomCompletedResults() {
+export function RoomFinalResume() {
   return(
     <section className="h-screen bg-slate-500">
 

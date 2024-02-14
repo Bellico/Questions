@@ -37,9 +37,9 @@ export const RoomSettingsSchema = z.object({
   mode: z.nativeEnum(RoomMode),
   withTimer: z.boolean(),
   withRandom: z.boolean(),
-  withCorrection: z.boolean(), // => Training
+  withCorrection: z.boolean(), // => Training ?
   withResults: z.boolean(),
-  // progress
+  withProgress: z.boolean()
 })
 
 export const AnswerRoomSchema = z.object({

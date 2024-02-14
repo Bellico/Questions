@@ -70,7 +70,7 @@
   }
 
   .q-card{
-    @apply transition-transform lg:hover:scale-105 hover:border-foreground
+    @apply transition-transform lg:hover:scale-105
   }
 
   section{
@@ -80,10 +80,10 @@
   h1.title{
     @apply mb-6 lg:mb-12 text-center text-4xl lg:text-5xl font-extrabold
   }
-}
 
-.q-editor-markdown {
-  font-family: '__Inter_e66fe9', '__Inter_Fallback_e66fe9';
+  .text-second{
+    @apply text-gray-500 dark:text-gray-400 font-medium
+  }
 }
 
 .q-editor-markdown h1 {
@@ -161,4 +161,8 @@
 }
 ._popupContainer_11eqz_1170:has(div) {
   display: block
+}
+
+.progress-room{
+  background: repeating-linear-gradient( -45deg, hsl(var(--primary) / 0.1), hsl(var(--primary) / 0.1) 15px,  hsl(var(--accent)) 50px,  hsl(var(--accent)) 80px);
 }

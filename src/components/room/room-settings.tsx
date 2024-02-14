@@ -35,7 +35,7 @@ export function RoomSettings(settings: RoomSettingsType) {
 
   return(
     <Form {...form}>
-      <form className="m-auto space-y-6 lg:w-2/3">
+      <form id="form-room-settings" className="m-auto space-y-6 lg:w-2/3">
 
         <FormField
           control={control}
@@ -161,6 +161,22 @@ export function RoomSettings(settings: RoomSettingsType) {
               <div className="space-y-0.5">
                 <FormLabel className="text-base">Show results</FormLabel>
                 <FormDescription>Final results will be displayed at the end.</FormDescription>
+              </div>
+              <FormControl>
+                <Switch checked={field.value} onCheckedChange={field.onChange} />
+              </FormControl>
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="withProgress"
+          render={({ field }) => (
+            <FormItem className="flex flex-row items-center justify-between rounded-lg border bg-background p-4">
+              <div className="space-y-0.5">
+                <FormLabel className="text-base">Progress bar</FormLabel>
+                <FormDescription>Show a progress bar to see progress.</FormDescription>
               </div>
               <FormControl>
                 <Switch checked={field.value} onCheckedChange={field.onChange} />

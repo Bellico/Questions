@@ -28,6 +28,7 @@ export const startRoom = async (data: RoomSettingsType): Promise<ActionResultTyp
           withResults: data.withResults,
           withCorrection: data.withCorrection,
           withRandom: data.withRandom,
+          withProgress: data.withProgress
         }
       })
 
@@ -63,11 +64,18 @@ export const answerRoom = async (data: AnswerRoomType): Promise<ActionResultType
   if (errors) return errors
 
   const userId = await getSessionUserId()
-  const currentAnswerContext = await canAnswerQuestion(data.roomId, data.questionId, userId, data.shareLink )
+  const currentAnswerContext = await canAnswerQuestion(data.roomId, data.questionId, userId, data.shareLink)
 
   if (!currentAnswerContext) {
     throw new Error('403 Forbidden')
   }
+
+  const goodResponsesCount = currentAnswerContext.question?.responses
+    .map(r => r.id)
+    .filter(rId => data.choices.includes(rId))
+    .length!
+
+  const achievement = (goodResponsesCount * 100) / currentAnswerContext.question?.responses.length!
 
   try {
     await prisma.$transaction(async (tx) => {
@@ -77,10 +85,12 @@ export const answerRoom = async (data: AnswerRoomType): Promise<ActionResultType
           id: currentAnswerContext.id
         },
         data: {
-          achievement: 100,
+          achievement,
           dateEnd: new Date(),
-          //responseId: '0',
-        },
+          choices: {
+            create: data.choices.map(rId => ({ responseId: rId}))
+          }
+        }
       })
 
       const answeredQuestionIds = await getAnsweredQuestionIdsInRoom(data.roomId)
@@ -111,8 +121,6 @@ export const answerRoom = async (data: AnswerRoomType): Promise<ActionResultType
       }
 
     })
-
-    // revalidatePath(`/room/${data.roomId}`)
 
     const nextQuestion = await getNextQuestionToAnswer(data.roomId)
 

@@ -32,7 +32,7 @@ export function useRoomFader() {
 
     const time = setTimeout(() => {
       showFinal()
-    }, 750)
+    }, 800)
 
     return () => {
       clearTimeout(time)

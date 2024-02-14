@@ -1,18 +1,20 @@
 import { Spinner } from '@/components/commons/spinner'
 import { useRoomContext } from '@/components/providers/room-provider'
-import { RoomCompleted } from '@/components/room/room-completed'
 import { RoomProgress } from '@/components/room/room-progress'
 import { RoomResponses } from '@/components/room/room-responses'
 import { RoomSubject } from '@/components/room/room-subject'
 import { useRoomFader } from '@/hooks/useRoomFader'
+import { redirect, useRouter } from 'next/navigation'
 
 export function RoomDisplay() {
-
+  const roomId = useRoomContext(state => state.roomId)
   const isCompleted = useRoomContext(state => state.isCompleted)
+
   const { isPending, animation, validAnswerChoices} = useRoomFader()
+  const router = useRouter()
 
   if(isCompleted){
-    return <RoomCompleted />
+    redirect(`/final/${roomId}`)
   }
 
   return (

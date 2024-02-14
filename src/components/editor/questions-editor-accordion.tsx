@@ -32,7 +32,7 @@ export function QuestionsEditorAccordion() {
               <div className="container flex items-center">
                 <div>
                   <span className="mr-1">Question {index}</span>
-                  <span className="text-xs text-gray-500 dark:text-gray-400"> - {value.responses.length} response(s)</span>
+                  <span className="text-second text-xs"> - {value.responses.length} response(s)</span>
                 </div>
                 {isClient &&
                   <div className="flex-1 text-right">

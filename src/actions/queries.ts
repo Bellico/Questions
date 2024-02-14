@@ -127,7 +127,8 @@ export const getLastSettingsRoom = async (groupId: string, userId: string) => {
       withTimer: true,
       withRandom: true,
       withCorrection: true,
-      withResults: true
+      withResults: true,
+      withProgress: true
     }
   })
 
@@ -146,7 +147,8 @@ export const getLastSettingsRoom = async (groupId: string, userId: string) => {
         withTimer: true,
         withRandom: true,
         withCorrection: true,
-        withResults: true
+        withResults: true,
+        withProgress: true
       }
     })
   }
@@ -160,6 +162,7 @@ export const getLastSettingsRoom = async (groupId: string, userId: string) => {
     withRandom: false,
     withCorrection: false,
     withResults: false,
+    withProgress: false,
   }
 
   return {...settings, groupId}
@@ -289,9 +292,11 @@ export const canAnswerQuestion = async (roomId: string, questionId: string, user
           id: true,
           title: true,
           responses:{
+            where:{
+              isCorrect: true
+            },
             select:{
               id: true,
-              isCorrect: true
             }
           }
         }
@@ -353,9 +358,6 @@ export const canPlayRoom = async (roomId: string, userId?: string, shareLink?: s
     where: {
       id: roomId,
       dateEnd: null,
-      groupId:{
-        not: null
-      },
       AND: [
         {
           OR: [
@@ -376,4 +378,51 @@ export const canPlayRoom = async (roomId: string, userId?: string, shareLink?: s
       withRandom: true,
     }
   })
+}
+
+export const canViewRoom = async (roomId: string, userId?: string, shareLink?: string) => {
+  return await prisma.room.findFirstOrThrow({
+    where: {
+      id: roomId,
+      dateEnd: {
+        not: null
+      },
+      AND: [
+        {
+          OR: [
+            {
+              userId: userId,
+            },
+            {
+              shareLink: shareLink,
+            },
+          ],
+        },
+      ]
+    },
+    select: {
+      id: true
+    }
+  })
+}
+
+
+export const getRoomFinalStats = async (roomId: string) => {
+  const results = await prisma.answer.findMany({
+    where:{
+      roomId: roomId,
+    },
+    select:{
+      achievement: true
+    }
+  })
+
+  const success = results.filter(r => r.achievement === 100).length
+
+  return {
+    success,
+    count : results.length,
+    score: (success * 100 ) / results.length,
+    failed: results.filter(r => r.achievement! < 100).length,
+  }
 }

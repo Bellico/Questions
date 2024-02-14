@@ -45,11 +45,11 @@ export function RoomResponses({submitAnswerChoices }: RoomResponsesProps) {
 
   return(
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)}>
+      <form id="form-room-responses" onSubmit={form.handleSubmit(onSubmit)}>
 
         <div className="my-5 grid gap-4 md:grid-cols-2 md:gap-8">
           {responses.map((item, index) => (
-            <div key={item.id} className="h-24 rounded-xl border bg-accent transition-colors hover:bg-primary/5">
+            <div key={item.id} className="h-24 rounded-xl border bg-accent shadow-sm transition-colors hover:bg-primary/5 has-[input:checked]:bg-primary/5">
 
               <FormField
                 control={control}
@@ -72,7 +72,7 @@ export function RoomResponses({submitAnswerChoices }: RoomResponsesProps) {
           ))}
         </div>
 
-        <Button className="m-auto mt-4 block w-full sm:w-36" type="submit" disabled={!isValid || isSubmitted}>
+        <Button className="m-auto mt-4 block h-12 w-full sm:h-10 sm:w-36" type="submit" disabled={!isValid || isSubmitted}>
             Submit
         </Button>
       </form>

@@ -35,7 +35,7 @@ export default function SubscribeForm() {
 
   return (
     <>
-      <form noValidate className="flex space-x-2" onSubmit={handleSubmit(signWithEmail)}>
+      <form id="form-subscribe" noValidate className="flex space-x-2" onSubmit={handleSubmit(signWithEmail)}>
         <Input placeholder="Enter your email" type="email" {...register('email')} />
         <Button type="submit" disabled={isSubmitting} >
           {isSubmitting && <Loader2 className="-ml-1 mr-3 animate-spin" />}

@@ -30,7 +30,7 @@ export const BoardStats = async () => {
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold text-primary">{groupCount}</div>
-              {/* <p className="text-xs text-gray-500 dark:text-gray-400">+10.1% from last month</p> */}
+              <p className="text-second text-xs">+10.1% from last month</p>
             </CardContent>
           </Card>
           <Card>

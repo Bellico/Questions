@@ -25,9 +25,9 @@ export async function QuestionGroupsList() {
             Questions
           </h1>
 
-          <div className="h-16 rounded-lg border-2 border-dashed border-slate-700 hover:border-solid">
+          <div className="h-16 rounded-lg border-2 border-dashed border-gray-300 hover:border-solid dark:border-gray-700/65">
             <Link href="/editor">
-              <div className="flex h-full items-center justify-center text-sm text-gray-500 hover:underline dark:text-gray-400">
+              <div className="flex h-full items-center justify-center text-sm text-gray-400">
                 Add your first group of questions
               </div>
             </Link>
@@ -50,20 +50,23 @@ export async function QuestionGroupsList() {
         <div className="my-5 grid gap-4 md:grid-cols-2 lg:grid-cols-4">
           {questionGroups.map((group) => (
             <Card className="q-card" key={group.id}>
-              <CardHeader className="flex flex-row items-center text-xl font-bold">
+              <CardHeader className="flex flex-row items-center pb-2 text-lg  font-bold">
                 <div>
                   <Group className="mr-2 size-8" />
                 </div>
                 <div>
                   {group.name}
-                  <span className="text-xs">(v{group.version})</span>
+                  <span className="ml-1 text-xs">(v{group.version})</span>
                 </div>
               </CardHeader>
               <CardContent>
-                <div className="text-sm">{group._count.questions} questions</div>
-                <div className="text-sm">10 try</div>
-                <div className="text-sm">9 success</div>
-                <div className="mt-4">
+                <div className='mb-4'>
+                  <div className="text-sm">Questions: <span className="text-second">{group._count.questions}</span></div>
+                  {/* <div className="text-sm">Success: <span className="text-second">1/2</span></div> */}
+                  {/* <div className="text-sm">Pay number: <span className="text-second">1</span></div> */}
+                  {/* <div className="text-sm">Last pratice: <span className="text-second">21/23/1223</span></div> */}
+                </div>
+                <div>
                   <Link href={`/start/${group.id}`}>
                     <Button className="mr-4">
                       <Play className="mr-2 size-4" />

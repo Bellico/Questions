@@ -12,7 +12,6 @@ params: { id: string }
   if (!session) {
     redirect('/')
   }
-
   const group = await getGroupForStart(params.id, session.user.id!)
   if (!group) {
     notFound()
@@ -33,7 +32,7 @@ params: { id: string }
           {group.name}
         </h1>
 
-        <p className="mb-6 text-center text-3xl font-bold text-gray-500 lg:mb-12 dark:text-gray-400">
+        <p className="text-second mb-6 text-center text-3xl font-bold lg:mb-12">
           {group._count.questions} questions
         </p>
 
