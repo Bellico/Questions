@@ -32,7 +32,7 @@ export function QuestionGroupsListActions({ groupId }: QuestionsTableProps) {
   }
 
   return (
-    <YesNoDialogAction action={onDeleteAction} titleDialog='Are you absolutely sure?' descDialog='This will permanently delete your account and remove your data from our servers.'>
+    <YesNoDialogAction action={onDeleteAction} titleDialog='Are you absolutely sure?' descDialog='You will lose all statistics and anwsers linked to this group.'>
       <DropdownMenuContent align="end">
         <DropdownMenuLabel>Actions</DropdownMenuLabel>
         <Link href={'/results'}>

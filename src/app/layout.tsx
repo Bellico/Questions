@@ -1,5 +1,5 @@
 import { ThemeProvider } from '@/components/theme/theme-provider'
-import type { Metadata } from 'next'
+import type { Metadata, Viewport } from 'next'
 import { Inter } from 'next/font/google'
 import React from 'react'
 import './globals.css'
@@ -11,6 +11,12 @@ const inter = Inter({
 export const metadata: Metadata = {
   title: 'Questions Editor',
   description: 'A personal questionnaire application',
+}
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 1,
 }
 
 export default function RootLayout({

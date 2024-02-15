@@ -67,7 +67,8 @@ export type RoomQuestionType = {
 export type RoomQuestionResultType = {
   id: string,
   title: string,
-  isSuccess: boolean
+  isAnswer: boolean,
+  hasGood: boolean | null
 }
 
 export type AnswerRoomReturnType = {

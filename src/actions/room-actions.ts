@@ -17,7 +17,7 @@ export const startRoom = async (data: RoomSettingsType): Promise<ActionResultTyp
 
   try {
     const roomId = await prisma.$transaction(async (tx) => {
-      const room = await prisma.room.create({
+      const room = await tx.room.create({
         data: {
           groupId: data.groupId,
           dateStart: new Date(),
@@ -32,7 +32,7 @@ export const startRoom = async (data: RoomSettingsType): Promise<ActionResultTyp
         }
       })
 
-      await prisma.answer.create({
+      await tx.answer.create({
         data: {
           roomId: room.id,
           order: 1,
@@ -70,17 +70,23 @@ export const answerRoom = async (data: AnswerRoomType): Promise<ActionResultType
     throw new Error('403 Forbidden')
   }
 
+  const totalGoodResponse = currentAnswerContext.question?.responses.length!
   const goodResponsesCount = currentAnswerContext.question?.responses
     .map(r => r.id)
     .filter(rId => data.choices.includes(rId))
     .length!
 
-  const achievement = (goodResponsesCount * 100) / currentAnswerContext.question?.responses.length!
+  const diff = goodResponsesCount - (data.choices.length - totalGoodResponse)
+  const trueGoodResponse = data.choices.length > totalGoodResponse ? Math.max(diff, 0) : goodResponsesCount
+  const achievement = (trueGoodResponse * 100) / totalGoodResponse
+
+  const answeredQuestionIds = await getAnsweredQuestionIdsInRoom(data.roomId)
+  const nextQuestionId = await computeNextQuestion(currentAnswerContext.room.groupId!, currentAnswerContext.room.withRandom, answeredQuestionIds)
 
   try {
     await prisma.$transaction(async (tx) => {
 
-      await prisma.answer.update({
+      await tx.answer.update({
         where: {
           id: currentAnswerContext.id
         },
@@ -93,12 +99,9 @@ export const answerRoom = async (data: AnswerRoomType): Promise<ActionResultType
         }
       })
 
-      const answeredQuestionIds = await getAnsweredQuestionIdsInRoom(data.roomId)
-      const nextQuestionId = await computeNextQuestion(currentAnswerContext.room.groupId!, currentAnswerContext.room.withRandom, answeredQuestionIds)
-
       // Prepare next question if exists
       if(nextQuestionId){
-        await prisma.answer.create({
+        await tx.answer.create({
           data: {
             roomId: data.roomId,
             order: currentAnswerContext.order + 1,
@@ -110,7 +113,7 @@ export const answerRoom = async (data: AnswerRoomType): Promise<ActionResultType
 
       // Else End room
       else{
-        await prisma.room.update({
+        await tx.room.update({
           where: {
             id: data.roomId
           },
@@ -121,25 +124,24 @@ export const answerRoom = async (data: AnswerRoomType): Promise<ActionResultType
       }
 
     })
-
-    const nextQuestion = await getNextQuestionToAnswer(data.roomId)
-
-    return {
-      success: true,
-      data: {
-        next: nextQuestion,
-        result: {
-          id: currentAnswerContext.question?.id!,
-          title : currentAnswerContext.question?.title || `Question ${currentAnswerContext.order}`,
-          isSuccess : true
-        }
-      }
-    }
   }
   catch (error: any) {
     return {
       success: false,
       message: 'Database Error: Failed to answer question: ' + error.message,
+    }
+  }
+
+  return {
+    success: true,
+    data: {
+      next: await getNextQuestionToAnswer(data.roomId),
+      result: {
+        id: currentAnswerContext.question?.id!,
+        title : currentAnswerContext.question?.title || `Question ${currentAnswerContext.order}`,
+        isAnswer: true,
+        hasGood : achievement === 100
+      }
     }
   }
 }

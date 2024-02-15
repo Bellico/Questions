@@ -1,5 +1,6 @@
 import { auth } from '@/lib/auth'
 import prisma from '@/lib/prisma'
+import { RoomQuestionResultType } from '@/lib/schema'
 
 export const getSessionUserIdOrThrow = async (): Promise<string> => {
   const session = await auth()
@@ -221,7 +222,7 @@ export const getNextQuestionToAnswer = async (roomId: string) => {
   return null
 }
 
-export const getProgressInfosRoom = async (roomId: string, groupId: string) => {
+export const getProgressInfosRoom = async (roomId: string, groupId: string) : Promise<RoomQuestionResultType[]> => {
   const questions = await prisma.question.findMany({
     where: {
       groupId: groupId
@@ -237,7 +238,10 @@ export const getProgressInfosRoom = async (roomId: string, groupId: string) => {
 
   const answers = await prisma.answer.findMany({
     where: {
-      roomId: roomId
+      roomId: roomId,
+      dateEnd:{
+        not : null
+      }
     },
     select: {
       questionId: true,
@@ -245,12 +249,17 @@ export const getProgressInfosRoom = async (roomId: string, groupId: string) => {
     }
   })
 
+
+
   const progress = questions.map((q, i) => {
-    const answer = answers.find(a => a.questionId == q.id)
+    const answer = answers.find(a => a.questionId === q.id)
+
     return {
-      ...q,
+      id: q.id,
       title: q.title || `Question ${i + 1}`,
-      isSuccess : answer?.achievement === 100}
+      hasGood : answer ? answer.achievement === 100 : null,
+      isAnswer : !!answer
+    }
   })
 
   return progress
@@ -311,9 +320,6 @@ export const getAnsweredQuestionIdsInRoom = async (roomId: string) => {
   const questionIds = await prisma.answer.findMany({
     where: {
       roomId: roomId,
-      dateEnd: {
-        not: null
-      }
     },
     select:{
       questionId: true,
@@ -422,7 +428,7 @@ export const getRoomFinalStats = async (roomId: string) => {
   return {
     success,
     count : results.length,
-    score: (success * 100 ) / results.length,
+    score: Math.round((success * 100 ) / results.length),
     failed: results.filter(r => r.achievement! < 100).length,
   }
 }

@@ -65,7 +65,7 @@ export const updateQuestionGroup = async (data: QuestionGroupType): Promise<Acti
     await prisma.$transaction(async (tx) => {
 
       // 1. Update group
-      await prisma.questionGroup.update({
+      await tx.questionGroup.update({
         where: {
           id: data.id!,
         },
@@ -78,7 +78,7 @@ export const updateQuestionGroup = async (data: QuestionGroupType): Promise<Acti
 
       // 2. Delete old Questions
       const questionIdToKeep = data.questions.filter(q => !!q.id).map(q => q.id!)
-      await prisma.question.deleteMany({
+      await tx.question.deleteMany({
         where: {
           id: {
             notIn: questionIdToKeep
@@ -93,7 +93,7 @@ export const updateQuestionGroup = async (data: QuestionGroupType): Promise<Acti
       for (let i = 0; i < data.questions.length; i++) {
         const q = data.questions[i]
 
-        await prisma.question.upsert({
+        await tx.question.upsert({
           where: {
             id: q.id || '0'
           },
@@ -123,7 +123,7 @@ export const updateQuestionGroup = async (data: QuestionGroupType): Promise<Acti
 
         const q = updatedQuestion[i]
         // Delete
-        await prisma.response.deleteMany({
+        await tx.response.deleteMany({
           where: {
             id: {
               notIn: q.responses.filter(r => !!r.id).map(r => r.id!)
@@ -139,7 +139,7 @@ export const updateQuestionGroup = async (data: QuestionGroupType): Promise<Acti
           const r = q.responses[j]
           if (!r.text) continue
 
-          await prisma.response.upsert({
+          await tx.response.upsert({
             where: {
               id: r.id || '0'
             },
@@ -181,10 +181,38 @@ export const deleteQuestionGroup = async (id: string): Promise<ActionResultType<
   await isGroupOwnerOrThrow(id, userId)
 
   try {
-    await prisma.questionGroup.delete({
-      where: {
-        id: id
-      }
+    await prisma.$transaction(async (tx) => {
+
+      await tx.choices.deleteMany({
+        where: {
+          answer:{
+            room:{
+              groupId: id
+            }
+          }
+        }
+      })
+
+      await tx.answer.deleteMany({
+        where: {
+          room:{
+            groupId: id
+          }
+        }
+      })
+
+      await tx.room.deleteMany({
+        where: {
+          groupId: id
+        }
+      })
+
+      await tx.questionGroup.delete({
+        where: {
+          id: id
+        }
+      })
+
     })
 
     revalidatePath('/board')

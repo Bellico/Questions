@@ -28,11 +28,7 @@ export const YesNoDialogAction = ({
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>{titleDialog}</AlertDialogTitle>
-          {descDialog && <AlertDialogDescription>
-            This action cannot be undone. This will permanently delete your
-            account and remove your data from our servers.
-          </AlertDialogDescription>
-          }
+          {descDialog && <AlertDialogDescription>{descDialog}</AlertDialogDescription>}
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel>Cancel</AlertDialogCancel>
