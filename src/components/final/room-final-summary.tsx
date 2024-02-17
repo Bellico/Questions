@@ -1,23 +1,16 @@
+import { getRoomFinalScore } from '@/actions/queries'
 import { Spinner } from '@/components/commons/spinner'
 import { RoomFinalHeroStats } from '@/components/final/room-final-hero-stats'
 import { Suspense } from 'react'
 
-export function RoomFinalSummary({roomId} : { roomId: string}) {
+export async function RoomFinalSummary({roomId} : { roomId: string}) {
+  const stats = await getRoomFinalScore(roomId)
+
   return(
-    <section className="items-center justify-center">
-      <div className="container mt-[-65px] flex flex-col items-center space-y-7 text-center sm:space-y-10">
-
-        <div className="animate-room-final">
-          <h1 className="text-4xl font-extrabold tracking-tight sm:text-5xl md:text-6xl">
-              All questions are completed !
-          </h1>
-        </div>
-
-        <Suspense fallback={<Spinner />}>
-          <RoomFinalHeroStats roomId={roomId} />
-        </Suspense>
-
-      </div>
-    </section>
+    <div className="space-y-3 text-xl sm:space-y-5 sm:text-3xl">
+      <div className="animate-fadeIn opacity-0 delay-500">Score {stats.score}%</div>
+      <div className="animate-fadeIn opacity-0 delay-700">Success {stats.success}/{stats.count}</div>
+      <div className="animate-fadeIn opacity-0 delay-1000">Failed {stats.failed}/{stats.count}</div>
+    </div>
   )
 }

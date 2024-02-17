@@ -96,15 +96,17 @@ model Room {
   userId            String
   user              User @relation(fields: [userId], references: [id])
   shareLink         String?
-  display           RoomDisplay
+  score             Int?
+  successCount      Int?
+  failedCount       Int?
   mode              RoomMode
+  dateStart         DateTime?
+  dateEnd           DateTime?
   withTimer         Boolean
   withRandom        Boolean
   withCorrection    Boolean
   withResults       Boolean
   withProgress      Boolean
-  dateStart         DateTime?
-  dateEnd           DateTime?
   answers           Answer[]
 }
 
@@ -128,11 +130,6 @@ model Choices{
   response        Response @relation(fields: [responseId], references: [id], onDelete: Cascade)
 
   @@id([answerId, responseId])
-}
-
-enum RoomDisplay {
-  Horizontal
-  Vertical
 }
 
 enum RoomMode {

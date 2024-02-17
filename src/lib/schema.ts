@@ -1,4 +1,4 @@
-import { RoomDisplay, RoomMode } from '@prisma/client'
+import { RoomMode } from '@prisma/client'
 import * as z from 'zod'
 
 // See schema.prisma
@@ -33,7 +33,6 @@ export const QuestionGroupSchema = z.object({
 
 export const RoomSettingsSchema = z.object({
   groupId: z.string(),
-  display: z.nativeEnum(RoomDisplay),
   mode: z.nativeEnum(RoomMode),
   withTimer: z.boolean(),
   withRandom: z.boolean(),
@@ -65,7 +64,7 @@ export type RoomQuestionType = {
 }
 
 export type RoomQuestionResultType = {
-  id: string,
+  id: string | null,
   title: string,
   isAnswer: boolean,
   hasGood: boolean | null

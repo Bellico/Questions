@@ -39,40 +39,6 @@ export function RoomSettings(settings: RoomSettingsType) {
 
         <FormField
           control={control}
-          name="display"
-          render={({ field }) => (
-            <FormItem className="rounded-lg border bg-background p-4">
-              <FormLabel className="text-base">Display</FormLabel>
-              <FormControl>
-                <div className="space-y-2">
-                  <RadioGroup
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                    className="flex gap-6">
-                    <FormItem className="flex items-center space-x-3 space-y-0">
-                      <FormControl>
-                        <RadioGroupItem value="Vertical" />
-                      </FormControl>
-                      <FormLabel className="font-normal">Vertical</FormLabel>
-                    </FormItem>
-
-                    <FormItem className="flex items-center space-x-3 space-y-0">
-                      <FormControl>
-                        <RadioGroupItem value="Horizontal" />
-                      </FormControl>
-                      <FormLabel className="font-normal">Horizontal</FormLabel>
-                    </FormItem>
-                  </RadioGroup>
-                  <FormDescription>Show questions next to or below the subject.</FormDescription>
-                </div>
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={control}
           name="mode"
           render={({ field }) => (
             <FormItem className="rounded-lg border bg-background p-4">

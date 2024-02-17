@@ -70,3 +70,13 @@ export function generateRandomGroup(questionCount: number = 6, responsesCount: n
 
   return arrayToMap(questions)
 }
+
+export function computeScore(results: number[]){
+  const success = results.filter(r => r === 100).length
+
+  return {
+    score: Math.round((success * 100) / results.length),
+    success,
+    failed: results.filter(r => r < 100).length,
+  }
+}

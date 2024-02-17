@@ -34,11 +34,20 @@ export const createRoomStore = (initProps: RoomStateProps) => {
     disappears: (result : RoomQuestionResultType, isEnd: boolean) => set((state) => {
       const newProgress = [...state.progress]
       const index = newProgress.findIndex(p => p.id == result.id)
-      newProgress[index].hasGood = result.hasGood
-      newProgress[index].title = result.title
-      newProgress[index].isAnswer = result.isAnswer
+      if(index >= 0){
+        newProgress[index].hasGood = result.hasGood
+        newProgress[index].title = result.title
+        newProgress[index].isAnswer = result.isAnswer
+      }
+      else{
+        const replace = newProgress.findIndex(p => !p.id)
+        newProgress[replace].id = result.id
+        newProgress[replace].hasGood = result.hasGood
+        newProgress[replace].title = result.title
+        newProgress[replace].isAnswer = result.isAnswer
+      }
 
-      return { animation : 'animate-zoomOutRoom', progress: newProgress, progressingId: result.id, isEnd }
+      return { animation : 'animate-zoomOutRoom', progress: newProgress, progressingId: result.id!, isEnd }
     }),
 
     appearsNewQuestion: (question: RoomQuestionType) => set(() => ({ currentQuestion: question, animation : 'animate-zoomInRoom' })),

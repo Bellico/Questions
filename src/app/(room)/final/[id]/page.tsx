@@ -1,8 +1,10 @@
 import { canViewRoom } from '@/actions/queries'
+import { Spinner } from '@/components/commons/spinner'
 import { RoomFinalResume } from '@/components/final/room-final-resume'
 import { RoomFinalSummary } from '@/components/final/room-final-summary'
 import { auth } from '@/lib/auth'
 import { redirect } from 'next/navigation'
+import { Suspense } from 'react'
 
 export default async function RoomPage({
   params
@@ -18,7 +20,9 @@ params: { id: string, shareLink?: string }
   return (
     <>
       <RoomFinalSummary roomId={room.id} />
-      <RoomFinalResume />
+      <Suspense fallback={<Spinner />}>
+        <RoomFinalResume roomId={room.id} />
+      </Suspense>
     </>
   )
 }

@@ -1,5 +1,6 @@
 import { useRoomContext } from '@/components/providers/room-provider'
 import { cn } from '@/lib/utils'
+import { CheckCheck, XCircle } from 'lucide-react'
 
 export function RoomProgress() {
   const progress = useRoomContext(state => state.progress)
@@ -13,16 +14,18 @@ export function RoomProgress() {
   if(progress.length > 30) classDisplayTitle = 'hidden'
 
   function getAnwserResultDisplay(value : boolean | null){
-    if(value === null) return ''
-    return value ? 'OK' : 'KO'
+    if(value === null) return null
+    return value ?
+      <CheckCheck className="ml-2 text-success" /> :
+      <XCircle className="ml-2 text-destructive" />
   }
 
   return(
     <div className="progress-room fixed bottom-0 h-6 w-full animate-fadeIn border-t border-t-gray-200 bg-accent lg:h-8 dark:border-t-black">
       <div className="flex size-full">
-        {progress.map(q => (
-          <div key={q.id} className="relative flex flex-1 items-center justify-around overflow-hidden border-r-2 border-accent text-center last:border-none">
-            <div className={cn('absolute left-0 -z-10 size-full bg-primary/25 dark:bg-primary/10', {
+        {progress.map((q, i) => (
+          <div key={i} className="relative flex flex-1 items-center justify-around overflow-hidden border-r-2 border-accent text-center last:border-none">
+            <div className={cn('absolute left-0 -z-10 size-full bg-primary/25', {
               'animate-room-progress': q.id === progressingId,
               'w-0': !q.isAnswer
             })}></div>

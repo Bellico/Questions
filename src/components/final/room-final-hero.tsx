@@ -39,7 +39,7 @@ export function RoomFinalHero({roomId} : { roomId: string}) {
       </div>
 
       <div className="absolute inset-x-0 bottom-0 flex animate-bounce flex-col items-center">
-        <p>Scroll to see results</p>
+        <p>Scroll to yours results</p>
         <ArrowDownToLine />
       </div>
     </section>

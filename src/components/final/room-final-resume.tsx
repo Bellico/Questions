@@ -1,11 +1,11 @@
+import { getRoomFinalResume } from '@/actions/queries'
 import { RoomFinalResumeSection } from '@/components/final/room-final-resume-section'
 
-export function RoomFinalResume() {
-
-  const q = [1, 2, 3, 4, 5]
+export async function RoomFinalResume({roomId} : { roomId: string}) {
+  const resume = await getRoomFinalResume(roomId)
   return(
     <>
-      { q.map(d => <RoomFinalResumeSection key={d} />)}
+      { resume.map(answer => <RoomFinalResumeSection key={answer.id} answerResume={answer} />)}
     </>
   )
 }

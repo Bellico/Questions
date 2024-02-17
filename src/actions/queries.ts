@@ -123,7 +123,6 @@ export const getLastSettingsRoom = async (groupId: string, userId: string) => {
       dateStart: 'desc'
     },
     select:{
-      display: true,
       mode: true,
       withTimer: true,
       withRandom: true,
@@ -143,7 +142,6 @@ export const getLastSettingsRoom = async (groupId: string, userId: string) => {
         dateStart: 'desc'
       },
       select:{
-        display: true,
         mode: true,
         withTimer: true,
         withRandom: true,
@@ -157,7 +155,6 @@ export const getLastSettingsRoom = async (groupId: string, userId: string) => {
   // Or Default
   if(!settings) return {
     groupId: groupId,
-    display : 'Vertical' as 'Vertical' | 'Horizontal',
     mode: 'Training' as 'Training' | 'Rating',
     withTimer: false,
     withRandom: false,
@@ -222,7 +219,7 @@ export const getNextQuestionToAnswer = async (roomId: string) => {
   return null
 }
 
-export const getProgressInfosRoom = async (roomId: string, groupId: string) : Promise<RoomQuestionResultType[]> => {
+export const getProgressInfosRoom = async (roomId: string, groupId: string, withResult: boolean) : Promise<RoomQuestionResultType[]> => {
   const questions = await prisma.question.findMany({
     where: {
       groupId: groupId
@@ -249,18 +246,63 @@ export const getProgressInfosRoom = async (roomId: string, groupId: string) : Pr
     }
   })
 
-
-
   const progress = questions.map((q, i) => {
     const answer = answers.find(a => a.questionId === q.id)
 
     return {
       id: q.id,
       title: q.title || `Question ${i + 1}`,
-      hasGood : answer ? answer.achievement === 100 : null,
+      hasGood : withResult && answer ? answer.achievement === 100 : null,
       isAnswer : !!answer
     }
   })
+
+  return progress
+}
+
+export const getProgressInfosWithRandom = async (roomId: string, groupId: string, withResult: boolean) : Promise<RoomQuestionResultType[]> => {
+  const questions = await prisma.question.count({
+    where: {
+      groupId: groupId
+    }
+  })
+
+  const answers = await prisma.answer.findMany({
+    where: {
+      roomId: roomId,
+    },
+    select: {
+      questionId: true,
+      achievement: true,
+      question:{
+        select:{
+          id: true,
+          title: true
+        }
+      }
+    },
+    orderBy:{
+      order: 'asc'
+    }
+  })
+
+  // Already knows
+  const progress = answers.map((answer, i) => ({
+    id: answer.questionId,
+    title: answer?.question?.title || `Question ${i + 1}`,
+    hasGood: withResult && answer.achievement !== null ? answer.achievement === 100 : null,
+    isAnswer: answer.achievement !== null
+  }))
+
+  // Fill next questions
+  for (let i = progress.length ; i < questions; i++) {
+    progress.push({
+      id: null,
+      title: `Question ${i + 1}`,
+      hasGood: null,
+      isAnswer: false
+    })
+  }
 
   return progress
 }
@@ -293,6 +335,7 @@ export const canAnswerQuestion = async (roomId: string, questionId: string, user
       room:{
         select:{
           groupId: true,
+          mode: true,
           withRandom: true
         }
       },
@@ -372,6 +415,11 @@ export const canPlayRoom = async (roomId: string, userId?: string, shareLink?: s
             },
             {
               shareLink: shareLink,
+              AND:{
+                shareLink: {
+                  not: null
+                }
+              }
             },
           ],
         },
@@ -380,7 +428,7 @@ export const canPlayRoom = async (roomId: string, userId?: string, shareLink?: s
     select: {
       id: true,
       groupId: true,
-      display: true,
+      mode: true,
       withRandom: true,
     }
   })
@@ -401,6 +449,11 @@ export const canViewRoom = async (roomId: string, userId?: string, shareLink?: s
             },
             {
               shareLink: shareLink,
+              AND:{
+                shareLink: {
+                  not: null
+                }
+              }
             },
           ],
         },
@@ -413,22 +466,56 @@ export const canViewRoom = async (roomId: string, userId?: string, shareLink?: s
 }
 
 
-export const getRoomFinalStats = async (roomId: string) => {
-  const results = await prisma.answer.findMany({
+export const getRoomFinalScore = async (roomId: string) => {
+  const results = await prisma.room.findFirstOrThrow({
+    where:{
+      id: roomId,
+    },
+    select:{
+      score: true,
+      successCount: true,
+      failedCount: true
+    }
+  })
+
+  return {
+    score: results.score,
+    success: results.successCount,
+    failed: results.failedCount,
+    count : results.successCount! +  results.failedCount!
+  }
+}
+
+export const getRoomFinalResume = async (roomId: string) => {
+  return await prisma.answer.findMany({
     where:{
       roomId: roomId,
     },
     select:{
-      achievement: true
+      id: true,
+      achievement: true,
+      order: true,
+      choices:{
+        select:{
+          responseId: true
+        }
+      },
+      question:{
+        select:{
+          title: true,
+          subject: true,
+          responses:{
+            select:{
+              id: true,
+              text: true,
+              isCorrect: true
+            }
+          }
+        }
+      },
+    },
+    orderBy:{
+      order:'asc'
     }
   })
-
-  const success = results.filter(r => r.achievement === 100).length
-
-  return {
-    success,
-    count : results.length,
-    score: Math.round((success * 100 ) / results.length),
-    failed: results.filter(r => r.achievement! < 100).length,
-  }
 }

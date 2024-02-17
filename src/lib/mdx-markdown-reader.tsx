@@ -9,7 +9,7 @@ import { ForwardedRef } from 'react'
 export default function MarkdownReader({
   editorRef,
   markdown
-}: { editorRef: ForwardedRef<MDXEditorMethods> | null } & { markdown : string}) {
+}: { editorRef?: ForwardedRef<MDXEditorMethods> | null } & { markdown : string}) {
   return (
     <MDXEditor
       ref={editorRef}

@@ -60,7 +60,7 @@ export async function QuestionGroupsList() {
                 </div>
               </CardHeader>
               <CardContent>
-                <div className='mb-4'>
+                <div className="mb-4">
                   <div className="text-sm">Questions: <span className="text-second">{group._count.questions}</span></div>
                   {/* <div className="text-sm">Success: <span className="text-second">1/2</span></div> */}
                   {/* <div className="text-sm">Pay number: <span className="text-second">1</span></div> */}

@@ -3,7 +3,8 @@
 import { canAnswerQuestion, computeNextQuestion, getAnsweredQuestionIdsInRoom, getNextQuestionToAnswer, getSessionUserId, getSessionUserIdOrThrow, isGroupOwnerOrThrow } from '@/actions/queries'
 import prisma from '@/lib/prisma'
 import { AnswerRoomReturnType, AnswerRoomSchema, AnswerRoomType, RoomSettingsSchema, RoomSettingsType } from '@/lib/schema'
-import { ActionResultType, ZparseOrError } from '@/lib/utils'
+import { ActionResultType, ZparseOrError, computeScore } from '@/lib/utils'
+import { RoomMode } from '@prisma/client'
 import { revalidatePath } from 'next/cache'
 
 export const startRoom = async (data: RoomSettingsType): Promise<ActionResultType<string>> => {
@@ -22,7 +23,6 @@ export const startRoom = async (data: RoomSettingsType): Promise<ActionResultTyp
           groupId: data.groupId,
           dateStart: new Date(),
           userId: userId,
-          display: data.display,
           mode: data.mode,
           withTimer: data.withTimer,
           withResults: data.withResults,
@@ -82,6 +82,7 @@ export const answerRoom = async (data: AnswerRoomType): Promise<ActionResultType
 
   const answeredQuestionIds = await getAnsweredQuestionIdsInRoom(data.roomId)
   const nextQuestionId = await computeNextQuestion(currentAnswerContext.room.groupId!, currentAnswerContext.room.withRandom, answeredQuestionIds)
+  const withResult = currentAnswerContext.room.mode == RoomMode.Training
 
   try {
     await prisma.$transaction(async (tx) => {
@@ -113,11 +114,25 @@ export const answerRoom = async (data: AnswerRoomType): Promise<ActionResultType
 
       // Else End room
       else{
+        const results = await tx.answer.findMany({
+          where:{
+            roomId: data.roomId,
+          },
+          select:{
+            achievement: true
+          }
+        })
+
+        const score = computeScore(results.map(r => r.achievement!))
+
         await tx.room.update({
           where: {
             id: data.roomId
           },
           data: {
+            score: score.score,
+            successCount: score.success,
+            failedCount: score.failed,
             dateEnd: new Date(),
           },
         })
@@ -140,7 +155,7 @@ export const answerRoom = async (data: AnswerRoomType): Promise<ActionResultType
         id: currentAnswerContext.question?.id!,
         title : currentAnswerContext.question?.title || `Question ${currentAnswerContext.order}`,
         isAnswer: true,
-        hasGood : achievement === 100
+        hasGood : withResult ? achievement === 100 : null
       }
     }
   }
