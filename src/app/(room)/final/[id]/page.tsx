@@ -13,7 +13,7 @@ params: { id: string, shareLink?: string }
 }) {
   const session = await auth()
   const room = await canViewRoom(params.id, session?.user.id, params.shareLink)
-  if(!room){
+  if(!room || !room.withResults){
     redirect('/')
   }
 

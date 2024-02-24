@@ -23,7 +23,6 @@ type RoomResponsesProps = {
 }
 
 export function RoomResponses({submitAnswerChoices }: RoomResponsesProps) {
-
   const currentQuestion = useRoomContext(state => state.currentQuestion)
   const responses = currentQuestion.responses.map(r => ({...r, isCorrect : false}))
 

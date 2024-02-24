@@ -1,4 +1,5 @@
 import { QuestionType } from '@/lib/schema'
+import { generateRandomGroup } from '@/lib/utils'
 import superjson from 'superjson'
 import { v4 } from 'uuid'
 import { create } from 'zustand'
@@ -59,7 +60,8 @@ export const createQuestionsEditorStore = (initProps?: Partial<QuestionsEditorSt
   const DEFAULT_PROPS: QuestionsEditorStateProps = {
     id: null,
     name: '',
-    questionsMap: createDefaultQuestionsMap()
+    // questionsMap: createDefaultQuestionsMap()
+    questionsMap: generateRandomGroup()
   }
 
   return create<QuestionsEditorState>()(persist((set, get) => ({

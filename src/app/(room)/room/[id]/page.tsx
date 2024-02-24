@@ -21,11 +21,17 @@ params: { id: string, shareLink?: string }
     redirect('/')
   }
 
+  const isTraining = room.mode === RoomMode.Training
   const progress = room.withRandom ?
-    await getProgressInfosWithRandom(room.id, room.groupId!, room.mode === RoomMode.Training):
-    await getProgressInfosRoom(room.id, room.groupId!, room.mode === RoomMode.Training)
+    await getProgressInfosWithRandom(room.id, room.groupId!, isTraining):
+    await getProgressInfosRoom(room.id, room.groupId!, isTraining)
 
   return (
-    <Room roomId={room.id} currentQuestion={nextQuestion} progress={progress} />
+    <Room
+      roomId={room.id}
+      currentQuestion={nextQuestion}
+      progress={progress}
+      canNavigate={isTraining}
+      withProgress={room.withProgress}/>
   )
 }

@@ -8,8 +8,10 @@ import { Switch } from '@/components/ui/switch'
 import { useAction } from '@/hooks/useAction'
 import { RoomSettingsSchema, RoomSettingsType } from '@/lib/schema'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { RoomMode } from '@prisma/client'
 import { Play, Share } from 'lucide-react'
 import { redirect } from 'next/navigation'
+import { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 
 export function RoomSettings(settings: RoomSettingsType) {
@@ -18,9 +20,14 @@ export function RoomSettings(settings: RoomSettingsType) {
     values: settings,
   })
 
-  const { control, getValues } = form
+  const { control, getValues, setValue } = form
+  const { mode, withCorrection } = getValues()
 
   const requestAction = useAction()
+
+  useEffect(() => {
+    if(mode === RoomMode.Rating && withCorrection) setValue('withCorrection', false)
+  }, [setValue, mode, withCorrection])
 
   async function start(){
     requestAction(
@@ -63,13 +70,34 @@ export function RoomSettings(settings: RoomSettingsType) {
                       <FormLabel className="font-normal">Rating</FormLabel>
                     </FormItem>
                   </RadioGroup>
-                  <FormDescription>Training will have no impact on your stats.</FormDescription>
+                  <FormDescription>
+                    Training will have no impact on your stats.<br />
+                    You can prev / next
+                  </FormDescription>
                 </div>
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
+
+        {mode === RoomMode.Training &&
+        <FormField
+          control={form.control}
+          name="withCorrection"
+          render={({ field }) => (
+            <FormItem className="flex flex-row items-center justify-between rounded-lg border bg-background p-4">
+              <div className="space-y-0.5">
+                <FormLabel className="text-base">Correction</FormLabel>
+                <FormDescription>The correct answers will be displayed for each question after answering.</FormDescription>
+              </div>
+              <FormControl>
+                <Switch checked={field.value} onCheckedChange={field.onChange} />
+              </FormControl>
+            </FormItem>
+          )}
+        />
+        }
 
         <FormField
           control={form.control}
@@ -105,12 +133,12 @@ export function RoomSettings(settings: RoomSettingsType) {
 
         <FormField
           control={form.control}
-          name="withCorrection"
+          name="withProgress"
           render={({ field }) => (
             <FormItem className="flex flex-row items-center justify-between rounded-lg border bg-background p-4">
               <div className="space-y-0.5">
-                <FormLabel className="text-base">Correction</FormLabel>
-                <FormDescription>The correct answers will be displayed for each question after answering.</FormDescription>
+                <FormLabel className="text-base">Progress bar</FormLabel>
+                <FormDescription>Show a progress bar to see progress.</FormDescription>
               </div>
               <FormControl>
                 <Switch checked={field.value} onCheckedChange={field.onChange} />
@@ -127,22 +155,6 @@ export function RoomSettings(settings: RoomSettingsType) {
               <div className="space-y-0.5">
                 <FormLabel className="text-base">Show results</FormLabel>
                 <FormDescription>Final results will be displayed at the end.</FormDescription>
-              </div>
-              <FormControl>
-                <Switch checked={field.value} onCheckedChange={field.onChange} />
-              </FormControl>
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="withProgress"
-          render={({ field }) => (
-            <FormItem className="flex flex-row items-center justify-between rounded-lg border bg-background p-4">
-              <div className="space-y-0.5">
-                <FormLabel className="text-base">Progress bar</FormLabel>
-                <FormDescription>Show a progress bar to see progress.</FormDescription>
               </div>
               <FormControl>
                 <Switch checked={field.value} onCheckedChange={field.onChange} />

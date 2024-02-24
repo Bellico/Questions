@@ -39,13 +39,19 @@ export const RoomSettingsSchema = z.object({
   withCorrection: z.boolean(), // => Training ?
   withResults: z.boolean(),
   withProgress: z.boolean()
-})
+}).refine(v => v.mode === RoomMode.Rating && v.withCorrection ? false: true)
 
 export const AnswerRoomSchema = z.object({
   roomId: z.string(),
   questionId: z.string(),
   shareLink: z.string().optional(),
-  choices: z.array( z.string())
+  choices: z.array(z.string())
+})
+
+export const PrevNextRoomSchema = z.object({
+  roomId: z.string(),
+  questionId: z.string().nullable(),
+  shareLink: z.string().optional()
 })
 
 export type ResponseType = z.infer<typeof ResponseSchema>
@@ -54,23 +60,36 @@ export type QuestionGroupType = z.infer<typeof QuestionGroupSchema>
 export type QuestionFormType = z.infer<typeof QuestionFormSchema>
 export type RoomSettingsType = z.infer<typeof RoomSettingsSchema>
 export type AnswerRoomType = z.infer<typeof AnswerRoomSchema>
+export type PrevNextRoomType = z.infer<typeof PrevNextRoomSchema>
 
-export type RoomQuestionType = {
-  order: number,
+export type RoomQuestionNextType = {
   questionId: string,
   subject: string,
-  title: string | null,
-  responses: { id: string, text: string} []
+  title: string,
+  responses: { id: string, text: string} [],
+
+  navigate?: {
+    hasGood: boolean,
+    choices: string[]
+    correction: string[] | null,
+  }
 }
 
-export type RoomQuestionResultType = {
+export type RoomProgressType = {
   id: string | null,
   title: string,
   isAnswer: boolean,
-  hasGood: boolean | null
+  hasGood: boolean | null,
+}
+
+export type RoomQuestionResultType = {
+  id: string,
+  title: string,
+  hasGood: boolean | null,
+  correction: string[] | null,
 }
 
 export type AnswerRoomReturnType = {
-  next: RoomQuestionType | null,
+  next: RoomQuestionNextType | null,
   result: RoomQuestionResultType
 }

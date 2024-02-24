@@ -8,6 +8,7 @@ import { redirect } from 'next/navigation'
 export default function SignOutButton() {
   return (
     <Button size="icon"
+      title='Sign out'
       onClick={() => {
         signOut()
         redirect('/')

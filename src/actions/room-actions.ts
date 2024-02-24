@@ -1,8 +1,8 @@
 'use server'
 
-import { canAnswerQuestion, computeNextQuestion, getAnsweredQuestionIdsInRoom, getNextQuestionToAnswer, getSessionUserId, getSessionUserIdOrThrow, isGroupOwnerOrThrow } from '@/actions/queries'
+import { canAnswerQuestion, canNavigateRoom, canPlayRoom, computeNextQuestion, getAnsweredQuestionIdsInRoom, getNextQuestionToAnswer, getSessionUserId, getSessionUserIdOrThrow, isGroupOwnerOrThrow } from '@/actions/queries'
 import prisma from '@/lib/prisma'
-import { AnswerRoomReturnType, AnswerRoomSchema, AnswerRoomType, RoomSettingsSchema, RoomSettingsType } from '@/lib/schema'
+import { AnswerRoomReturnType, AnswerRoomSchema, AnswerRoomType, PrevNextRoomSchema, PrevNextRoomType, RoomQuestionNextType, RoomSettingsSchema, RoomSettingsType } from '@/lib/schema'
 import { ActionResultType, ZparseOrError, computeScore } from '@/lib/utils'
 import { RoomMode } from '@prisma/client'
 import { revalidatePath } from 'next/cache'
@@ -70,14 +70,12 @@ export const answerRoom = async (data: AnswerRoomType): Promise<ActionResultType
     throw new Error('403 Forbidden')
   }
 
-  const totalGoodResponse = currentAnswerContext.question?.responses.length!
-  const goodResponsesCount = currentAnswerContext.question?.responses
-    .map(r => r.id)
-    .filter(rId => data.choices.includes(rId))
-    .length!
+  const goodResponseIds = currentAnswerContext.question?.responses.map(r => r.id)!
+  const totalGoodResponse = goodResponseIds.length
+  const goodChoicesCount = goodResponseIds.filter(rId => data.choices.includes(rId)).length
 
-  const diff = goodResponsesCount - (data.choices.length - totalGoodResponse)
-  const trueGoodResponse = data.choices.length > totalGoodResponse ? Math.max(diff, 0) : goodResponsesCount
+  const diff = goodChoicesCount - (data.choices.length - totalGoodResponse)
+  const trueGoodResponse = data.choices.length > totalGoodResponse ? Math.max(diff, 0) : goodChoicesCount
   const achievement = (trueGoodResponse * 100) / totalGoodResponse
 
   const answeredQuestionIds = await getAnsweredQuestionIdsInRoom(data.roomId)
@@ -154,9 +152,46 @@ export const answerRoom = async (data: AnswerRoomType): Promise<ActionResultType
       result: {
         id: currentAnswerContext.question?.id!,
         title : currentAnswerContext.question?.title || `Question ${currentAnswerContext.order}`,
-        isAnswer: true,
-        hasGood : withResult ? achievement === 100 : null
+        hasGood : withResult ? achievement === 100 : null,
+        correction: currentAnswerContext.room.withCorrection ? goodResponseIds : null
       }
     }
+  }
+}
+
+export const navigateRoom = async (data: PrevNextRoomType): Promise<ActionResultType<RoomQuestionNextType>> => {
+  const errors = ZparseOrError(PrevNextRoomSchema, data)
+  if (errors) return errors
+
+  const userId = await getSessionUserId()
+
+  // If null provided (random case) get next question to answer
+  if (!data.questionId) {
+    const room = await canPlayRoom(data.roomId, userId, data.shareLink)
+
+    if (!room) {
+      throw new Error('403 Forbidden')
+    }
+
+    const next = await getNextQuestionToAnswer(data.roomId)
+    if (! next) {
+      throw new Error('Can\'t navigate to questionId null')
+    }
+
+    return {
+      success: true,
+      data: next
+    }
+  }
+
+  const navigateQuestion = await canNavigateRoom(data.roomId, data.questionId, userId, data.shareLink)
+
+  if (!navigateQuestion) {
+    throw new Error('403 Forbidden')
+  }
+
+  return {
+    success: true,
+    data: navigateQuestion
   }
 }

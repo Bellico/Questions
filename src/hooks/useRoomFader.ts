@@ -1,6 +1,6 @@
-import { answerRoom } from '@/actions/room-actions'
+import { answerRoom, navigateRoom } from '@/actions/room-actions'
 import { useRoomContext } from '@/components/providers/room-provider'
-import { RoomQuestionType } from '@/lib/schema'
+import { RoomQuestionNextType } from '@/lib/schema'
 import { useRouter } from 'next/navigation'
 import { useEffect, useRef, useTransition } from 'react'
 import { useShallow } from 'zustand/react/shallow'
@@ -11,12 +11,12 @@ export function useRoomFader() {
   const animation = useRoomContext(state => state.animation)
   const isEnd = useRoomContext(state => state.isEnd)
 
-  const [disappears, appearsNewQuestion, showFinal] = useRoomContext(
-    useShallow((s) => [s.disappears, s.appearsNewQuestion, s.showFinal]),
+  const [disappears, disappearsWithResult, applyCorrection, appearsNewQuestion, showFinal] = useRoomContext(
+    useShallow((s) => [s.disappears, s.disappearsWithResult, s.applyCorrection, s.appearsNewQuestion, s.showFinal]),
   )
 
   const router = useRouter()
-  const nextQRef = useRef<RoomQuestionType | null>(null)
+  const nextQRef = useRef<RoomQuestionNextType | null>(null)
   const [isPending, startTransition] = useTransition()
 
   // To force refresh if we back and return on the page
@@ -53,7 +53,7 @@ export function useRoomFader() {
   }, [appearsNewQuestion, animation])
 
   // Valide choices and save next question then fadeOut
-  async function validAnswerChoices(choices: string[]){
+  async function submitChoices(choices: string[]){
     startTransition(async () => {
       const result = await answerRoom({
         roomId: roomId,
@@ -61,17 +61,39 @@ export function useRoomFader() {
         choices
       })
 
-      if(result.data?.next){
-        nextQRef.current = result.data.next
-        disappears(result.data?.result!, false)
+      if(!result.data) throw new Error('Answer Room failed')
+
+      const isEnd = result.data.next == null
+      nextQRef.current = result.data.next
+
+      if(result.data.result.correction){
+        applyCorrection(result.data.result, choices, isEnd)
+        return
       }
-      else{
-        nextQRef.current = null
-        disappears(result.data?.result!, true)
+
+      disappearsWithResult(result.data.result, isEnd)
+    })
+  }
+
+  async function navigate(questionId : string){
+    startTransition(async () => {
+      const result = await navigateRoom({
+        roomId: roomId,
+        questionId: questionId
+      })
+
+      if(result.data){
+        nextQRef.current = result.data
+        disappears()
       }
     })
   }
 
-  return { isPending, animation, validAnswerChoices }
+  return {
+    isPending,
+    animation,
+    submitChoices,
+    navigate,
+  }
 }
 

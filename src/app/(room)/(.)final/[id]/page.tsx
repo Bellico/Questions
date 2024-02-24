@@ -1,6 +1,7 @@
 import { canViewRoom } from '@/actions/queries'
 import { Spinner } from '@/components/commons/spinner'
 import { RoomFinalHero } from '@/components/final/room-final-hero'
+import { RoomFinalHeroStats } from '@/components/final/room-final-hero-stats'
 import { RoomFinalResume } from '@/components/final/room-final-resume'
 import { auth } from '@/lib/auth'
 import { redirect } from 'next/navigation'
@@ -17,9 +18,20 @@ params: { id: string, shareLink?: string }
     redirect('/')
   }
 
+  if(!room.withResults){
+    return(
+      <RoomFinalHero canScroll={false} />
+    )
+  }
+
   return (
     <>
-      <RoomFinalHero roomId={room.id} />
+      <RoomFinalHero canScroll={true} >
+        <Suspense fallback={<Spinner />}>
+          <RoomFinalHeroStats roomId={room.id} />
+        </Suspense>
+      </RoomFinalHero>
+
       <Suspense fallback={<Spinner />}>
         <RoomFinalResume roomId={room.id} />
       </Suspense>
