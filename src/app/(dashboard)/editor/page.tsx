@@ -1,4 +1,4 @@
-import { createQuestionGroup } from '@/actions/editor-actions'
+import { createQuestionGroupAction } from '@/actions/editor/create-question-group-action'
 import { QuestionsEditor } from '@/components/editor/questions-editor'
 
 export default async function EditorPage({
@@ -9,7 +9,7 @@ export default async function EditorPage({
   return (
     <QuestionsEditor
       useDraft={searchParams.useDraft}
-      saveGroupAction={createQuestionGroup}
+      saveGroupAction={createQuestionGroupAction}
     />
   )
 }

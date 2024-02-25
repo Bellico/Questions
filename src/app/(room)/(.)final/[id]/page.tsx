@@ -1,4 +1,4 @@
-import { canViewRoom } from '@/actions/queries'
+import { canViewRoomQuery } from '@/actions/queries'
 import { Spinner } from '@/components/commons/spinner'
 import { RoomFinalHero } from '@/components/final/room-final-hero'
 import { RoomFinalHeroStats } from '@/components/final/room-final-hero-stats'
@@ -13,7 +13,7 @@ export default async function RoomPage({
 params: { id: string, shareLink?: string }
 }) {
   const session = await auth()
-  const room = await canViewRoom(params.id, session?.user.id, params.shareLink)
+  const room = await canViewRoomQuery(params.id, session?.user.id, params.shareLink)
   if(!room){
     redirect('/')
   }

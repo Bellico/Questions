@@ -1,4 +1,4 @@
-import { getRoomFinalResume } from '@/actions/queries'
+import { getRoomFinalResumeQuery } from '@/actions/queries'
 import { cn } from '@/lib/utils'
 import { CheckCheck, XCircle } from 'lucide-react'
 import dynamic from 'next/dynamic'
@@ -8,7 +8,7 @@ const QReaderMarkdown = dynamic(() => import('../../lib/mdx-markdown-reader'), {
 })
 
 type ArrayType<T> = T extends (infer Item)[] ? Item : T
-type RoomFinalResumeSectionPropsType = ArrayType<Awaited<ReturnType<typeof getRoomFinalResume>>>
+type RoomFinalResumeSectionPropsType = ArrayType<Awaited<ReturnType<typeof getRoomFinalResumeQuery>>>
 
 export function RoomFinalResumeSection({answerResume} : { answerResume: RoomFinalResumeSectionPropsType }) {
 

@@ -1,4 +1,4 @@
-import { getActiveRoom, getGroupForStart, getLastSettingsRoom } from '@/actions/queries'
+import { getActiveRoomQuery, getGroupForStartQuery, getLastSettingsRoomQuery } from '@/actions/queries'
 import { RoomSettings } from '@/components/room/room-settings'
 import { auth } from '@/lib/auth'
 import { notFound, redirect } from 'next/navigation'
@@ -12,17 +12,17 @@ params: { id: string }
   if (!session) {
     redirect('/')
   }
-  const group = await getGroupForStart(params.id, session.user.id!)
+  const group = await getGroupForStartQuery(params.id, session.user.id!)
   if (!group) {
     notFound()
   }
 
-  const activeRoom = await getActiveRoom(group.id, session.user.id!)
+  const activeRoom = await getActiveRoomQuery(group.id, session.user.id!)
   if(activeRoom){
     redirect(`/room/${activeRoom.id}`)
   }
 
-  const lastSettings = await getLastSettingsRoom(group.id, session.user.id!)
+  const lastSettings = await getLastSettingsRoomQuery(group.id, session.user.id!)
 
   return (
     <section className="animate-moveToLeft">

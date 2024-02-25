@@ -1,7 +1,6 @@
 import { auth } from '@/lib/auth'
 import prisma from '@/lib/prisma'
 import { RoomProgressType, RoomQuestionNextType } from '@/lib/schema'
-import { RoomMode } from '@prisma/client'
 
 export const getSessionUserIdOrThrow = async (): Promise<string> => {
   const session = await auth()
@@ -99,7 +98,7 @@ export const getStatsQuery = async (userId: string) => {
   return { groupCount, questionCount }
 }
 
-export const getGroupForStart = async (groupId: string, userId: string) => {
+export const getGroupForStartQuery = async (groupId: string, userId: string) => {
   return await prisma.questionGroup.findUnique({
     where: {
       id: groupId,
@@ -113,7 +112,7 @@ export const getGroupForStart = async (groupId: string, userId: string) => {
   })
 }
 
-export const getLastSettingsRoom = async (groupId: string, userId: string) => {
+export const getLastSettingsRoomQuery = async (groupId: string, userId: string) => {
   // Last setting of same group
   let settings = await prisma.room.findFirst({
     where: {
@@ -167,7 +166,7 @@ export const getLastSettingsRoom = async (groupId: string, userId: string) => {
   return {...settings, groupId}
 }
 
-export const getActiveRoom = async (groupId: string, userId: string) => {
+export const getActiveRoomQuery = async (groupId: string, userId: string) => {
   return await prisma.room.findFirst({
     where: {
       groupId: groupId,
@@ -183,43 +182,7 @@ export const getActiveRoom = async (groupId: string, userId: string) => {
   })
 }
 
-export const getNextQuestionToAnswer = async (roomId: string) : Promise<RoomQuestionNextType | null> => {
-  const result = await prisma.answer.findFirst({
-    where: {
-      roomId: roomId,
-      dateEnd: null,
-    },
-    select: {
-      order: true,
-      question:{
-        select: {
-          id: true,
-          title: true,
-          subject: true,
-          responses:{
-            select:{
-              id: true,
-              text: true
-            }
-          }
-        }
-      }
-    }
-  })
-
-  if(result?.question){
-    return{
-      questionId : result.question.id,
-      title: result?.question?.title || `Question ${result.order}`,
-      subject: result.question.subject,
-      responses: result.question.responses,
-    }
-  }
-
-  return null
-}
-
-export const getProgressInfosRoom = async (roomId: string, groupId: string, withResult: boolean) : Promise<RoomProgressType[]> => {
+export const getProgressInfosRoomQuery = async (roomId: string, groupId: string, withResult: boolean) : Promise<RoomProgressType[]> => {
   const questions = await prisma.question.findMany({
     where: {
       groupId: groupId
@@ -260,7 +223,7 @@ export const getProgressInfosRoom = async (roomId: string, groupId: string, with
   return progress
 }
 
-export const getProgressInfosWithRandom = async (roomId: string, groupId: string, withResult: boolean) : Promise<RoomProgressType[]> => {
+export const getProgressInfosWithRandomQuery = async (roomId: string, groupId: string, withResult: boolean) : Promise<RoomProgressType[]> => {
   const questions = await prisma.question.count({
     where: {
       groupId: groupId
@@ -307,98 +270,74 @@ export const getProgressInfosWithRandom = async (roomId: string, groupId: string
   return progress
 }
 
-export const canAnswerQuestion = async (roomId: string, questionId: string, userId?: string, shareLink?: string) => {
-  const result = await prisma.answer.findFirstOrThrow({
+export const canViewRoomQuery = async (roomId: string, userId?: string, shareLink?: string) => {
+  return await prisma.room.findFirstOrThrow({
     where: {
-      questionId: questionId,
-      dateEnd: null,
-      room:{
-        id: roomId,
-        dateEnd: null,
-        AND: [
-          {
-            OR: [
-              {
-                userId: userId,
-              },
-              {
-                shareLink: shareLink,
-              },
-            ],
-          },
-        ]
-      }
+      id: roomId,
+      dateEnd: {
+        not: null
+      },
+      AND: [
+        {
+          OR: [
+            {
+              userId: userId,
+            },
+            {
+              shareLink: shareLink,
+              AND:{
+                shareLink: {
+                  not: null
+                }
+              }
+            },
+          ],
+        },
+      ]
     },
     select: {
       id: true,
-      order: true,
-      room:{
-        select:{
-          groupId: true,
-          mode: true,
-          withCorrection: true,
-          withRandom: true
-        }
-      },
-      question:{
-        select: {
-          id: true,
-          title: true,
-          responses:{
-            where:{
-              isCorrect: true
-            },
-            select:{
-              id: true,
-            }
-          }
-        }
-      }
+      withResults: true
+    }
+  })
+}
+
+export const getRoomFinalScoreQuery = async (roomId: string) => {
+  const results = await prisma.room.findFirstOrThrow({
+    where:{
+      id: roomId,
+    },
+    select:{
+      score: true,
+      successCount: true,
+      failedCount: true
     }
   })
 
-  return result!
+  return {
+    score: results.score,
+    success: results.successCount,
+    failed: results.failedCount,
+    count : results.successCount! +  results.failedCount!
+  }
 }
 
-export const canNavigateRoom = async (roomId: string, questionId: string, userId?: string, shareLink?: string) : Promise<RoomQuestionNextType> => {
-  const result = await prisma.answer.findFirstOrThrow({
-    where: {
-      questionId: questionId,
-      room:{
-        id: roomId,
-        dateEnd: null,
-        mode: RoomMode.Training,
-        AND: [
-          {
-            OR: [
-              {
-                userId: userId,
-              },
-              {
-                shareLink: shareLink,
-              },
-            ],
-          },
-        ]
-      }
+export const getRoomFinalResumeQuery = async (roomId: string) => {
+  return await prisma.answer.findMany({
+    where:{
+      roomId: roomId,
     },
-    select: {
-      order: true,
-      dateEnd: true,
+    select:{
+      id: true,
       achievement: true,
+      order: true,
       choices:{
         select:{
           responseId: true
         }
       },
-      room:{
-        select: {
-          withCorrection: true
-        }
-      },
       question:{
-        select: {
-          id: true,
+        select:{
           title: true,
           subject: true,
           responses:{
@@ -409,67 +348,15 @@ export const canNavigateRoom = async (roomId: string, questionId: string, userId
             }
           }
         }
-      }
-    }
-  })
-
-  return{
-    questionId : result.question?.id!,
-    title: result?.question?.title || `Question ${result.order}`,
-    subject: result.question?.subject!,
-    responses: result.question?.responses.map(r => ({ id: r.id, text: r.text }))!,
-    navigate: result.dateEnd === null ? undefined : {
-      hasGood: result.achievement === 100,
-      correction: result.room.withCorrection ? result.question?.responses.filter(r => r.isCorrect).map(r => r.id)! : null,
-      choices: result.choices.map(c => c.responseId)
-    }
-  }
-}
-
-export const getAnsweredQuestionIdsInRoom = async (roomId: string) => {
-  const questionIds = await prisma.answer.findMany({
-    where: {
-      roomId: roomId,
-    },
-    select:{
-      questionId: true,
-    },
-  })
-
-  return questionIds.map(q => q.questionId!)
-}
-
-export const computeNextQuestion = async (groupId: string, withRandom: boolean, alreadyAnsweredQuestionId: string[]) => {
-  const availableQuestions = await prisma.question.findMany({
-    where: {
-      id: {
-        notIn: alreadyAnsweredQuestionId
       },
-      groupId: groupId
-    },
-    select:{
-      id: true,
     },
     orderBy:{
-      order: 'asc'
+      order:'asc'
     }
   })
-
-  if(availableQuestions.length === 0){
-    return null
-  }
-
-  const questionIds = availableQuestions.map(q => q.id)
-  let nextQuestionId = questionIds[0]
-
-  if(withRandom){
-    nextQuestionId = questionIds[Math.floor(Math.random() * questionIds.length)]
-  }
-
-  return nextQuestionId
 }
 
-export const canPlayRoom = async (roomId: string, userId?: string, shareLink?: string) => {
+export const canPlayRoomQuery = async (roomId: string, userId?: string, shareLink?: string) => {
   return await prisma.room.findFirst({
     where: {
       id: roomId,
@@ -502,89 +389,68 @@ export const canPlayRoom = async (roomId: string, userId?: string, shareLink?: s
   })
 }
 
-export const canViewRoom = async (roomId: string, userId?: string, shareLink?: string) => {
-  return await prisma.room.findFirstOrThrow({
+export const computeNextQuestionQuery = async (groupId: string, withRandom: boolean, alreadyAnsweredQuestionId: string[]) => {
+  const availableQuestions = await prisma.question.findMany({
     where: {
-      id: roomId,
-      dateEnd: {
-        not: null
+      id: {
+        notIn: alreadyAnsweredQuestionId
       },
-      AND: [
-        {
-          OR: [
-            {
-              userId: userId,
-            },
-            {
-              shareLink: shareLink,
-              AND:{
-                shareLink: {
-                  not: null
-                }
-              }
-            },
-          ],
-        },
-      ]
+      groupId: groupId
+    },
+    select:{
+      id: true,
+    },
+    orderBy:{
+      order: 'asc'
+    }
+  })
+
+  if(availableQuestions.length === 0){
+    return null
+  }
+
+  const questionIds = availableQuestions.map(q => q.id)
+  let nextQuestionId = questionIds[0]
+
+  if(withRandom){
+    nextQuestionId = questionIds[Math.floor(Math.random() * questionIds.length)]
+  }
+
+  return nextQuestionId
+}
+
+export const getNextQuestionToAnswerQuery = async (roomId: string) : Promise<RoomQuestionNextType | null> => {
+  const result = await prisma.answer.findFirst({
+    where: {
+      roomId: roomId,
+      dateEnd: null,
     },
     select: {
-      id: true,
-      withResults: true
-    }
-  })
-}
-
-
-export const getRoomFinalScore = async (roomId: string) => {
-  const results = await prisma.room.findFirstOrThrow({
-    where:{
-      id: roomId,
-    },
-    select:{
-      score: true,
-      successCount: true,
-      failedCount: true
-    }
-  })
-
-  return {
-    score: results.score,
-    success: results.successCount,
-    failed: results.failedCount,
-    count : results.successCount! +  results.failedCount!
-  }
-}
-
-export const getRoomFinalResume = async (roomId: string) => {
-  return await prisma.answer.findMany({
-    where:{
-      roomId: roomId,
-    },
-    select:{
-      id: true,
-      achievement: true,
       order: true,
-      choices:{
-        select:{
-          responseId: true
-        }
-      },
       question:{
-        select:{
+        select: {
+          id: true,
           title: true,
           subject: true,
           responses:{
             select:{
               id: true,
-              text: true,
-              isCorrect: true
+              text: true
             }
           }
         }
-      },
-    },
-    orderBy:{
-      order:'asc'
+      }
     }
   })
+
+  if(result?.question){
+    return{
+      questionId : result.question.id,
+      title: result?.question?.title || `Question ${result.order}`,
+      subject: result.question.subject,
+      responses: result.question.responses,
+    }
+  }
+
+  return null
 }

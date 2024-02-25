@@ -1,6 +1,6 @@
 'use client'
 
-import { deleteQuestionGroup } from '@/actions/editor-actions'
+import { deleteQuestionGroupAction } from '@/actions/editor/delete-question-group-action'
 import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
@@ -66,7 +66,7 @@ export function QuestionsTable({ questionGroups }: QuestionsTableProps) {
                   <DropdownMenuItem>Duplicate</DropdownMenuItem>
                   <Link
                     href="/"
-                    onClick={() => deleteQuestionGroup(invoice.id)}
+                    onClick={() => deleteQuestionGroupAction(invoice.id)}
                   >
                     <DropdownMenuItem>Delete</DropdownMenuItem>
                   </Link>

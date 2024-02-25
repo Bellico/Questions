@@ -1,4 +1,4 @@
-import { updateQuestionGroup } from '@/actions/editor-actions'
+import { updateQuestionGroupAction } from '@/actions/editor/update-question-group-actions'
 import { getEditorQuery } from '@/actions/queries'
 import { QuestionsEditor } from '@/components/editor/questions-editor'
 import { auth } from '@/lib/auth'
@@ -16,7 +16,7 @@ export default async function EditorPage({
   const useDraft = Boolean(searchParams.useDraft)
 
   if (useDraft) {
-    return <QuestionsEditor useDraft saveGroupAction={updateQuestionGroup} />
+    return <QuestionsEditor useDraft saveGroupAction={updateQuestionGroupAction} />
   }
 
   const questionGroup = await getEditorQuery(params.id, session?.user.id!)
@@ -28,7 +28,7 @@ export default async function EditorPage({
   return (
     <QuestionsEditor
       questionGroup={questionGroup}
-      saveGroupAction={updateQuestionGroup}
+      saveGroupAction={updateQuestionGroupAction}
     />
   )
 }

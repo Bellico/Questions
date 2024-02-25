@@ -1,4 +1,4 @@
-import { canPlayRoom, getNextQuestionToAnswer, getProgressInfosRoom, getProgressInfosWithRandom } from '@/actions/queries'
+import { canPlayRoomQuery, getNextQuestionToAnswerQuery, getProgressInfosRoomQuery, getProgressInfosWithRandomQuery } from '@/actions/queries'
 import { Room } from '@/components/room/room'
 import { auth } from '@/lib/auth'
 import { RoomMode } from '@prisma/client'
@@ -11,20 +11,20 @@ params: { id: string, shareLink?: string }
 }) {
   const session = await auth()
 
-  const room = await canPlayRoom(params.id, session?.user.id, params.shareLink)
+  const room = await canPlayRoomQuery(params.id, session?.user.id, params.shareLink)
   if(!room){
     redirect('/')
   }
 
-  const nextQuestion = await getNextQuestionToAnswer(room.id)
+  const nextQuestion = await getNextQuestionToAnswerQuery(room.id)
   if(!nextQuestion){
     redirect('/')
   }
 
   const isTraining = room.mode === RoomMode.Training
   const progress = room.withRandom ?
-    await getProgressInfosWithRandom(room.id, room.groupId!, isTraining):
-    await getProgressInfosRoom(room.id, room.groupId!, isTraining)
+    await getProgressInfosWithRandomQuery(room.id, room.groupId!, isTraining):
+    await getProgressInfosRoomQuery(room.id, room.groupId!, isTraining)
 
   return (
     <Room

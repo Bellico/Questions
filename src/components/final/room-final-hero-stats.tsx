@@ -1,7 +1,7 @@
-import { getRoomFinalScore } from '@/actions/queries'
+import { getRoomFinalScoreQuery } from '@/actions/queries'
 
 export async function RoomFinalHeroStats({roomId} : { roomId: string}) {
-  const stats = await getRoomFinalScore(roomId)
+  const stats = await getRoomFinalScoreQuery(roomId)
 
   return(
     <div className="space-y-3 text-xl sm:space-y-5 sm:text-3xl">

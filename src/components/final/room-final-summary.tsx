@@ -1,10 +1,7 @@
-import { getRoomFinalScore } from '@/actions/queries'
-import { Spinner } from '@/components/commons/spinner'
-import { RoomFinalHeroStats } from '@/components/final/room-final-hero-stats'
-import { Suspense } from 'react'
+import { getRoomFinalScoreQuery } from '@/actions/queries'
 
 export async function RoomFinalSummary({roomId} : { roomId: string}) {
-  const stats = await getRoomFinalScore(roomId)
+  const stats = await getRoomFinalScoreQuery(roomId)
 
   return(
     <div className="space-y-3 text-xl sm:space-y-5 sm:text-3xl">

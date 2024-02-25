@@ -1,6 +1,7 @@
 'use client'
 
-import { deleteQuestionGroup, duplicateQuestionGroup } from '@/actions/editor-actions'
+import { deleteQuestionGroupAction } from '@/actions/editor/delete-question-group-action'
+import { duplicateQuestionGroupAction } from '@/actions/editor/duplicate-question-group-action'
 import { YesNoDialogAction } from '@/components/commons/dialog'
 import { AlertDialogTrigger } from '@/components/ui/alert-dialog'
 import { DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator } from '@/components/ui/dropdown-menu'
@@ -17,7 +18,7 @@ export function QuestionGroupsListActions({ groupId }: QuestionsTableProps) {
 
   async function onDeleteAction(){
     requestAction(
-      () => deleteQuestionGroup(groupId),
+      () => deleteQuestionGroupAction(groupId),
       () => {},
       'Group deleted'
     )
@@ -25,7 +26,7 @@ export function QuestionGroupsListActions({ groupId }: QuestionsTableProps) {
 
   async function onDuplicateAction(){
     requestAction(
-      () => duplicateQuestionGroup(groupId),
+      () => duplicateQuestionGroupAction(groupId),
       () => {},
       'Group duplicated'
     )

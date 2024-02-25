@@ -1,4 +1,5 @@
-import { answerRoom, navigateRoom } from '@/actions/room-actions'
+import { answerRoomAction } from '@/actions/room/answer-room-action'
+import { navigateRoomAction } from '@/actions/room/navigate-room-action'
 import { useRoomContext } from '@/components/providers/room-provider'
 import { RoomQuestionNextType } from '@/lib/schema'
 import { useRouter } from 'next/navigation'
@@ -55,7 +56,7 @@ export function useRoomFader() {
   // Valide choices and save next question then fadeOut
   async function submitChoices(choices: string[]){
     startTransition(async () => {
-      const result = await answerRoom({
+      const result = await answerRoomAction({
         roomId: roomId,
         questionId: currentQuestion.questionId,
         choices
@@ -77,7 +78,7 @@ export function useRoomFader() {
 
   async function navigate(questionId : string){
     startTransition(async () => {
-      const result = await navigateRoom({
+      const result = await navigateRoomAction({
         roomId: roomId,
         questionId: questionId
       })
