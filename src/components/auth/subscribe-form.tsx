@@ -12,7 +12,7 @@ const SignInSchema = z.object({
   email: z.string().email()
 })
 
-type SignInSchemaType = z.infer<typeof SignInSchema>;
+type SignInSchemaType = z.infer<typeof SignInSchema>
 
 export default function SubscribeForm() {
 
@@ -23,7 +23,7 @@ export default function SubscribeForm() {
   const { handleSubmit,
     register,
     setError,
-    formState: { isSubmitting, isSubmitSuccessful, errors },
+    formState: { isSubmitting, isSubmitSuccessful, errors, isValid },
   } = form
 
   const signWithEmail = async (data: SignInSchemaType) => {
@@ -37,7 +37,7 @@ export default function SubscribeForm() {
     <>
       <form id="form-subscribe" noValidate className="flex space-x-2" onSubmit={handleSubmit(signWithEmail)}>
         <Input placeholder="Enter your email" type="email" {...register('email')} />
-        <Button type="submit" disabled={isSubmitting} >
+        <Button type="submit" disabled={isSubmitting || !isValid} >
           {isSubmitting && <Loader2 className="-ml-1 mr-3 animate-spin" />}
                     Sign In
         </Button>

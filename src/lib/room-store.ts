@@ -2,8 +2,6 @@ import { RoomProgressType, RoomQuestionNextType, RoomQuestionResultType } from '
 import { create } from 'zustand'
 
 export type RoomStateProps = {
-    roomId: string,
-    isCompleted: boolean,
     currentQuestion: RoomQuestionNextType,
     progress : RoomProgressType[]
 }
@@ -13,6 +11,7 @@ type animationType = 'animate-scaleUp' | 'animate-zoomInRoom' | 'animate-zoomOut
 export type RoomState = RoomStateProps & {
   animation: animationType,
   progressingId?: string
+  isCompleted: boolean,
   isEnd: boolean
   canGoPrev: boolean,
   canGoNext: boolean,
@@ -28,6 +27,7 @@ export type RoomState = RoomStateProps & {
 export const createRoomStore = (initProps: RoomStateProps) => {
   const DEFAULT_PROPS = {
     animation: 'animate-scaleUp' as animationType,
+    isCompleted : false,
     isEnd: false,
     canGoPrev: initProps.currentQuestion.questionId !== initProps.progress[0].id,
     canGoNext: false

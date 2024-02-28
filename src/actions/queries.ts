@@ -112,6 +112,28 @@ export const getGroupForStartQuery = async (groupId: string, userId: string) => 
   })
 }
 
+export const getGroupForShareQuery = async (groupId: string, shareLink: string) => {
+  return await prisma.room.findUnique({
+    where: {
+      id: groupId,
+      shareLink: shareLink,
+      dateEnd: null
+    },
+    select: {
+      id: true,
+      dateStart: true,
+      mode: true,
+      group:{
+        include:{
+          _count: {
+            select: { questions: true },
+          },
+        }
+      }
+    }
+  })
+}
+
 export const getLastSettingsRoomQuery = async (groupId: string, userId: string) => {
   // Last setting of same group
   let settings = await prisma.room.findFirst({
@@ -271,29 +293,22 @@ export const getProgressInfosWithRandomQuery = async (roomId: string, groupId: s
 }
 
 export const canViewRoomQuery = async (roomId: string, userId?: string, shareLink?: string) => {
-  return await prisma.room.findFirstOrThrow({
+  return await prisma.room.findFirst({
     where: {
       id: roomId,
       dateEnd: {
         not: null
       },
-      AND: [
-        {
-          OR: [
-            {
-              userId: userId,
-            },
-            {
-              shareLink: shareLink,
-              AND:{
-                shareLink: {
-                  not: null
-                }
-              }
-            },
-          ],
-        },
-      ]
+      AND:{
+        OR: [
+          {
+            userId: userId,
+          },
+          {
+            shareLink: shareLink ?? '',
+          },
+        ]
+      }
     },
     select: {
       id: true,
@@ -306,6 +321,9 @@ export const getRoomFinalScoreQuery = async (roomId: string) => {
   const results = await prisma.room.findFirstOrThrow({
     where:{
       id: roomId,
+      dateEnd: {
+        not: null
+      }
     },
     select:{
       score: true,
@@ -326,6 +344,9 @@ export const getRoomFinalResumeQuery = async (roomId: string) => {
   return await prisma.answer.findMany({
     where:{
       roomId: roomId,
+      dateEnd: {
+        not: null
+      }
     },
     select:{
       id: true,
@@ -360,24 +381,20 @@ export const canPlayRoomQuery = async (roomId: string, userId?: string, shareLin
   return await prisma.room.findFirst({
     where: {
       id: roomId,
+      dateStart:{
+        not: null
+      },
       dateEnd: null,
-      AND: [
-        {
-          OR: [
-            {
-              userId: userId,
-            },
-            {
-              shareLink: shareLink,
-              AND:{
-                shareLink: {
-                  not: null
-                }
-              }
-            },
-          ],
-        },
-      ]
+      AND:{
+        OR: [
+          {
+            userId: userId,
+          },
+          {
+            shareLink: shareLink ?? '',
+          },
+        ]
+      }
     },
     select: {
       id: true,

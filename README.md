@@ -14,6 +14,9 @@ RESEND_API_KEY = "*******"
 # For production https://next-auth.js.org/configuration/options
 # Example : openssl rand -base64 32
 NEXTAUTH_SECRET = "*******"
+
+# Use for generate share link
+PUBLIC_URL = "https://yourdomain.com"
 ```
 
 ## Local database install

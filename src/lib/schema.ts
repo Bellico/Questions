@@ -31,7 +31,7 @@ export const QuestionGroupSchema = z.object({
   questions: z.array(QuestionSchema).min(1),
 })
 
-export const RoomSettingsSchema = z.object({
+const RoomSettingsBaseSchema = z.object({
   groupId: z.string(),
   mode: z.nativeEnum(RoomMode),
   withTimer: z.boolean(),
@@ -39,7 +39,20 @@ export const RoomSettingsSchema = z.object({
   withCorrection: z.boolean(), // => Training ?
   withResults: z.boolean(),
   withProgress: z.boolean()
-}).refine(v => v.mode === RoomMode.Rating && v.withCorrection ? false: true)
+})
+
+export const RoomSettingsSchema = RoomSettingsBaseSchema
+  .refine(v => v.mode === RoomMode.Rating && v.withCorrection ? false: true)
+
+export const RoomShareSchema = z.object({
+  username: z.string(),
+}).merge(RoomSettingsBaseSchema)
+  .refine(v => v.mode === RoomMode.Rating && v.withCorrection ? false: true)
+
+export const RoomStartShareSchema = z.object({
+  roomId: z.string(),
+  shareLink: z.string(),
+})
 
 export const AnswerRoomSchema = z.object({
   roomId: z.string(),
@@ -59,6 +72,8 @@ export type QuestionType = z.infer<typeof QuestionSchema>
 export type QuestionGroupType = z.infer<typeof QuestionGroupSchema>
 export type QuestionFormType = z.infer<typeof QuestionFormSchema>
 export type RoomSettingsType = z.infer<typeof RoomSettingsSchema>
+export type RoomShareType = z.infer<typeof RoomShareSchema>
+export type RoomStartShareType = z.infer<typeof RoomStartShareSchema>
 export type AnswerRoomType = z.infer<typeof AnswerRoomSchema>
 export type PrevNextRoomType = z.infer<typeof PrevNextRoomSchema>
 

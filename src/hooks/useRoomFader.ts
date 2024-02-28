@@ -6,8 +6,8 @@ import { useRouter } from 'next/navigation'
 import { useEffect, useRef, useTransition } from 'react'
 import { useShallow } from 'zustand/react/shallow'
 
-export function useRoomFader() {
-  const roomId = useRoomContext(state => state.roomId)
+export function useRoomFader(roomId: string, shareLink?: string) {
+
   const currentQuestion = useRoomContext(state => state.currentQuestion)
   const animation = useRoomContext(state => state.animation)
   const isEnd = useRoomContext(state => state.isEnd)
@@ -30,6 +30,8 @@ export function useRoomFader() {
   // IsEnd so show final
   useEffect(()=> {
     if(!isEnd) return
+    // When correction, don't show final automatically, the user will do it
+    if(currentQuestion.navigate) return
 
     const time = setTimeout(() => {
       showFinal()
@@ -38,7 +40,7 @@ export function useRoomFader() {
     return () => {
       clearTimeout(time)
     }
-  }, [showFinal, isEnd])
+  }, [showFinal, isEnd, currentQuestion])
 
   // Have next Question so appears it
   useEffect(()=> {
@@ -59,7 +61,8 @@ export function useRoomFader() {
       const result = await answerRoomAction({
         roomId: roomId,
         questionId: currentQuestion.questionId,
-        choices
+        choices,
+        shareLink
       })
 
       if(!result.data) throw new Error('Answer Room failed')
@@ -80,7 +83,8 @@ export function useRoomFader() {
     startTransition(async () => {
       const result = await navigateRoomAction({
         roomId: roomId,
-        questionId: questionId
+        questionId: questionId,
+        shareLink
       })
 
       if(result.data){

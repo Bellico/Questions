@@ -16,24 +16,22 @@ export function RoomNavigate({navigate} : RoomNavigateProps) {
     useShallow((s) => [s.getPrevQuestionId, s.getNextQuestionId]),
   )
 
-  async function navigateToPrev(e: FormEvent){
-    e.preventDefault()
+  async function navigateToPrev(){
     await navigate(goToPrevQuestion())
   }
 
-  async function navigateToNext(e: FormEvent){
-    e.preventDefault()
+  async function navigateToNext(){
     await navigate(goToNextQuestion())
   }
 
   return (
     <div className="inset-x-0 z-10 mb-6 flex justify-between sm:absolute">
-      <form onSubmit={navigateToPrev}>
+      <form action={navigateToPrev}>
         <Button variant="outline" type="submit" disabled={!canGoPrev} >
           <ArrowBigLeftDash className="mr-2" /> Prev
         </Button>
       </form>
-      <form onSubmit={navigateToNext}>
+      <form action={navigateToNext}>
         <Button variant="outline" type="submit" disabled={!canGoNext} >
           Next <ArrowBigRightDash className="ml-2" />
         </Button>

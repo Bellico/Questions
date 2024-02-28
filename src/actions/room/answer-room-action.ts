@@ -114,18 +114,16 @@ const canAnswerQuestion = async (roomId: string, questionId: string, userId?: st
       room:{
         id: roomId,
         dateEnd: null,
-        AND: [
-          {
-            OR: [
-              {
-                userId: userId,
-              },
-              {
-                shareLink: shareLink,
-              },
-            ],
-          },
-        ]
+        AND:{
+          OR: [
+            {
+              userId: userId,
+            },
+            {
+              shareLink: shareLink ?? '',
+            },
+          ]
+        }
       }
     },
     select: {

@@ -38,7 +38,7 @@ export function RoomCorrection({ goToNext }: RoomCorrectionProps) {
       {!canGoNext &&
         <form onSubmit={(e) => { e.preventDefault(); goToNext()}}>
           <Button className="m-auto mt-4 block h-12 w-full sm:h-10 sm:w-36" type="submit">
-              Go to next
+              Next
           </Button>
         </form>
       }

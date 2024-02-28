@@ -9,20 +9,23 @@ import { useRoomFader } from '@/hooks/useRoomFader'
 import { redirect } from 'next/navigation'
 
 type RoomDisplayProps = {
+  roomId: string,
   withProgress: boolean
   canNavigate: boolean
+  shareLink?: string
 }
 
-export function RoomDisplay({withProgress, canNavigate} : RoomDisplayProps) {
-  const roomId = useRoomContext(state => state.roomId)
+export function RoomDisplay({roomId, withProgress, canNavigate, shareLink} : RoomDisplayProps) {
   const currentQuestion = useRoomContext(state => state.currentQuestion)
   const isCompleted = useRoomContext(state => state.isCompleted)
   const disappears = useRoomContext(state => state.disappears)
 
-  const { isPending, animation, submitChoices, navigate} = useRoomFader()
+  const { isPending, animation, submitChoices, navigate} = useRoomFader(roomId, shareLink)
 
   if(isCompleted){
-    redirect(`/final/${roomId}`)
+    shareLink ?
+      redirect(`/final/${roomId}/?shareLink=${shareLink}`) :
+      redirect(`/final/${roomId}`)
   }
 
   return (

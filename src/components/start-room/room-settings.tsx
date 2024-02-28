@@ -1,6 +1,8 @@
 'use client'
 
+import { shareRoomAction } from '@/actions/room/share-room-action'
 import { startRoomAction } from '@/actions/room/start-room-action'
+import { ShareDialog } from '@/components/start-room/share-dialog'
 import { Button } from '@/components/ui/button'
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
@@ -34,10 +36,6 @@ export function RoomSettings(settings: RoomSettingsType) {
       () => startRoomAction(getValues()),
       (data) => redirect(`/room/${data}`),
     )
-  }
-
-  function share(){
-    console.log(getValues())
   }
 
   return(
@@ -165,7 +163,7 @@ export function RoomSettings(settings: RoomSettingsType) {
 
         <div className="space-x-4 text-center">
           <Button onClick={(e) => { e.preventDefault(); start()}}><Play className="mr-2" />Start now</Button>
-          <Button onClick={(e) => { e.preventDefault(); share()}} variant="secondary"><Share className="mr-2" />Get a share link</Button>
+          <ShareDialog settingValues={getValues} />
         </div>
       </form>
     </Form>

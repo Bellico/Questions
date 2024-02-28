@@ -2,7 +2,7 @@
 
 import { deleteQuestionGroupAction } from '@/actions/editor/delete-question-group-action'
 import { duplicateQuestionGroupAction } from '@/actions/editor/duplicate-question-group-action'
-import { YesNoDialogAction } from '@/components/commons/dialog'
+import { YesNoDialogAction } from '@/components/commons/yes-no-dialog'
 import { AlertDialogTrigger } from '@/components/ui/alert-dialog'
 import { DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator } from '@/components/ui/dropdown-menu'
 import { useAction } from '@/hooks/useAction'

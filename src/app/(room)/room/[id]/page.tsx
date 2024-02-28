@@ -2,18 +2,20 @@ import { canPlayRoomQuery, getNextQuestionToAnswerQuery, getProgressInfosRoomQue
 import { Room } from '@/components/room/room'
 import { auth } from '@/lib/auth'
 import { RoomMode } from '@prisma/client'
-import { redirect } from 'next/navigation'
+import { notFound, redirect } from 'next/navigation'
 
 export default async function RoomPage({
-  params
+  params,
+  searchParams
 }: {
-params: { id: string, shareLink?: string }
+params: { id: string },
+searchParams?: { shareLink?: string }
 }) {
   const session = await auth()
 
-  const room = await canPlayRoomQuery(params.id, session?.user.id, params.shareLink)
+  const room = await canPlayRoomQuery(params.id, session?.user.id, searchParams?.shareLink)
   if(!room){
-    redirect('/')
+    notFound()
   }
 
   const nextQuestion = await getNextQuestionToAnswerQuery(room.id)
@@ -32,6 +34,7 @@ params: { id: string, shareLink?: string }
       currentQuestion={nextQuestion}
       progress={progress}
       canNavigate={isTraining}
-      withProgress={room.withProgress}/>
+      withProgress={room.withProgress}
+      shareLink={searchParams?.shareLink} />
   )
 }

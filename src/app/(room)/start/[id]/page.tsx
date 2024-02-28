@@ -1,5 +1,5 @@
 import { getActiveRoomQuery, getGroupForStartQuery, getLastSettingsRoomQuery } from '@/actions/queries'
-import { RoomSettings } from '@/components/room/room-settings'
+import { RoomSettings } from '@/components/start-room/room-settings'
 import { auth } from '@/lib/auth'
 import { notFound, redirect } from 'next/navigation'
 
@@ -12,6 +12,7 @@ params: { id: string }
   if (!session) {
     redirect('/')
   }
+
   const group = await getGroupForStartQuery(params.id, session.user.id!)
   if (!group) {
     notFound()

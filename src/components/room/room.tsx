@@ -10,12 +10,17 @@ type RoomProps = {
   progress: RoomProgressType[]
   withProgress: boolean
   canNavigate: boolean
+  shareLink?: string
 }
 
 export function Room(props: RoomProps) {
   return (
-    <RoomProvider value={{...props, isCompleted: false}}>
-      <RoomDisplay canNavigate={props.canNavigate} withProgress={props.withProgress} />
+    <RoomProvider value={{...props}}>
+      <RoomDisplay
+        roomId={props.roomId}
+        canNavigate={props.canNavigate}
+        withProgress={props.withProgress}
+        shareLink={props.shareLink} />
     </RoomProvider>
   )
 }

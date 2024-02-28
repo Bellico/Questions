@@ -7,12 +7,15 @@ import { redirect } from 'next/navigation'
 import { Suspense } from 'react'
 
 export default async function RoomPage({
-  params
+  params,
+  searchParams
 }: {
-params: { id: string, shareLink?: string }
+  params: { id: string },
+  searchParams?: { shareLink?: string }
 }) {
   const session = await auth()
-  const room = await canViewRoomQuery(params.id, session?.user.id, params.shareLink)
+  const room = await canViewRoomQuery(params.id, session?.user.id, searchParams?.shareLink)
+
   if(!room || !room.withResults){
     redirect('/')
   }

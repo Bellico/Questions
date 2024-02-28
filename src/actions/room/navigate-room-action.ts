@@ -12,57 +12,33 @@ export const navigateRoomAction = async (data: PrevNextRoomType): Promise<Action
 
   const userId = await getSessionUserId()
 
-  // If null provided (random case) get next question to answer
-  if (!data.questionId) {
-    const room = await canPlayRoomQuery(data.roomId, userId, data.shareLink)
+  const room = await canPlayRoomQuery(data.roomId, userId, data.shareLink)
 
-    if (!room) {
-      throw new Error('403 Forbidden')
-    }
-
-    const next = await getNextQuestionToAnswerQuery(data.roomId)
-    if (! next) {
-      throw new Error('Can\'t navigate to questionId null')
-    }
-
-    return {
-      success: true,
-      data: next
-    }
+  if (!room || room.mode !== RoomMode.Training) {
+    throw new Error('403 Forbidden')
   }
 
-  const navigateQuestion = await canNavigateRoom(data.roomId, data.questionId, userId, data.shareLink)
+  const navigate = data.questionId ?
+    await getQuestionToNavigate(data.roomId, data.questionId) :
+    await getNextQuestionToAnswerQuery(data.roomId)
 
-  if (!navigateQuestion) {
+  if (!navigate) {
     throw new Error('403 Forbidden')
   }
 
   return {
     success: true,
-    data: navigateQuestion
+    data: navigate
   }
 }
 
-const canNavigateRoom = async (roomId: string, questionId: string, userId?: string, shareLink?: string) : Promise<RoomQuestionNextType> => {
+const getQuestionToNavigate = async (roomId: string, questionId: string) : Promise<RoomQuestionNextType> => {
   const result = await prisma.answer.findFirstOrThrow({
     where: {
       questionId: questionId,
       room:{
         id: roomId,
         dateEnd: null,
-        mode: RoomMode.Training,
-        AND: [
-          {
-            OR: [
-              {
-                userId: userId,
-              },
-              {
-                shareLink: shareLink,
-              },
-            ],
-          },
-        ]
       }
     },
     select: {
