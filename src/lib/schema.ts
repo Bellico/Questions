@@ -11,7 +11,7 @@ export const ResponseSchema = z.object({
 
 export const QuestionSchema = z.object({
   id: z.string().nullable(),
-  title: z.string().max(100).nullish(),
+  title: z.string().max(100).nullable(),
   subject: z.string().min(10, 'At least 10 characters expected'),
   order: z.number(),
   responses: z.array(ResponseSchema).min(2),
@@ -20,7 +20,7 @@ export const QuestionSchema = z.object({
 // Used for editor form
 export const QuestionFormSchema = z.object({
   id: z.string().nullable(),
-  title: z.string().max(100).optional(),
+  title: z.string().max(100),
   subject: z.string().min(10, 'At least 10 characters expected'),
   responses: z.array(ResponseSchema).min(2),
 })

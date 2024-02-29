@@ -1,5 +1,6 @@
 import {
   headingsPlugin,
+  imagePlugin,
   linkDialogPlugin,
   linkPlugin,
   listsPlugin,
@@ -16,4 +17,20 @@ export const PLUGINS_MDX = [
   linkDialogPlugin(),
   tablePlugin(),
   thematicBreakPlugin(),
+  imagePlugin({
+    imageUploadHandler: async (image: File) => {
+      const formData = new FormData()
+      formData.append('image', image)
+
+      const options = {
+        method: 'POST',
+        body: formData,
+      }
+
+      const result = await fetch('/api/upload', options)
+      const res = await result.json()
+
+      return res.url
+    }
+  }),
 ]

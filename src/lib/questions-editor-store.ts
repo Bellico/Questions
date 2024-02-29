@@ -1,7 +1,7 @@
 import { QuestionType } from '@/lib/schema'
-import { generateRandomGroup } from '@/lib/utils'
+import { arrayToMap, findIndexOfKeyMap, generateRandomGroup, mapToArray } from '@/lib/utils'
+import { arrayMove } from '@dnd-kit/sortable'
 import superjson from 'superjson'
-import { v4 } from 'uuid'
 import { create } from 'zustand'
 import { PersistStorage, persist } from 'zustand/middleware'
 
@@ -20,12 +20,14 @@ export type QuestionsEditorState = QuestionsEditorStateProps & {
     updateSubject: (keyMap: string, subject: string) => void,
     addResponse: (keyMap: string) => void,
     removeResponse: (keyMap: string, index: number) => void,
+    changeOrder: (keyMapActive: string, keyMapOver: string) => void,
 }
 
 const defaultQuestion: QuestionType = {
   id: null,
   order: 1,
   subject: '',
+  title: null,
   responses: [{
     id: null,
     text: '',
@@ -40,7 +42,7 @@ const defaultQuestion: QuestionType = {
 
 function createDefaultQuestionsMap(): Map<string, QuestionType> {
   return new Map([
-    [v4(), { ...defaultQuestion }],
+    [crypto.randomUUID(), { ...defaultQuestion }],
   ])
 }
 
@@ -70,13 +72,9 @@ export const createQuestionsEditorStore = (initProps?: Partial<QuestionsEditorSt
 
     updateGroupName: (name: string) => set((state) => ({ name: name })),
 
-    // addQuestion: () => set(produce((state: QuestionsEditorState) => {
-    //     state.questionsMap.set(v4(), { ...defaultQuestion })
-    // })),
-
     addQuestion: () => set((state) => {
       const newMap = new Map(state.questionsMap)
-      const newKey = v4()
+      const newKey = crypto.randomUUID()
       const maxOrder = [...state.questionsMap].map(([_, value]) => value.order).reduce((a, b) => Math.max(a, b))
       newMap.set(newKey, { ...defaultQuestion, order: maxOrder + 1 })
       return { questionsMap: newMap, lastQuestionAdded: newKey }
@@ -87,10 +85,6 @@ export const createQuestionsEditorStore = (initProps?: Partial<QuestionsEditorSt
             newMap.delete(keyMap)!
             return { questionsMap: newMap }
     }),
-
-    // updateQuestion: (id: string, question: QuestionType) => set(produce((state: QuestionsEditorState) => {
-    //     state.questionsMap.set(id, { ...defaultQuestion })
-    // })),
 
     updateQuestion: (keyMap: string, newValues: Omit<QuestionType, 'id' | 'order'>) => set((state) => {
       const newMap = new Map(state.questionsMap)
@@ -132,6 +126,19 @@ export const createQuestionsEditorStore = (initProps?: Partial<QuestionsEditorSt
       newMap.set(keyMap, question)
       return { questionsMap: newMap }
     }),
+
+    changeOrder: (keyMapActive: string, keyMapOver: string) => set((state) => {
+      const oldIndex = findIndexOfKeyMap(state.questionsMap, keyMapActive)
+      const newIndex =  findIndexOfKeyMap(state.questionsMap, keyMapOver)
+      let questionArray = mapToArray(state.questionsMap)
+      questionArray = arrayMove(questionArray, oldIndex, newIndex)
+
+      let order = 1
+      questionArray.forEach(q => q.order = order++)
+
+      return { questionsMap: arrayToMap(questionArray) }
+    })
+
   }), {
     name: 'q-editor',
     storage,

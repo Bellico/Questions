@@ -13,7 +13,8 @@ import {
   UndoRedo,
   toolbarPlugin,
   type MDXEditorMethods,
-  type MDXEditorProps
+  type MDXEditorProps,
+  InsertImage
 } from '@mdxeditor/editor'
 import type { ForwardedRef } from 'react'
 
@@ -36,6 +37,7 @@ export default function MarkdownEditor({
               <CreateLink />
               <InsertTable />
               <InsertThematicBreak />
+              <InsertImage />
             </>
           ),
         }),

@@ -147,6 +147,11 @@
   padding-right: 0.25rem;
 }
 
+._editorRoot_11eqz_38 button {
+  color: hsl(var(--foreground));
+  background: hsl(var(--background));
+}
+
 .q-editor-markdown {
   color: hsl(var(--foreground));
 }
@@ -164,5 +169,5 @@
 }
 
 .progress-room{
-  background: repeating-linear-gradient( -45deg, hsl(var(--primary) / 0.1), hsl(var(--primary) / 0.1) 15px,  hsl(var(--accent)) 50px,  hsl(var(--accent)) 80px);
+  background: repeating-linear-gradient(-45deg, hsl(var(--primary) / 0.1), hsl(var(--primary) / 0.1) 15px,  hsl(var(--accent)) 50px,  hsl(var(--accent)) 80px);
 }

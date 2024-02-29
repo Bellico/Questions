@@ -1,7 +1,6 @@
 import { commonNames, swNames } from '@/lib/collection-names'
 import { clsx, type ClassValue } from 'clsx'
 import { twMerge } from 'tailwind-merge'
-import { v4 } from 'uuid'
 import { ZodType } from 'zod'
 
 export function cn(...inputs: ClassValue[]) {
@@ -40,7 +39,18 @@ export const mapToArray = <T>(map: Map<string, T>): T[] =>
   Array.from(map, ([_, value]) => value)
 
 export const arrayToMap = <T>(datas: T[]) =>
-  new Map<string, T>(datas.map((e) => [v4(), e]))
+  new Map<string, T>(datas.map((e) => [crypto.randomUUID(), e]))
+
+export const findIndexOfKeyMap = (map: Map<string, unknown>, key: string) =>  {
+  let index = 0
+  for (const [mapKey, _] of map) {
+    if (mapKey === key) {
+      return index
+    }
+    index++
+  }
+  return -1
+}
 
 export const randomSwName = () => swNames[Math.floor(Math.random() * swNames.length)]
 
@@ -63,6 +73,7 @@ export function generateRandomGroup(questionCount: number = 6, responsesCount: n
     questions.push({
       id: null,
       order: q + 1,
+      title: null,
       subject: 'Question ' + randomCommonName(),
       responses
     })
