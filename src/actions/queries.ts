@@ -146,8 +146,8 @@ export const getLastSettingsRoomQuery = async (groupId: string, userId: string) 
     },
     select:{
       mode: true,
-      withTimer: true,
       withRandom: true,
+      withRetry: true,
       withCorrection: true,
       withResults: true,
       withProgress: true
@@ -165,7 +165,7 @@ export const getLastSettingsRoomQuery = async (groupId: string, userId: string) 
       },
       select:{
         mode: true,
-        withTimer: true,
+        withRetry: true,
         withRandom: true,
         withCorrection: true,
         withResults: true,
@@ -178,14 +178,14 @@ export const getLastSettingsRoomQuery = async (groupId: string, userId: string) 
   if(!settings) return {
     groupId: groupId,
     mode: 'Training' as 'Training' | 'Rating',
-    withTimer: false,
+    withRetry: 0,
     withRandom: false,
     withCorrection: false,
     withResults: false,
     withProgress: false,
   }
 
-  return {...settings, groupId}
+  return {...settings, withRetry: settings.withRetry ?? 0, groupId}
 }
 
 export const getActiveRoomQuery = async (groupId: string, userId: string) => {
@@ -312,7 +312,8 @@ export const canViewRoomQuery = async (roomId: string, userId?: string, shareLin
     },
     select: {
       id: true,
-      withResults: true
+      withResults: true,
+      withRetry: true
     }
   })
 }

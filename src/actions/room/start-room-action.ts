@@ -23,7 +23,7 @@ export const startRoomAction = async (data: RoomSettingsType): Promise<ActionRes
           dateStart: new Date(),
           userId: userId,
           mode: data.mode,
-          withTimer: data.withTimer,
+          withRetry: data.withRetry > 0 ? Number(data.withRetry) : null,
           withResults: data.withResults,
           withCorrection: data.withCorrection,
           withRandom: data.withRandom,

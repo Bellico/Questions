@@ -1,17 +1,17 @@
 'use client'
 
-import { shareRoomAction } from '@/actions/room/share-room-action'
 import { startRoomAction } from '@/actions/room/start-room-action'
 import { ShareDialog } from '@/components/start-room/share-dialog'
 import { Button } from '@/components/ui/button'
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
+import { Input } from '@/components/ui/input'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { Switch } from '@/components/ui/switch'
 import { useAction } from '@/hooks/useAction'
 import { RoomSettingsSchema, RoomSettingsType } from '@/lib/schema'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { RoomMode } from '@prisma/client'
-import { Play, Share } from 'lucide-react'
+import { Play } from 'lucide-react'
 import { redirect } from 'next/navigation'
 import { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
@@ -29,6 +29,7 @@ export function RoomSettings(settings: RoomSettingsType) {
 
   useEffect(() => {
     if(mode === RoomMode.Rating && withCorrection) setValue('withCorrection', false)
+    if(mode === RoomMode.Training) setValue('withRetry', 0)
   }, [setValue, mode, withCorrection])
 
   async function start(){
@@ -69,8 +70,8 @@ export function RoomSettings(settings: RoomSettingsType) {
                     </FormItem>
                   </RadioGroup>
                   <FormDescription>
-                    Training will have no impact on your stats.<br />
-                    You can prev / next
+                    Training : Scores will not be impacted. You can navigate to previous questions.<br />
+                    Rating : Evaluate your knowledge. This will impact your score.
                   </FormDescription>
                 </div>
               </FormControl>
@@ -80,38 +81,40 @@ export function RoomSettings(settings: RoomSettingsType) {
         />
 
         {mode === RoomMode.Training &&
-        <FormField
-          control={form.control}
-          name="withCorrection"
-          render={({ field }) => (
-            <FormItem className="flex flex-row items-center justify-between rounded-lg border bg-background p-4">
-              <div className="space-y-0.5">
-                <FormLabel className="text-base">Correction</FormLabel>
-                <FormDescription>The correct answers will be displayed for each question after answering.</FormDescription>
-              </div>
-              <FormControl>
-                <Switch checked={field.value} onCheckedChange={field.onChange} />
-              </FormControl>
-            </FormItem>
-          )}
-        />
+          <FormField
+            control={form.control}
+            name="withCorrection"
+            render={({ field }) => (
+              <FormItem className="flex flex-row items-center justify-between rounded-lg border bg-background p-4">
+                <div className="space-y-0.5">
+                  <FormLabel className="text-base">Correction</FormLabel>
+                  <FormDescription>The correct answers will be displayed before moving on to the next question.</FormDescription>
+                </div>
+                <FormControl>
+                  <Switch checked={field.value} onCheckedChange={field.onChange} />
+                </FormControl>
+              </FormItem>
+            )}
+          />
         }
 
-        <FormField
-          control={form.control}
-          name="withTimer"
-          render={({ field }) => (
-            <FormItem className="flex flex-row items-center justify-between rounded-lg border bg-background p-4">
-              <div className="space-y-0.5">
-                <FormLabel className="text-base">Timer</FormLabel>
-                <FormDescription>The questionnaire will be timed for each question.</FormDescription>
-              </div>
-              <FormControl>
-                <Switch checked={field.value} onCheckedChange={field.onChange} />
-              </FormControl>
-            </FormItem>
-          )}
-        />
+        {mode === RoomMode.Rating &&
+          <FormField
+            control={form.control}
+            name="withRetry"
+            render={({ field }) => (
+              <FormItem className="flex flex-row items-center justify-between rounded-lg border bg-background p-4">
+                <div className="space-y-0.5">
+                  <FormLabel className="text-base">Number of retries</FormLabel>
+                  <FormDescription>Adds retries before saving your scores definitely. (max: 3)</FormDescription>
+                </div>
+                <FormControl>
+                  <Input className="w-16" type="number" {...field} value={field.value || 0} min="0" max="3" onKeyDown={(e) => e.preventDefault()}/>
+                </FormControl>
+              </FormItem>
+            )}
+          />
+        }
 
         <FormField
           control={form.control}
@@ -136,7 +139,7 @@ export function RoomSettings(settings: RoomSettingsType) {
             <FormItem className="flex flex-row items-center justify-between rounded-lg border bg-background p-4">
               <div className="space-y-0.5">
                 <FormLabel className="text-base">Progress bar</FormLabel>
-                <FormDescription>Show a progress bar to see progress.</FormDescription>
+                <FormDescription>Allows to know the progress status and the number of questions.</FormDescription>
               </div>
               <FormControl>
                 <Switch checked={field.value} onCheckedChange={field.onChange} />
@@ -151,8 +154,8 @@ export function RoomSettings(settings: RoomSettingsType) {
           render={({ field }) => (
             <FormItem className="flex flex-row items-center justify-between rounded-lg border bg-background p-4">
               <div className="space-y-0.5">
-                <FormLabel className="text-base">Show results</FormLabel>
-                <FormDescription>Final results will be displayed at the end.</FormDescription>
+                <FormLabel className="text-base">Summary</FormLabel>
+                <FormDescription>The summary of the results will be available at the end.</FormDescription>
               </div>
               <FormControl>
                 <Switch checked={field.value} onCheckedChange={field.onChange} />

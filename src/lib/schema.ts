@@ -34,9 +34,9 @@ export const QuestionGroupSchema = z.object({
 const RoomSettingsBaseSchema = z.object({
   groupId: z.string(),
   mode: z.nativeEnum(RoomMode),
-  withTimer: z.boolean(),
+  withRetry: z.coerce.number().min(0).max(5),
   withRandom: z.boolean(),
-  withCorrection: z.boolean(), // => Training ?
+  withCorrection: z.boolean(),
   withResults: z.boolean(),
   withProgress: z.boolean()
 })
@@ -49,9 +49,9 @@ export const RoomShareSchema = z.object({
 }).merge(RoomSettingsBaseSchema)
   .refine(v => v.mode === RoomMode.Rating && v.withCorrection ? false: true)
 
-export const RoomStartShareSchema = z.object({
+export const RoomStartSchema = z.object({
   roomId: z.string(),
-  shareLink: z.string(),
+  shareLink: z.string().optional(),
 })
 
 export const AnswerRoomSchema = z.object({
@@ -73,7 +73,7 @@ export type QuestionGroupType = z.infer<typeof QuestionGroupSchema>
 export type QuestionFormType = z.infer<typeof QuestionFormSchema>
 export type RoomSettingsType = z.infer<typeof RoomSettingsSchema>
 export type RoomShareType = z.infer<typeof RoomShareSchema>
-export type RoomStartShareType = z.infer<typeof RoomStartShareSchema>
+export type RoomStartType = z.infer<typeof RoomStartSchema>
 export type AnswerRoomType = z.infer<typeof AnswerRoomSchema>
 export type PrevNextRoomType = z.infer<typeof PrevNextRoomSchema>
 

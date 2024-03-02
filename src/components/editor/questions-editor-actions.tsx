@@ -56,7 +56,7 @@ export function QuestionsEditorActions({ useDraft, saveGroupAction }: QuestionsE
         <Button className="mr-2" size="lg"><ArrowDownToLine className="mr-2 size-4" />Save</Button>
       </form>
 
-      <form id="form-back-editor"  action={onBack}>
+      <form id="form-back-editor" action={onBack}>
         <Button variant="secondary" size="lg"><ArrowBigLeft className="mr-2 size-4" />Back</Button>
       </form>
     </div>

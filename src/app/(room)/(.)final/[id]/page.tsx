@@ -21,15 +21,22 @@ export default async function RoomPage({
     redirect('/')
   }
 
+  const hero = {
+    canScroll: room.withResults,
+    canRetry: (room.withRetry || 0) > 0,
+    roomId: room.id,
+    shareLink: searchParams?.shareLink
+  }
+
   if(!room.withResults){
     return(
-      <RoomFinalHero canScroll={false} />
+      <RoomFinalHero {...hero} />
     )
   }
 
   return (
     <>
-      <RoomFinalHero canScroll={true} >
+      <RoomFinalHero {...hero} >
         <Suspense fallback={<Spinner />}>
           <RoomFinalHeroStats roomId={room.id} />
         </Suspense>

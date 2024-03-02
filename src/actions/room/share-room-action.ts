@@ -2,11 +2,11 @@
 
 import { getSessionUserIdOrThrow, isGroupOwnerOrThrow } from '@/actions/queries'
 import prisma from '@/lib/prisma'
-import { RoomSettingsSchema, RoomShareType } from '@/lib/schema'
+import { RoomShareSchema, RoomShareType } from '@/lib/schema'
 import { ActionResultType, ZparseOrError } from '@/lib/utils'
 
 export const shareRoomAction = async (data: RoomShareType): Promise<ActionResultType<string>> => {
-  const errors = ZparseOrError(RoomSettingsSchema, data)
+  const errors = ZparseOrError(RoomShareSchema, data)
   if (errors) return errors
 
   const userId = await getSessionUserIdOrThrow()
@@ -34,7 +34,7 @@ export const shareRoomAction = async (data: RoomShareType): Promise<ActionResult
           groupId: data.groupId,
           userId: friend.id,
           mode: data.mode,
-          withTimer: data.withTimer,
+          withRetry: data.withRetry > 0 ? Number(data.withRetry) : null,
           withResults: data.withResults,
           withCorrection: data.withCorrection,
           withRandom: data.withRandom,

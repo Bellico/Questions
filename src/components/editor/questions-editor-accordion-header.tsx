@@ -37,7 +37,7 @@ export function QuestionsEditorAccordionHeader( {
 
       <div className="container flex items-center justify-between">
         <div>
-          <GripVertical className="inline-block h-full" {...listeners} />
+          <GripVertical className="inline-block h-full touch-manipulation" {...listeners} />
           <span className="mr-1">Question {index}</span>
           {title && <span className="hidden: mr-1 hidden text-xs sm:inline">({title})</span>}
           <span className="text-second hidden text-xs sm:inline"> - {responseCount} response(s)</span>

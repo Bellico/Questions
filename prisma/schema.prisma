@@ -102,7 +102,7 @@ model Room {
   mode              RoomMode
   dateStart         DateTime?
   dateEnd           DateTime?
-  withTimer         Boolean
+  withRetry         Int?
   withRandom        Boolean
   withCorrection    Boolean
   withResults       Boolean

@@ -6,7 +6,7 @@ const html = `
 
             <div style="background-color: #000; color: #fafafa;padding: 15px 0;">
                 <h1 style="line-height: 160%; text-align: center; font-size: 1.8em; font-weight: 400;">
-                    <strong>Questions Editor</strong>
+                    <strong>QUESTIONS EDITOR</strong>
                 </h1>
             </div>
 

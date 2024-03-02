@@ -4,9 +4,8 @@ import { computeNextQuestionQuery } from '@/actions/queries'
 import prisma from '@/lib/prisma'
 import { RoomStartSchema, RoomStartType } from '@/lib/schema'
 import { ActionResultType, ZparseOrError } from '@/lib/utils'
-import { revalidatePath } from 'next/cache'
 
-export const startShareRoomAction = async (data: RoomStartType): Promise<ActionResultType<void>> => {
+export const retryRoomAction = async (data: RoomStartType): Promise<ActionResultType<string>> => {
   const errors = ZparseOrError(RoomStartSchema, data)
   if (errors) return errors
 
@@ -14,7 +13,12 @@ export const startShareRoomAction = async (data: RoomStartType): Promise<ActionR
     where:{
       id: data.roomId,
       shareLink: data.shareLink,
-      dateStart: null
+      withRetry: {
+        gt: 0
+      },
+      dateEnd: {
+        not: null
+      }
     }
   })
 
@@ -23,12 +27,27 @@ export const startShareRoomAction = async (data: RoomStartType): Promise<ActionR
   try {
     await prisma.$transaction(async (tx) => {
 
+      await tx.choices.deleteMany({
+        where: {
+          answer:{
+            roomId: room.id
+          }
+        }
+      })
+
+      await tx.answer.deleteMany({
+        where: {
+          roomId: room.id
+        }
+      })
+
       await tx.room.update({
         where:{
           id: room.id
         },
         data:{
-          dateStart: new Date()
+          dateEnd: null,
+          withRetry: { decrement: 1 }
         }
       })
 
@@ -43,16 +62,14 @@ export const startShareRoomAction = async (data: RoomStartType): Promise<ActionR
 
     })
 
-    revalidatePath('/share/')
-
     return {
-      success: true,
+      success: true
     }
   }
   catch (error: any) {
     return {
       success: false,
-      message: 'Database Error: Failed to start room: ' + error.message,
+      message: 'Database Error: Failed to retry room: ' + error.message,
     }
   }
 }

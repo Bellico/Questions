@@ -1,9 +1,21 @@
+import { RoomFinalRetry } from '@/components/final/room-final-retry'
 import { Button } from '@/components/ui/button'
-import { ArrowDownToLine, Group, ListRestart } from 'lucide-react'
+import { ArrowDownToLine, Group } from 'lucide-react'
 import Link from 'next/link'
 import { PropsWithChildren } from 'react'
 
-export function RoomFinalHero({canScroll, children} : PropsWithChildren<{canScroll : boolean}>) {
+export function RoomFinalHero({
+  roomId,
+  shareLink,
+  canScroll,
+  canRetry,
+  children
+} : PropsWithChildren<{
+  roomId : string,
+  shareLink? : string,
+  canScroll : boolean,
+  canRetry: boolean
+}>) {
   return(
     <section className="relative flex min-h-[calc(100vh-65px)] items-center justify-center">
       <div className="container mt-[-65px] flex flex-col items-center space-y-7 text-center sm:space-y-10">
@@ -16,15 +28,12 @@ export function RoomFinalHero({canScroll, children} : PropsWithChildren<{canScro
 
         {children}
 
-        <div className="animate-fadeIn opacity-0 delay-1000">
-          <Link href={'/start/1'}>
-            <Button className="mr-4 sm:w-36">
-              <ListRestart className="mr-2" />
-                Retry
-            </Button>
-          </Link>
+        <div className="flex animate-fadeIn opacity-0 delay-1000">
+          {canRetry &&
+            <RoomFinalRetry roomId={roomId} shareLink={shareLink} />
+          }
 
-          <Link href={'/board'}>
+          <Link href={'/'}>
             <Button variant="secondary" className="mr-4 sm:w-36">
               <Group className="mr-2" />
                 Leave
