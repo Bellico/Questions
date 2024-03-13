@@ -59,7 +59,7 @@ model VerificationToken {
 
 model QuestionGroup {
   id           String   @id @default(cuid())
-  name         String   @unique @db.VarChar(50)
+  name         String   @db.VarChar(50)
   creationDate DateTime
   updateDate   DateTime
   version      Int
@@ -67,6 +67,8 @@ model QuestionGroup {
   authorId     String
   author       User     @relation(fields: [authorId], references: [id])
   rooms        Room[]
+
+   @@unique([name, authorId])
 }
 
 model Question {
@@ -130,6 +132,15 @@ model Choices{
   response        Response @relation(fields: [responseId], references: [id], onDelete: Cascade)
 
   @@id([answerId, responseId])
+}
+
+model Images{
+  id              String   @id @default(cuid())
+  name            String
+  filetype        String
+  base64          String
+  createdDate     DateTime
+  authorId        String
 }
 
 enum RoomMode {

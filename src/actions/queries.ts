@@ -1,6 +1,7 @@
 import { auth } from '@/lib/auth'
 import prisma from '@/lib/prisma'
 import { RoomProgressType, RoomQuestionNextType } from '@/lib/schema'
+import { RoomMode } from '@prisma/client'
 
 export const getSessionUserIdOrThrow = async (): Promise<string> => {
   const session = await auth()
@@ -33,8 +34,18 @@ export const isGroupOwnerOrThrow = async (groupId: string, userId: string): Prom
   return true
 }
 
+export const getGroupName = async (groupId: string): Promise<string> => {
+  const group = await prisma.questionGroup.findUniqueOrThrow({
+    where: {
+      id: groupId,
+    }
+  })
+
+  return group.name
+}
+
 export const getGroupsListQuery = async (userId: string) => {
-  return await prisma.questionGroup.findMany({
+  const groupList =  await prisma.questionGroup.findMany({
     where: {
       authorId: userId,
     },
@@ -47,6 +58,60 @@ export const getGroupsListQuery = async (userId: string) => {
       },
     }
   })
+
+  const groupIds = groupList.map(g => g.id)
+
+  const resultsCountByGroup = await prisma.room.groupBy({
+    by: ['groupId'],
+    where: {
+      mode: 'Rating',
+      dateEnd: {
+        not: null
+      },
+      groupId: {
+        in: groupIds
+      },
+    },
+    _count: true,
+  })
+
+  const lastScoreByGroup = await prisma.questionGroup.findMany({
+    where: {
+      id: {
+        in: groupIds
+      },
+    },
+    select:{
+      id: true,
+      rooms: {
+        where:{
+          mode: 'Rating',
+          userId: userId,
+          dateEnd: {
+            not: null
+          },
+        },
+        orderBy : {
+          dateEnd: 'desc'
+        },
+        take: 1,
+        select:{
+          score: true,
+          dateEnd: true
+        }
+      }
+    }
+  })
+
+  return groupList.map(g => ({
+    id: g.id,
+    name: g.name,
+    version: g.version,
+    questionsCount : g._count.questions,
+    resultsCount: resultsCountByGroup.find(rc => rc.groupId === g.id)?._count ?? 0,
+    lastTryDate: lastScoreByGroup.find(sc => sc.id === g.id)?.rooms[0]?.dateEnd ?? null,
+    lastScore: lastScoreByGroup.find(sc => sc.id === g.id)?.rooms[0]?.score ?? null,
+  }))
 }
 
 export const getEditorQuery = async (groupId: string, userId: string) => {
@@ -95,7 +160,148 @@ export const getStatsQuery = async (userId: string) => {
     }
   })
 
-  return { groupCount, questionCount }
+  const roomScore = await prisma.room.aggregate({
+    where: {
+      userId: userId,
+      mode: RoomMode.Rating,
+    },
+    _count: true,
+    _avg: {
+      score: true
+    }
+  })
+
+  const answerCount = await prisma.answer.count({
+    where: {
+      room:{
+        userId: userId,
+        mode: RoomMode.Rating,
+      }
+    }
+  })
+
+  const answerFailedCount = await prisma.answer.count({
+    where: {
+      achievement:{
+        lt: 100
+      },
+      room:{
+        userId: userId,
+        mode: RoomMode.Rating,
+      }
+    }
+  })
+
+  const [{ round: avgAnwserTime }] = await prisma.$queryRaw`
+    SELECT ROUND(AVG(
+      ((DATE_PART('day', a."dateEnd"::timestamp - a."dateStart"::timestamp) * 24 +
+      DATE_PART('hour', a."dateEnd"::timestamp - a."dateStart"::timestamp)) * 60 +
+      DATE_PART('minute', a."dateEnd"::timestamp - a."dateStart"::timestamp)) * 60 +
+      DATE_PART('second', a."dateEnd"::timestamp - a."dateStart"::timestamp)
+    )) FROM "Answer" a
+       INNER JOIN "Room" r ON a."roomId" = r."id"
+       WHERE r."userId" = ${userId}
+       AND r."mode"::text = ${RoomMode.Rating}` as [{ round : number}]
+
+  const [{ round: totalTime }] = await prisma.$queryRaw`
+    SELECT ROUND(SUM(
+      ((DATE_PART('day', "dateEnd"::timestamp - "dateStart"::timestamp) * 24 +
+      DATE_PART('hour', "dateEnd"::timestamp - "dateStart"::timestamp)) * 60 +
+      DATE_PART('minute', "dateEnd"::timestamp - "dateStart"::timestamp)) * 60 +
+      DATE_PART('second', "dateEnd"::timestamp - "dateStart"::timestamp)
+    )) FROM "Room"
+       WHERE "Room"."userId" = ${userId}
+       AND "Room"."mode"::text = ${RoomMode.Rating}` as [{ round : number}]
+
+  return {
+    avgScore: roomScore._avg.score !== null ? Math.round(roomScore._avg.score) : null,
+    roomCount: roomScore._count,
+    groupCount,
+    questionCount,
+    answerCount,
+    answerFailedCount,
+    avgAnwserTime,
+    totalTime
+  }
+}
+
+export const getGroupStatsQuery = async (userId: string, groupId: string) => {
+  const groupCount = 1
+
+  const questionCount = await prisma.question.count({
+    where: {
+      groupId: groupId
+    }
+  })
+
+  const roomScore = await prisma.room.aggregate({
+    where: {
+      userId: userId,
+      groupId: groupId,
+      mode: RoomMode.Rating,
+    },
+    _count: true,
+    _avg: {
+      score: true
+    }
+  })
+
+  const answerCount = await prisma.answer.count({
+    where: {
+      room:{
+        userId: userId,
+        groupId: groupId,
+        mode: RoomMode.Rating,
+      }
+    }
+  })
+
+  const answerFailedCount = await prisma.answer.count({
+    where: {
+      achievement:{
+        lt: 100
+      },
+      room:{
+        userId: userId,
+        groupId: groupId,
+        mode: RoomMode.Rating,
+      }
+    }
+  })
+
+  const [{ round: avgAnwserTime }] = await prisma.$queryRaw`
+    SELECT ROUND(AVG(
+      ((DATE_PART('day', a."dateEnd"::timestamp - a."dateStart"::timestamp) * 24 +
+      DATE_PART('hour', a."dateEnd"::timestamp - a."dateStart"::timestamp)) * 60 +
+      DATE_PART('minute', a."dateEnd"::timestamp - a."dateStart"::timestamp)) * 60 +
+      DATE_PART('second', a."dateEnd"::timestamp - a."dateStart"::timestamp)
+    )) FROM "Answer" a
+       INNER JOIN "Room" r ON a."roomId" = r."id"
+       WHERE r."userId" = ${userId}
+       AND r."mode"::text = ${RoomMode.Rating}
+       AND r."groupId" = ${groupId}` as [{ round : number}]
+
+  const [{ round: totalTime }] = await prisma.$queryRaw`
+    SELECT ROUND(SUM(
+      ((DATE_PART('day', "dateEnd"::timestamp - "dateStart"::timestamp) * 24 +
+      DATE_PART('hour', "dateEnd"::timestamp - "dateStart"::timestamp)) * 60 +
+      DATE_PART('minute', "dateEnd"::timestamp - "dateStart"::timestamp)) * 60 +
+      DATE_PART('second', "dateEnd"::timestamp - "dateStart"::timestamp)
+    )) FROM "Room"
+       WHERE "Room"."userId" = ${userId}
+       AND "Room"."mode"::text = ${RoomMode.Rating}
+       AND "Room"."groupId" = ${groupId}` as [{ round : number}]
+
+  return {
+    avgScore: roomScore._avg.score !== null ? Math.round(roomScore._avg.score) : null,
+    roomCount: roomScore._count,
+    groupCount,
+    questionCount,
+    answerCount,
+    answerFailedCount,
+    avgAnwserTime,
+    totalTime
+  }
 }
 
 export const getGroupForStartQuery = async (groupId: string, userId: string) => {
@@ -406,6 +612,34 @@ export const canPlayRoomQuery = async (roomId: string, userId?: string, shareLin
     }
   })
 }
+export const canRetryRoomQuery = async (roomId: string, userId?: string, shareLink?: string) => {
+  return await prisma.room.findFirstOrThrow({
+    where: {
+      id: roomId,
+      dateEnd: {
+        not: null
+      },
+      withRetry: {
+        gt: 0
+      },
+      AND:{
+        OR: [
+          {
+            userId: userId,
+          },
+          {
+            shareLink: shareLink ?? '',
+          },
+        ]
+      }
+    },
+    select: {
+      id: true,
+      groupId: true,
+      withRandom: true,
+    }
+  })
+}
 
 export const computeNextQuestionQuery = async (groupId: string, withRandom: boolean, alreadyAnsweredQuestionId: string[]) => {
   const availableQuestions = await prisma.question.findMany({
@@ -471,4 +705,34 @@ export const getNextQuestionToAnswerQuery = async (roomId: string) : Promise<Roo
   }
 
   return null
+}
+
+export const getRoomListQuery = async (groupId: string) => {
+  return await prisma.room.findMany({
+    where: {
+      groupId: groupId,
+      mode: 'Rating',
+      dateEnd:{
+        not : null
+      }
+    },
+    orderBy: {
+      dateStart: 'desc',
+    },
+    select:{
+      id: true,
+      score: true,
+      successCount: true,
+      failedCount: true,
+      dateStart: true,
+      dateEnd: true,
+      withRetry: true,
+      user: {
+        select: {
+          id: true,
+          email: true
+        }
+      }
+    }
+  })
 }

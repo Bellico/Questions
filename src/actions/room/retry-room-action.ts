@@ -1,6 +1,6 @@
 'use server'
 
-import { computeNextQuestionQuery } from '@/actions/queries'
+import { canRetryRoomQuery, computeNextQuestionQuery, getSessionUserId } from '@/actions/queries'
 import prisma from '@/lib/prisma'
 import { RoomStartSchema, RoomStartType } from '@/lib/schema'
 import { ActionResultType, ZparseOrError } from '@/lib/utils'
@@ -9,19 +9,8 @@ export const retryRoomAction = async (data: RoomStartType): Promise<ActionResult
   const errors = ZparseOrError(RoomStartSchema, data)
   if (errors) return errors
 
-  const room = await prisma.room.findFirstOrThrow({
-    where:{
-      id: data.roomId,
-      shareLink: data.shareLink,
-      withRetry: {
-        gt: 0
-      },
-      dateEnd: {
-        not: null
-      }
-    }
-  })
-
+  const userId = await getSessionUserId()
+  const room = await canRetryRoomQuery(data.roomId, userId, data.shareLink)
   const nextQuestionId = await computeNextQuestionQuery(room.groupId, room.withRandom, [])
 
   try {

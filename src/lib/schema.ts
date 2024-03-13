@@ -34,7 +34,7 @@ export const QuestionGroupSchema = z.object({
 const RoomSettingsBaseSchema = z.object({
   groupId: z.string(),
   mode: z.nativeEnum(RoomMode),
-  withRetry: z.coerce.number().min(0).max(5),
+  withRetry: z.coerce.number().min(0).max(3),
   withRandom: z.boolean(),
   withCorrection: z.boolean(),
   withResults: z.boolean(),

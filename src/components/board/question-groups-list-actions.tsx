@@ -6,7 +6,6 @@ import { YesNoDialogAction } from '@/components/commons/yes-no-dialog'
 import { AlertDialogTrigger } from '@/components/ui/alert-dialog'
 import { DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator } from '@/components/ui/dropdown-menu'
 import { useAction } from '@/hooks/useAction'
-import Link from 'next/link'
 
 type QuestionsTableProps = {
   groupId: string
@@ -33,12 +32,9 @@ export function QuestionGroupsListActions({ groupId }: QuestionsTableProps) {
   }
 
   return (
-    <YesNoDialogAction action={onDeleteAction} titleDialog='Are you absolutely sure?' descDialog='You will lose all statistics and anwsers linked to this group.'>
+    <YesNoDialogAction action={onDeleteAction} titleDialog='Are you absolutely sure?' descDialog='You will lose all scores and results for this group.'>
       <DropdownMenuContent align="end">
         <DropdownMenuLabel>Actions</DropdownMenuLabel>
-        <Link href={'/results'}>
-          <DropdownMenuItem>See results</DropdownMenuItem>
-        </Link>
         <DropdownMenuSeparator />
         <DropdownMenuItem onClick={() => onDuplicateAction()}>Duplicate</DropdownMenuItem>
         <AlertDialogTrigger asChild>

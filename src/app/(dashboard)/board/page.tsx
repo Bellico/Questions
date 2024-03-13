@@ -10,7 +10,7 @@ export default async function BoardPage() {
 
   return (
     <>
-      <section className="hidden bg-accent shadow-md lg:block">
+      <section className="bg-accent shadow-md">
         <div className="container">
           <h1 className="title">Board stats</h1>
 
@@ -20,7 +20,6 @@ export default async function BoardPage() {
 
         </div>
       </section>
-
 
       <section>
         <div className="container">

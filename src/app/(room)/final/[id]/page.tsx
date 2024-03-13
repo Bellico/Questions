@@ -1,7 +1,6 @@
 import { canViewRoomQuery } from '@/actions/queries'
 import { Spinner } from '@/components/commons/spinner'
 import { RoomFinalResume } from '@/components/final/room-final-resume'
-import { RoomFinalRetry } from '@/components/final/room-final-retry'
 import { RoomFinalSummary } from '@/components/final/room-final-summary'
 import { auth } from '@/lib/auth'
 import { redirect } from 'next/navigation'
@@ -23,8 +22,7 @@ export default async function RoomPage({
 
   return (
     <>
-      <RoomFinalSummary roomId={room.id} />
-      {/* <RoomFinalRetry roomId={room.id} shareLink={searchParams?.shareLink} /> */}
+      <RoomFinalSummary roomId={room.id} canRetry={(room.withRetry || 0) > 0} shareLink={searchParams?.shareLink}/>
       <Suspense fallback={<Spinner />} >
         <RoomFinalResume roomId={room.id} />
       </Suspense>

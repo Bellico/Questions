@@ -6,7 +6,7 @@ import {
   DropdownMenu,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { Group, MoreHorizontal, Pencil, Play, Plus } from 'lucide-react'
+import { BarChart3, Group, MoreHorizontal, Pencil, Play, Plus } from 'lucide-react'
 import Link from 'next/link'
 
 export async function QuestionGroupsList({userId} : { userId: string}) {
@@ -32,31 +32,45 @@ export async function QuestionGroupsList({userId} : { userId: string}) {
             <div>
               <Group className="mr-2 size-8" />
             </div>
-            <div>
-              {group.name}
-              <span className="ml-1 text-xs">(v{group.version})</span>
+            <div className="flex">
+              <div>{group.name}</div>
+              <div className="ml-1 text-xs">(v{group.version})</div>
             </div>
           </CardHeader>
           <CardContent>
             <div className="mb-4">
-              <div className="text-sm">Questions: <span className="text-second">{group._count.questions}</span></div>
-              {/* <div className="text-sm">Score: <span className="text-second">1/2</span></div> */}
-              {/* <div className="text-sm">Pay number: <span className="text-second">1</span></div> */}
-              {/* <div className="text-sm">Last pratice: <span className="text-second">21/23/1223</span></div> */}
+              <div className="text-sm">Questions: <span className="text-second">{group.questionsCount}</span></div>
+              {group.lastScore !== null &&
+                <div className="text-sm">
+                  Last: <span className="font-medium text-primary">{group.lastScore}%</span>
+                  <span className="text-second"> - {group.lastTryDate?.toLocaleString()}</span>
+                </div>
+              }
             </div>
-            <div>
+            <div className="flex flex-wrap gap-4">
               <Link href={`/start/${group.id}`}>
-                <Button className="mr-4">
+                <Button>
                   <Play className="mr-2 size-4" />
                       Start
                 </Button>
               </Link>
+
               <Link href={`/editor/${group.id}`}>
-                <Button className="mr-4" variant="secondary">
+                <Button variant="secondary">
                   <Pencil className="mr-2 size-4" />
                       Edit
                 </Button>
               </Link>
+
+              {group.resultsCount > 0 &&
+                <Link href={`/board/${group.id}`}>
+                  <Button variant="secondary">
+                    <BarChart3 className="mr-2 size-4" />
+                      Results ({group.resultsCount})
+                  </Button>
+                </Link>
+              }
+
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button variant="ghost" className="size-8 p-0">

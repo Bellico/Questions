@@ -71,7 +71,7 @@ export function ShareDialog( {settingValues} : { settingValues: () => RoomSettin
                 <Label htmlFor="link" className="sr-only">Link</Label>
                 <Input id="link" defaultValue={shareLinkRef.current} readOnly />
               </div>
-              <Button type="submit" size="sm" className="px-3" onClick={() => navigator.clipboard.writeText(shareLinkRef.current)}>
+              <Button size="sm" className="px-3" onClick={(e) => { e.preventDefault(); navigator.clipboard.writeText(shareLinkRef.current)}}>
                 <span className="sr-only">Copy</span>
                 <Copy className="size-4" />
               </Button>

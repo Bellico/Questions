@@ -20,17 +20,23 @@ export function RoomSettings(settings: RoomSettingsType) {
   const form = useForm<RoomSettingsType>({
     resolver: zodResolver(RoomSettingsSchema),
     values: settings,
+    mode: 'onChange'
   })
 
-  const { control, getValues, setValue } = form
+  const { control, getValues, setValue, clearErrors } = form
   const { mode, withCorrection } = getValues()
 
   const requestAction = useAction()
 
   useEffect(() => {
-    if(mode === RoomMode.Rating && withCorrection) setValue('withCorrection', false)
-    if(mode === RoomMode.Training) setValue('withRetry', 0)
-  }, [setValue, mode, withCorrection])
+    if(mode === RoomMode.Rating && withCorrection)
+      setValue('withCorrection', false)
+
+    if(mode === RoomMode.Training) {
+      setValue('withRetry', 0)
+      clearErrors('withRetry')
+    }
+  }, [setValue, clearErrors, mode, withCorrection])
 
   async function start(){
     requestAction(
@@ -70,8 +76,8 @@ export function RoomSettings(settings: RoomSettingsType) {
                     </FormItem>
                   </RadioGroup>
                   <FormDescription>
-                    Training : Scores will not be impacted. You can navigate to previous questions.<br />
-                    Rating : Evaluate your knowledge. This will impact your score.
+                    Training : Test your questions. Answers and results will not be saved.<br />
+                    Rating : Evaluate your knowledge and improve your score.
                   </FormDescription>
                 </div>
               </FormControl>
@@ -107,9 +113,10 @@ export function RoomSettings(settings: RoomSettingsType) {
                 <div className="space-y-0.5">
                   <FormLabel className="text-base">Number of retries</FormLabel>
                   <FormDescription>Adds retries before saving your scores definitely. (max: 3)</FormDescription>
+                  <FormMessage />
                 </div>
                 <FormControl>
-                  <Input className="w-16" type="number" {...field} value={field.value || 0} min="0" max="3" onKeyDown={(e) => e.preventDefault()}/>
+                  <Input className="w-16" type="number" {...field} value={field.value || 0} min="0" max="3" />
                 </FormControl>
               </FormItem>
             )}

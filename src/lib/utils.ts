@@ -7,6 +7,8 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
+export type ArrayType<T> = T extends (infer Item)[] ? Item : T
+
 export const sleep = (s: number) => new Promise((r) => setTimeout(r, s * 1000))
 
 export type ActionResultType<T> = {
@@ -90,4 +92,18 @@ export function computeScore(results: number[]){
     success,
     failed: results.filter(r => r < 100).length,
   }
+}
+
+export function secondsToDhms(seconds : number) {
+  var d = Math.floor(seconds / (3600*24))
+  if(d > 0) return d + (d == 1 ? ' day' : ' days')
+
+  var h = Math.floor(seconds % (3600*24) / 3600)
+  if(h > 0) return h + (h == 1 ? ' hour' : ' hours')
+
+  var m = Math.floor(seconds % 3600 / 60)
+  if(m > 0) return m + (m == 1 ? ' minute' : ' minutes')
+
+  var s = Math.floor(seconds % 60)
+  return s + (s == 1 ? ' second' : ' seconds')
 }
