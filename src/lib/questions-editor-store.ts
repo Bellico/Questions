@@ -1,5 +1,5 @@
 import { QuestionType } from '@/lib/schema'
-import { arrayToMap, findIndexOfKeyMap, generateRandomGroup, mapToArray } from '@/lib/utils'
+import { arrayToMap, findIndexOfKeyMap, mapToArray } from '@/lib/utils'
 import { arrayMove } from '@dnd-kit/sortable'
 import superjson from 'superjson'
 import { create } from 'zustand'
@@ -62,8 +62,8 @@ export const createQuestionsEditorStore = (initProps?: Partial<QuestionsEditorSt
   const DEFAULT_PROPS: QuestionsEditorStateProps = {
     id: null,
     name: '',
-    // questionsMap: createDefaultQuestionsMap()
-    questionsMap: generateRandomGroup()
+    questionsMap: createDefaultQuestionsMap()
+    // questionsMap: generateRandomGroup()
   }
 
   return create<QuestionsEditorState>()(persist((set, get) => ({
