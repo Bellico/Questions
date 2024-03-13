@@ -1,26 +1,18 @@
-import { ThemeToggle } from "@/components/theme/theme-toogle";
+import { ThemeToggle } from '@/components/theme/theme-toogle'
+import { LayoutDashboardIcon } from 'lucide-react'
 
 export const HomeHeader = () => (
   <header className="fixed top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-    <div className="container mx-auto px-6 py-3">
+    <div className="container px-6 py-3">
       <div className="flex items-center justify-between">
-        <div>
-          <a className="text-xl font-bold" href="#">
+        <a className="flex items-center gap-2 text-sm font-medium" href="#">
+          <LayoutDashboardIcon className="size-6" />
             Questions Editor
-          </a>
-        </div>
-        <div className="lg:flex items-center ml-auto">
-          <nav className="text-sm leading-6 font-semibold text-slate-700 dark:text-slate-200">
-            <ul className="flex space-x-8">
-              <li>
-                <a className="transition-colors hover:text-foreground/80 text-foreground/60" href="#">Home</a>
-              </li>
-            </ul>
-          </nav>
-          <ThemeToggle className="ml-6" />
+        </a>
+        <div className="ml-auto items-center lg:flex">
+          <ThemeToggle />
         </div>
       </div>
     </div>
   </header>
 )
-

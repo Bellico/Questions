@@ -14,6 +14,9 @@ RESEND_API_KEY = "*******"
 # For production https://next-auth.js.org/configuration/options
 # Example : openssl rand -base64 32
 NEXTAUTH_SECRET = "*******"
+
+# Use for generate share link
+PUBLIC_URL = "https://yourdomain.com"
 ```
 
 ## Local database install
@@ -55,6 +58,8 @@ This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-opti
 npx prisma validate
 npx prisma migrate dev --name init
 (npx prisma generate)
+(npx prisma db push)
+(npx prisma migrate reset)
 ```
 
 ## Learn More

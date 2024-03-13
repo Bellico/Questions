@@ -11,13 +11,15 @@ datasource db {
 }
 
 model User {
-  id            String    @id @default(cuid())
-  name          String?
-  email         String?   @unique
-  emailVerified DateTime?
-  image         String?
-  accounts      Account[]
-  sessions      Session[]
+  id                  String    @id @default(cuid())
+  name                String?
+  email               String?   @unique
+  emailVerified       DateTime?
+  image               String?
+  accounts            Account[]
+  sessions            Session[]
+  questionGroups      QuestionGroup[]
+  rooms               Room[]
 }
 
 model Account {
@@ -57,23 +59,91 @@ model VerificationToken {
 
 model QuestionGroup {
   id           String   @id @default(cuid())
-  name         String   @unique @db.VarChar(50)
+  name         String   @db.VarChar(50)
   creationDate DateTime
+  updateDate   DateTime
+  version      Int
   questions    Question[]
+  authorId     String
+  author       User     @relation(fields: [authorId], references: [id])
+  rooms        Room[]
+
+   @@unique([name, authorId])
 }
 
 model Question {
   id           String   @id @default(cuid())
+  title        String?  @db.VarChar(100)
   subject      String
   groupId      String
-  group        QuestionGroup @relation(fields: [groupId], references: [id])
+  order        Int
+  group        QuestionGroup @relation(fields: [groupId], references: [id], onDelete: Cascade)
   responses    Response[]
+  answers      Answer[]
 }
 
 model Response {
   id           String   @id @default(cuid())
   text         String   @db.VarChar(250)
   questionId   String
-  question     Question @relation(fields: [questionId], references: [id])
+  question     Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
   isCorrect    Boolean
+  choices      Choices[]
+}
+
+model Room {
+  id                String   @id @default(cuid())
+  groupId           String
+  group             QuestionGroup @relation(fields: [groupId], references: [id])
+  userId            String
+  user              User @relation(fields: [userId], references: [id])
+  shareLink         String?
+  score             Int?
+  successCount      Int?
+  failedCount       Int?
+  mode              RoomMode
+  dateStart         DateTime?
+  dateEnd           DateTime?
+  withRetry         Int?
+  withRandom        Boolean
+  withCorrection    Boolean
+  withResults       Boolean
+  withProgress      Boolean
+  answers           Answer[]
+}
+
+model Answer {
+  id               String   @id @default(cuid())
+  roomId           String
+  room             Room @relation(fields: [roomId], references: [id])
+  questionId       String?
+  question         Question? @relation(fields: [questionId], references: [id])
+  dateStart        DateTime
+  dateEnd          DateTime?
+  order            Int
+  achievement      Int?
+  choices          Choices[]
+}
+
+model Choices{
+  answerId        String
+  answer          Answer @relation(fields: [answerId], references: [id])
+  responseId      String
+  response        Response @relation(fields: [responseId], references: [id], onDelete: Cascade)
+
+  @@id([answerId, responseId])
+}
+
+model Images{
+  id              String   @id @default(cuid())
+  name            String
+  filetype        String
+  base64          String
+  createdDate     DateTime
+  authorId        String
+}
+
+enum RoomMode {
+  Training
+  Rating
 }

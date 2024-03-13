@@ -1,4 +1,4 @@
-var html = `
+const html = `
 <html>
     <body style="font-family:'Montserrat',sans-serif;margin: 0;">
 
@@ -6,18 +6,20 @@ var html = `
 
             <div style="background-color: #000; color: #fafafa;padding: 15px 0;">
                 <h1 style="line-height: 160%; text-align: center; font-size: 1.8em; font-weight: 400;">
-                    <strong>Questions editor</strong>
+                    <strong>QUESTIONS EDITOR</strong>
                 </h1>
             </div>
 
             <h1 style="text-align: center; word-wrap: break-word; font-size: 33px; font-weight: 400;">
-                <strong>Almost, complete your registery</strong>
+                <strong>Welcome to your questions editor.</strong>
             </h1>
 
             <div style="font-size: 14px; color: #444444; line-height: 170%; text-align: center;">
-                <p style="font-size: 14px; line-height: 170%;"><span style="font-size: 16px; line-height: 27.2px;">Lorem
-                        ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut
-                        laoreet dolore magna aliquam erat volutpat.</span></p>
+                <p style="font-size: 14px; line-height: 170%;">
+                    <span style="font-size: 16px; line-height: 27.2px;">
+                        Use this unique link to log in once.
+                    </span>
+                </p>
             </div>
 
             <div align="center" style="margin: 1em auto">
@@ -31,32 +33,31 @@ var html = `
                 </a>
             </div>
 
-            <div style="background-color: #000; color: #4b5563;padding: 30px 0;">
-                <div style="text-align: center;font-size: 0.8rem;">© 2024 Questions App by Bellico Github</div>
+            <div style="background-color: #000; color: #fafafa;padding: 30px 0;">
+                <div style="text-align: center;font-size: 0.8rem;">© 2024 Bellico</div>
             </div>
         </div>
     </body>
 </html>
-`;
+`
 
 export async function sendVerificationAuthToken(email: string, url: string) {
-    const response = await fetch("https://api.resend.com/emails", {
+  const response = await fetch('https://api.resend.com/emails', {
+    body: JSON.stringify({
+      to: [email],
+      from: 'noreply@questions-editor.fr',
+      subject: 'Sign in link - Questions editor',
+      html: html.replace('[Url]', url),
+    }),
+    headers: {
+      Authorization: `Bearer ${process.env.RESEND_API_KEY}`,
+      'Content-Type': 'application/json',
+    },
+    method: 'POST',
+  })
 
-        body: JSON.stringify({
-            to: [email],
-            from: "noreply@resend.dev",
-            subject: "Sign in to Your page",
-            html: html.replace('[Url]', url)
-        }),
-        headers: {
-            "Authorization": `Bearer ${process.env.RESEND_API_KEY}`,
-            "Content-Type": "application/json",
-        },
-        method: "POST",
-    })
-
-    if (!response.ok) {
-        const { errors } = await response.json()
-        throw new Error(JSON.stringify(errors))
-    }
+  if (!response.ok) {
+    const { errors } = await response.json()
+    throw new Error(JSON.stringify(errors))
+  }
 }
