@@ -21,7 +21,7 @@ export function RoomProgress() {
   }
 
   return(
-    <div className="progress-room fixed bottom-0 h-6 w-full animate-fadeIn border-t border-t-gray-200 bg-accent lg:h-8 dark:border-t-black">
+    <div className="progress-room fixed bottom-0 h-6 w-full animate-fadeIn border-t border-t-gray-200 bg-accent dark:border-t-black lg:h-8">
       <div className="flex size-full">
         {progress.map((q, i) => (
           <div key={i} className="relative flex flex-1 items-center justify-around overflow-hidden border-r-2 border-accent text-center last:border-none">
