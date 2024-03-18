@@ -14,7 +14,7 @@ import { useEffect, useRef } from 'react'
 import { useFieldArray, useForm } from 'react-hook-form'
 import { useShallow } from 'zustand/react/shallow'
 
-const QEditorMarkdown = dynamic(() => import('../../lib/mdx-markdown-editor'), {
+const QEditorMarkdown = dynamic(() => import('../mdx/mdx-markdown-editor'), {
   ssr: false
 })
 

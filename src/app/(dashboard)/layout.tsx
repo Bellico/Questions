@@ -1,5 +1,5 @@
+import { BoardHeader } from '@/components/board-layout/header'
 import { Loader } from '@/components/commons/loader'
-import { DashboardHeader } from '@/components/dashboard-layout/header'
 import { Toaster } from '@/components/ui/toaster'
 import { auth } from '@/lib/auth'
 import { redirect } from 'next/navigation'
@@ -18,7 +18,7 @@ export default async function DashboardLayout({
 
   return (
     <>
-      <DashboardHeader />
+      <BoardHeader />
       <main>
         {children}
       </main>

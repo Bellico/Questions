@@ -3,7 +3,7 @@ import { ArrayType, cn } from '@/lib/utils'
 import { CheckCheck, XCircle } from 'lucide-react'
 import dynamic from 'next/dynamic'
 
-const QReaderMarkdown = dynamic(() => import('../../lib/mdx-markdown-reader'), {
+const QReaderMarkdown = dynamic(() => import('../mdx/mdx-markdown-reader'), {
   ssr: false
 })
 

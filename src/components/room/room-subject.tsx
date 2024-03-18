@@ -5,7 +5,7 @@ import { CheckCheck, XCircle } from 'lucide-react'
 import dynamic from 'next/dynamic'
 import { useEffect, useRef } from 'react'
 
-const QReaderMarkdown = dynamic(() => import('../../lib/mdx-markdown-reader'), {
+const QReaderMarkdown = dynamic(() => import('../mdx/mdx-markdown-reader'), {
   ssr: false
 })
 
