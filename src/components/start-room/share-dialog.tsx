@@ -6,8 +6,8 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { RoomSettingsType } from '@/lib/schema'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Copy, Loader2, Share } from 'lucide-react'
-import { useRef } from 'react'
+import { Check, Copy, Loader2, Share } from 'lucide-react'
+import { useRef, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 
@@ -20,6 +20,7 @@ type ShareSchemaType = z.infer<typeof ShareSchema>
 export function ShareDialog( {settingValues} : { settingValues: () => RoomSettingsType}) {
 
   const shareLinkRef = useRef<string>('')
+  const [copied, setCopied] = useState(false)
 
   const form = useForm<ShareSchemaType>({
     resolver: zodResolver(ShareSchema)
@@ -27,7 +28,7 @@ export function ShareDialog( {settingValues} : { settingValues: () => RoomSettin
 
   const { handleSubmit,
     register,
-    formState: { isSubmitting, isSubmitSuccessful, errors, isValid },
+    formState: { isSubmitting, isSubmitSuccessful, isValid },
   } = form
 
   const share = async ({username}: ShareSchemaType) => {
@@ -71,9 +72,9 @@ export function ShareDialog( {settingValues} : { settingValues: () => RoomSettin
                 <Label htmlFor="link" className="sr-only">Link</Label>
                 <Input id="link" defaultValue={shareLinkRef.current} readOnly />
               </div>
-              <Button size="sm" className="px-3" onClick={(e) => { e.preventDefault(); navigator.clipboard.writeText(shareLinkRef.current)}}>
+              <Button size="sm" className="px-3" onClick={(e) => { e.preventDefault(); navigator.clipboard.writeText(shareLinkRef.current); setCopied(true)}}>
                 <span className="sr-only">Copy</span>
-                <Copy className="size-4" />
+                {copied ? <Check className="size-4 animate-wiggle" /> : <Copy className="size-4" />}
               </Button>
             </div>
           }

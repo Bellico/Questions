@@ -205,13 +205,14 @@ export const getStatsQuery = async (userId: string) => {
 
   const [{ round: totalTime }] = await prisma.$queryRaw`
     SELECT ROUND(SUM(
-      ((DATE_PART('day', "dateEnd"::timestamp - "dateStart"::timestamp) * 24 +
-      DATE_PART('hour', "dateEnd"::timestamp - "dateStart"::timestamp)) * 60 +
-      DATE_PART('minute', "dateEnd"::timestamp - "dateStart"::timestamp)) * 60 +
-      DATE_PART('second', "dateEnd"::timestamp - "dateStart"::timestamp)
-    )) FROM "Room"
-       WHERE "Room"."userId" = ${userId}
-       AND "Room"."mode"::text = ${RoomMode.Rating}` as [{ round : number}]
+      ((DATE_PART('day', a."dateEnd"::timestamp - a."dateStart"::timestamp) * 24 +
+      DATE_PART('hour', a."dateEnd"::timestamp - a."dateStart"::timestamp)) * 60 +
+      DATE_PART('minute', a."dateEnd"::timestamp - a."dateStart"::timestamp)) * 60 +
+      DATE_PART('second', a."dateEnd"::timestamp - a."dateStart"::timestamp)
+    )) FROM "Answer" a
+       INNER JOIN "Room" r ON a."roomId" = r."id"
+       WHERE r."userId" = ${userId}
+       AND r."mode"::text = ${RoomMode.Rating}` as [{ round : number}]
 
   return {
     avgScore: roomScore._avg.score !== null ? Math.round(roomScore._avg.score) : null,
@@ -283,15 +284,17 @@ export const getGroupStatsQuery = async (userId: string, groupId: string) => {
 
   const [{ round: totalTime }] = await prisma.$queryRaw`
     SELECT ROUND(SUM(
-      ((DATE_PART('day', "dateEnd"::timestamp - "dateStart"::timestamp) * 24 +
-      DATE_PART('hour', "dateEnd"::timestamp - "dateStart"::timestamp)) * 60 +
-      DATE_PART('minute', "dateEnd"::timestamp - "dateStart"::timestamp)) * 60 +
-      DATE_PART('second', "dateEnd"::timestamp - "dateStart"::timestamp)
-    )) FROM "Room"
-       WHERE "Room"."userId" = ${userId}
-       AND "Room"."mode"::text = ${RoomMode.Rating}
-       AND "Room"."groupId" = ${groupId}` as [{ round : number}]
+      ((DATE_PART('day', a."dateEnd"::timestamp - a."dateStart"::timestamp) * 24 +
+      DATE_PART('hour', a."dateEnd"::timestamp - a."dateStart"::timestamp)) * 60 +
+      DATE_PART('minute', a."dateEnd"::timestamp - a."dateStart"::timestamp)) * 60 +
+      DATE_PART('second', a."dateEnd"::timestamp - a."dateStart"::timestamp)
+    )) FROM "Answer" a
+       INNER JOIN "Room" r ON a."roomId" = r."id"
+       WHERE r."userId" = ${userId}
+       AND r."mode"::text = ${RoomMode.Rating}
+       AND r."groupId" = ${groupId}` as [{ round : number}]
 
+  console.log(totalTime)
   return {
     avgScore: roomScore._avg.score !== null ? Math.round(roomScore._avg.score) : null,
     roomCount: roomScore._count,

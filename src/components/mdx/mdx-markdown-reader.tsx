@@ -1,6 +1,6 @@
 'use client'
 
-import { PLUGINS_MDX } from '@/lib/mdx-markdown-plugins'
+import { PLUGINS_MDX } from '@/components/mdx/mdx-markdown-plugins'
 import {
   MDXEditor, MDXEditorMethods
 } from '@mdxeditor/editor'

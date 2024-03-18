@@ -1,9 +1,9 @@
 import SignOutButton from '@/components/auth/signout-button'
-import { ThemeToggle } from '@/components/theme/theme-toogle'
+import { ThemeToggle } from '@/components/commons/theme-toogle'
 import { LayoutDashboardIcon } from 'lucide-react'
 import Link from 'next/link'
 
-export const DashboardHeader = () => (
+export const BoardHeader = () => (
   <header className="bg-accent">
     <div className="container flex h-16 items-center px-8">
       <nav className="flex flex-row items-center gap-6 text-sm font-medium md:gap-5">

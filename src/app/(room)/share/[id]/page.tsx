@@ -36,19 +36,21 @@ searchParams?: { shareLink?: string }
   }
 
   return (
-    <section >
-      <div className="flex w-full items-center justify-center py-12">
-        <div className="space-y-4 text-center">
-          <div className="container">
-            <h1 className="mb-8 text-4xl font-bold tracking-tighter sm:text-5xl md:text-6xl/none">Welcome on questions editor</h1>
-            <p className="text-2xl leading-loose">
-              You have been invited to answer a series of questions. <br /> {room?.group._count.questions} questions await you. <br /> Good Luck !
-            </p>
-          </div>
-          <form action={startShareRoom} className="text-center">
-            <Button size="lg">Start</Button>
-          </form>
-        </div>
+    <section className="flex min-h-[calc(100vh-65px)] flex-col items-center justify-center gap-8 px-4 text-center">
+      <h1 className="text-3xl font-extrabold sm:text-4xl md:text-5xl">
+          You're invited on Questions Editor
+      </h1>
+
+      <p className="text-gray-500 dark:text-gray-400">
+        Your friend has invited you to answer at {room?.group._count.questions} questions. Click the button below to get started.
+      </p>
+
+      <div className="w-full max-w-sm">
+        <form action={startShareRoom} >
+          <Button className="w-full">
+                Start to answer
+          </Button>
+        </form>
       </div>
     </section>
   )

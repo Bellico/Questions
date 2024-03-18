@@ -147,7 +147,7 @@
   padding-right: 0.25rem;
 }
 
-._editorRoot_11eqz_38 button {
+.mdxeditor-popup-container button {
   color: hsl(var(--foreground));
   background: hsl(var(--background));
 }
@@ -156,18 +156,18 @@
   color: hsl(var(--foreground));
 }
 
-._toolbarRoot_11eqz_145 {
+.mdxeditor-toolbar {
   background-color: hsl(var(--background));
   color: hsl(var(--foreground));
 }
 
-._popupContainer_11eqz_1170 {
+.mdxeditor-popup-container {
   display: none
 }
-._popupContainer_11eqz_1170:has(div) {
+.mdxeditor-popup-container:has(div) {
   display: block
 }
 
-.progress-room{
+.progress-room {
   background: repeating-linear-gradient(-45deg, hsl(var(--primary) / 0.1), hsl(var(--primary) / 0.1) 15px,  hsl(var(--accent)) 50px,  hsl(var(--accent)) 80px);
 }

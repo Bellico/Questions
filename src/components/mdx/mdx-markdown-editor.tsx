@@ -1,11 +1,12 @@
 'use client'
 
-import { PLUGINS_MDX } from '@/lib/mdx-markdown-plugins'
+import { PLUGINS_MDX } from '@/components/mdx/mdx-markdown-plugins'
 import {
   BlockTypeSelect,
   BoldItalicUnderlineToggles,
   CodeToggle,
   CreateLink,
+  InsertImage,
   InsertTable,
   InsertThematicBreak,
   ListsToggle,
@@ -13,8 +14,7 @@ import {
   UndoRedo,
   toolbarPlugin,
   type MDXEditorMethods,
-  type MDXEditorProps,
-  InsertImage
+  type MDXEditorProps
 } from '@mdxeditor/editor'
 import type { ForwardedRef } from 'react'
 
