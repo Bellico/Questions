@@ -12,6 +12,20 @@ export const createQuestionGroupAction = async (data: QuestionGroupType): Promis
 
   const userId = await getSessionUserIdOrThrow()
 
+  const existingName =  await prisma.questionGroup.findFirst({
+    where:{
+      name: data.name,
+      authorId: userId
+    }
+  })
+
+  if(existingName){
+    return {
+      success: false,
+      message: `Question group with name "${data.name}" already exists`,
+    }
+  }
+
   try {
     const group = await prisma.questionGroup.create({
       data: {

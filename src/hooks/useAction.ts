@@ -33,7 +33,7 @@ export function useAction() {
         toast({
           variant: 'destructive',
           title: 'Something wrong!',
-          description: result.message + ' ' + JSON.stringify(result.errors),
+          description: result.message + (result.errors ? '' + JSON.stringify(result.errors) : ''),
         })
       }
     })

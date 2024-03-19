@@ -6,7 +6,8 @@ import {
   AlertDialogDescription,
   AlertDialogFooter,
   AlertDialogHeader,
-  AlertDialogTitle
+  AlertDialogTitle,
+  AlertDialogTrigger
 } from '@/components/ui/alert-dialog'
 import { PropsWithChildren } from 'react'
 
@@ -24,7 +25,9 @@ export const YesNoDialogAction = ({
 }: PropsWithChildren<YesNoDialogActionProps>) => {
   return (
     <AlertDialog>
-      {children}
+      <AlertDialogTrigger asChild>
+        {children}
+      </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>{titleDialog}</AlertDialogTitle>

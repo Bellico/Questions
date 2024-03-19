@@ -107,3 +107,16 @@ export function secondsToDhms(seconds : number) {
   var s = Math.floor(seconds % 60)
   return s + (s == 1 ? ' second' : ' seconds')
 }
+
+export async function downloadBlob(res: Response) {
+  const disposition = res.headers.get('Content-Disposition')
+  const fileName = disposition!.split('filename=')[1].split(';')[0] ?? 'file'
+  // const blob = new Blob([blob], { type: contentType! })
+  const blob = await res.blob()
+
+  const url = URL.createObjectURL(blob)
+  const link = document.createElement('a')
+  link.href = url
+  link.setAttribute('download', fileName)
+  link.click()
+}

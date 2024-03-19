@@ -28,8 +28,7 @@ export const duplicateQuestionGroupAction = async (id: string): Promise<ActionRe
           subject: true,
           order: true,
           responses: {
-            select:
-            {
+            select: {
               id: true,
               text: true,
               isCorrect: true

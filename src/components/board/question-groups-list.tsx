@@ -1,4 +1,5 @@
 import { getGroupsListQuery } from '@/actions/queries'
+import { QuestionGroupNew } from '@/components/board/question-group-new'
 import { QuestionGroupsListActions } from '@/components/board/question-groups-list-actions'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
@@ -13,14 +14,10 @@ export async function QuestionGroupsList({userId} : { userId: string}) {
   const questionGroups = await getGroupsListQuery(userId)
 
   if (questionGroups.length == 0) {
-    return (
-      <div className="h-16 rounded-lg border-2 border-dashed border-gray-300 hover:border-solid dark:border-gray-700/65">
-        <Link href="/editor">
-          <div className="flex h-full items-center justify-center text-sm text-gray-400">
-                Add your first group of questions
-          </div>
-        </Link>
-      </div>
+    return(
+      <QuestionGroupNew className="h-16">
+        <span>Add your first group of questions</span>
+      </QuestionGroupNew>
     )
   }
 
@@ -85,13 +82,9 @@ export async function QuestionGroupsList({userId} : { userId: string}) {
         </Card>
       ))}
 
-      <div className="rounded-lg border-2 border-dashed border-gray-300 hover:border-solid dark:border-gray-700/65">
-        <Link href="/editor">
-          <div className="flex h-full items-center justify-center">
-            <Plus className="size-10 text-gray-400" />
-          </div>
-        </Link>
-      </div>
+      <QuestionGroupNew>
+        <Plus className="size-10" />
+      </QuestionGroupNew>
     </div>
   )
 }
