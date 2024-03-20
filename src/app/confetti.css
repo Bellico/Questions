@@ -1,0 +1,45 @@
+.confetti {
+  position: absolute;
+  z-index: 1;
+  top: -10px;
+  border-radius: 0%;
+}
+.confetti--animation-slow {
+  animation: confetti-slow 2.25s linear 1 forwards;
+}
+.confetti--animation-medium {
+  animation: confetti-medium 1.75s linear 1 forwards;
+}
+.confetti--animation-fast {
+  animation: confetti-fast 1.25s linear 1 forwards;
+}
+@keyframes confetti-slow {
+  0% { transform: translate3d(0, 0, 0) rotateX(0) rotateY(0); }
+  100% { transform: translate3d(25px, 105vh, 0) rotateX(360deg) rotateY(180deg); }
+}
+@keyframes confetti-medium {
+  0% { transform: translate3d(0, 0, 0) rotateX(0) rotateY(0); }
+  100% { transform: translate3d(100px, 105vh, 0) rotateX(100deg) rotateY(360deg); }
+}
+@keyframes confetti-fast {
+  0% { transform: translate3d(0, 0, 0) rotateX(0) rotateY(0); }
+  100% { transform: translate3d(-50px, 105vh, 0) rotateX(10deg) rotateY(250deg); }
+}
+
+.rainbow_text_animated {
+  /* background: linear-gradient(to right, #6666ff, #0099ff , #00ff00, #ff3399, #6666ff); */
+  background: linear-gradient(to right, #EF2964, #00C09D, #2D87B0, #48485E,#EFFF1D);
+  background-clip: text;
+  color: transparent;
+  animation: rainbow_animation 6s ease-in-out infinite;
+  background-size: 400% 100%;
+  line-height: normal;
+}
+@keyframes rainbow_animation {
+  0%,100% {
+      background-position: 0 0;
+  }
+  50% {
+      background-position: 100% 0;
+  }
+}

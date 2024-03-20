@@ -6,6 +6,7 @@ import { RoomFinalResume } from '@/components/final/room-final-resume'
 import { auth } from '@/lib/auth'
 import { redirect } from 'next/navigation'
 import { Suspense } from 'react'
+import '../../../confetti.css'
 
 export default async function RoomPage({
   params,
@@ -24,6 +25,7 @@ export default async function RoomPage({
   const hero = {
     canScroll: room.withResults,
     canRetry: (room.withRetry || 0) > 0,
+    playConfetti: room.withResults && room.score === 100,
     roomId: room.id,
     shareLink: searchParams?.shareLink
   }

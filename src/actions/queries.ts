@@ -294,7 +294,6 @@ export const getGroupStatsQuery = async (userId: string, groupId: string) => {
        AND r."mode"::text = ${RoomMode.Rating}
        AND r."groupId" = ${groupId}` as [{ round : number}]
 
-  console.log(totalTime)
   return {
     avgScore: roomScore._avg.score !== null ? Math.round(roomScore._avg.score) : null,
     roomCount: roomScore._count,
@@ -521,6 +520,7 @@ export const canViewRoomQuery = async (roomId: string, userId?: string, shareLin
     },
     select: {
       id: true,
+      score: true,
       withResults: true,
       withRetry: true
     }
