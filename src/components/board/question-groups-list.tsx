@@ -40,7 +40,7 @@ export async function QuestionGroupsList({userId} : { userId: string}) {
               {group.lastScore !== null &&
                 <div className="text-sm">
                   Last: <span className="font-medium text-primary">{group.lastScore}%</span>
-                  <span className="text-second"> - {group.lastTryDate?.toLocaleString()}</span>
+                  <span className="text-second"> - {group.lastTryDate?.toLocaleString('fr-fr')}</span>
                 </div>
               }
             </div>

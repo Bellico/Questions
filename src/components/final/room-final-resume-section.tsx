@@ -1,5 +1,5 @@
 import { getRoomFinalResumeQuery } from '@/actions/queries'
-import { ArrayType, cn } from '@/lib/utils'
+import { ArrayType, cn, diffDateToDhms } from '@/lib/utils'
 import { CheckCheck, XCircle } from 'lucide-react'
 import dynamic from 'next/dynamic'
 
@@ -29,7 +29,7 @@ export function RoomFinalResumeSection({answerResume} : { answerResume: RoomFina
   const choices = answerResume.choices.map(c => c.responseId)
 
   return(
-    <section className="py-36 shadow-inner even:bg-accent">
+    <section className="relative py-36 shadow-inner even:bg-accent">
       <div className="container flex flex-col lg:flex-row">
         <div className="flex-1 text-center lg:text-left">
           <h1 className="title flex flex-col items-center justify-center">
@@ -52,6 +52,8 @@ export function RoomFinalResumeSection({answerResume} : { answerResume: RoomFina
           ))}
         </div>
       </div>
+
+      <div className="absolute inset-x-0 bottom-4 text-center text-sm text-muted-foreground">Time: {diffDateToDhms(answerResume.dateStart, answerResume.dateEnd!)}</div>
     </section>
   )
 }
