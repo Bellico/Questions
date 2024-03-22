@@ -66,7 +66,6 @@ export function QuestionsEditorSection({
     }
   }, [append, responseFields, isValid])
 
-
   // Sync markdown with form
   useEffect(() => {
     if (subject !== '')
@@ -75,7 +74,6 @@ export function QuestionsEditorSection({
 
   // Send new state values to store
   const updateQuestionDebounced = useDebounce(() => {
-    // if (!isValid) return;
     canAutoAddResponse.current = true
     const newValues = getValues()
 
