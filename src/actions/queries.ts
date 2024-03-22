@@ -34,6 +34,30 @@ export const isGroupOwnerOrThrow = async (groupId: string, userId: string): Prom
   return true
 }
 
+export const isGroupOwner = async (groupId: string, userId: string): Promise<boolean> => {
+  const isOwner = await prisma.questionGroup.count({
+    where: {
+      id: groupId,
+      authorId: userId
+    }
+  })
+
+  return isOwner === 1
+}
+
+export const isRoomOwner = async (roomId: string, userId: string) => {
+  const isOwner = await prisma.room.count({
+    where: {
+      id: roomId,
+      group:{
+        authorId: userId
+      }
+    }
+  })
+
+  return isOwner === 1
+}
+
 export const getGroupName = async (groupId: string): Promise<string> => {
   const group = await prisma.questionGroup.findUniqueOrThrow({
     where: {
@@ -500,7 +524,7 @@ export const getProgressInfosWithRandomQuery = async (roomId: string, groupId: s
   return progress
 }
 
-export const canViewRoomQuery = async (roomId: string, userId?: string, shareLink?: string) => {
+export const canViewFinalRoomQuery = async (roomId: string, userId?: string, shareLink?: string) => {
   return await prisma.room.findFirst({
     where: {
       id: roomId,

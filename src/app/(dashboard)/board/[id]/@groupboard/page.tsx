@@ -1,4 +1,4 @@
-import { getGroupName } from '@/actions/queries'
+import { getGroupName, isGroupOwner } from '@/actions/queries'
 import { Spinner } from '@/components/commons/spinner'
 import { AnswersList } from '@/components/groupboard/answers-list'
 import { RoomsList } from '@/components/groupboard/rooms-list'
@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button'
 import { auth } from '@/lib/auth'
 import { Pencil, Play } from 'lucide-react'
 import Link from 'next/link'
+import { notFound } from 'next/navigation'
 import { Suspense } from 'react'
 
 export default async function GroupBoardPage({
@@ -14,6 +15,11 @@ export default async function GroupBoardPage({
   params: { id: string }
 }) {
   const session = await auth()
+  const isOwner = await isGroupOwner(params.id, session!.user.id!)
+
+  if(!isOwner){
+    notFound()
+  }
 
   return (
     <div className="bg-accent">

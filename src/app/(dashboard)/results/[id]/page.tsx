@@ -1,4 +1,4 @@
-import { canViewRoomQuery } from '@/actions/queries'
+import { isRoomOwner } from '@/actions/queries'
 import { Spinner } from '@/components/commons/spinner'
 import { RoomFinalResume } from '@/components/final/room-final-resume'
 import { RoomFinalSummary } from '@/components/final/room-final-summary'
@@ -12,9 +12,9 @@ export default async function ResultsPage({
   params: { id: string }
 }) {
   const session = await auth()
-  const room = await canViewRoomQuery(params.id, session!.user.id!)
+  const isOwner = await isRoomOwner(params.id, session!.user.id!)
 
-  if(!room){
+  if(!isOwner){
     notFound()
   }
 
