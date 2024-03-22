@@ -58,8 +58,8 @@ export async function RoomFinalSummary({roomId, shareLink, canRetry} : RoomFinal
           </CardHeader>
         </Card>
 
-        <div className="flex gap-4">
-          <Card className="flex-1">
+        <div className="flex gap-2 sm:gap-4">
+          <Card className="sm:flex-1">
             <CardHeader className="p-0">
               <div className="flex items-center space-x-4 p-4">
                 <Calendar className="size-6" />
@@ -71,7 +71,7 @@ export async function RoomFinalSummary({roomId, shareLink, canRetry} : RoomFinal
             </CardHeader>
           </Card>
 
-          <Card className="flex-1">
+          <Card className="sm:flex-1">
             <CardHeader className="p-0">
               <div className="flex items-center space-x-4 p-4">
                 <CalendarFold className="size-6" />
@@ -83,7 +83,7 @@ export async function RoomFinalSummary({roomId, shareLink, canRetry} : RoomFinal
             </CardHeader>
           </Card>
 
-          <Card className="flex-1">
+          <Card className="sm:flex-1">
             <CardHeader className="p-0">
               <div className="flex items-center space-x-4 p-4">
                 <History className="size-6" />

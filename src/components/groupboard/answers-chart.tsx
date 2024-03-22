@@ -2,22 +2,18 @@
 
 import { Pie, PieChart, ResponsiveContainer, Tooltip } from 'recharts'
 
-const data01 = [
-  { name: 'Group A', value: 400 },
-  { name: 'Group B', value: 300 },
-  { name: 'Group C', value: 300 },
-  { name: 'Group D', value: 200 },
-  { name: 'Group E', value: 278 },
-  { name: 'Group F', value: 189 },
-]
+type AnwserPieType ={
+  name: string,
+  value: number
+}
 
-export function AnwsersChart() {
+export function AnwsersChart({ data }: { data: AnwserPieType[]}) {
   return (
     <ResponsiveContainer width="100%" height="100%">
       <PieChart>
         <Pie
           dataKey="value"
-          data={data01}
+          data={data}
           fill="hsl(var(--primary))"
           label
         />

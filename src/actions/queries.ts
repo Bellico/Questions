@@ -726,7 +726,7 @@ export const getRoomBoardQuery = async (groupId: string, mode: RoomMode) => {
       }
     },
     orderBy: {
-      dateStart: 'desc',
+      dateStart: 'asc',
     },
     select:{
       id: true,
@@ -750,18 +750,24 @@ export const getAnwsersBoardQuery = async (groupId: string, userId: string) => {
   return await prisma.$queryRaw`
     SELECT
       a."questionId",
-      q."order",
-      q."title",
+      CASE
+          WHEN (q."title" IS NOT NULL AND q."title" <> '')
+          THEN CONCAT('Question', ' ', q."order", ' ', '(', q."title", ')')
+          ELSE CONCAT('Question', ' ', q."order")
+      END AS "title",
+
       CAST (SUM(
         CASE WHEN a."achievement" = 100 THEN 1 ELSE 0 END
       ) AS INTEGER) AS "successCount",
       CAST (COUNT(*) AS INTEGER) AS "totalCount",
+
       ROUND(AVG(
         ((DATE_PART('day', a."dateEnd"::timestamp - a."dateStart"::timestamp) * 24 +
         DATE_PART('hour', a."dateEnd"::timestamp - a."dateStart"::timestamp)) * 60 +
         DATE_PART('minute', a."dateEnd"::timestamp - a."dateStart"::timestamp)) * 60 +
         DATE_PART('second', a."dateEnd"::timestamp - a."dateStart"::timestamp)
      )) AS "avgAnwserTime"
+
      FROM "Answer" a
      INNER JOIN "Room" r ON a."roomId" = r."id"
      INNER JOIN "Question" q ON a."questionId" = q."id"
@@ -771,8 +777,8 @@ export const getAnwsersBoardQuery = async (groupId: string, userId: string) => {
      AND a."questionId" IS NOT NULL
      GROUP BY a."questionId", q."order", q."title"
      ORDER BY q."order"` as [{
-      questionId: string, order: number,
-      title: string | null,
+      questionId: string,
+      title: string,
       avgAnwserTime: number,
       successCount: number,
       totalCount: number

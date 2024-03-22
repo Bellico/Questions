@@ -9,6 +9,7 @@ import { useAction } from '@/hooks/useAction'
 import { useDataTable } from '@/hooks/useDataTable'
 import { ArrayType } from '@/lib/utils'
 import { redirect } from 'next/navigation'
+import { useEffect } from 'react'
 
 type dataTableType = ArrayType<Awaited<ReturnType<typeof getRoomBoardQuery>>>
 
@@ -18,6 +19,12 @@ export function RoomsTable({ userId, roomsList } : { userId: string, roomsList: 
   const userSelect = [...new Set(roomsList.map(r => r.user.email!))].sort()
 
   const requestAction = useAction()
+
+  // Query list sort by dateStart asc for chart => make a sort desc for table
+  useEffect(() => {
+    const dateColumn = table.getColumn('dateStart')
+    dateColumn?.toggleSorting(true)
+  },[table])
 
   async function onRetryAction(roomId: string){
     requestAction(

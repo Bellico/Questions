@@ -4,6 +4,10 @@ import { AnswersTable } from '@/components/groupboard/answers-table'
 
 export async function AnswersList({ userId, groupId } : { userId: string, groupId: string}) {
   const answersList = await getAnwsersBoardQuery(groupId, userId)
+  const chartDatas = answersList.map(row => ({
+    name: row.title,
+    value : row.successCount
+  }))
 
   return (
     <div className="space-y-2">
@@ -16,7 +20,7 @@ export async function AnswersList({ userId, groupId } : { userId: string, groupI
         </div>
 
         <div className="flex-1">
-          <AnwsersChart />
+          <AnwsersChart data={chartDatas} />
         </div>
       </div>
     </div>

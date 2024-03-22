@@ -1,5 +1,3 @@
-'use client'
-
 import {
   ColumnDef
 } from '@tanstack/react-table'
@@ -25,7 +23,7 @@ export const AnswersTableColumns: ColumnDef<dataTableType>[] =
       ,
       cell: ({ row }) =>
         <div>
-          Question {row.original.order} {row.original.title ? `(${row.original.title})` : ''}
+          {row.original.title}
         </div>,
     },
     {

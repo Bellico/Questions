@@ -1,5 +1,3 @@
-'use client'
-
 import {
   ColumnDef
 } from '@tanstack/react-table'
@@ -33,7 +31,7 @@ export const RoomsTableColumns: (
         <div className="flex items-center gap-2">
           {/* eslint-disable @next/next/no-img-element */}
           <img src={`https://api.dicebear.com/8.x/initials/svg?size=32&seed=${row.original.user.email}`} alt="avatar"/>
-          {row.original.user.email}
+          {row.original.user.email} {row.original.user.id === userId && '(me)'}
         </div>,
     },
     {
@@ -60,6 +58,7 @@ export const RoomsTableColumns: (
         </div>,
     },
     {
+      id: 'dateStart',
       accessorKey: 'dateStart',
       header: ({ column }) =>
         <Button

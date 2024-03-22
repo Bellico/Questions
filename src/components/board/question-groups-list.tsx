@@ -22,7 +22,7 @@ export async function QuestionGroupsList({userId} : { userId: string}) {
   }
 
   return (
-    <div className="my-5 grid animate-fadeIn gap-4 md:grid-cols-2 lg:grid-cols-4">
+    <div className="my-5 grid animate-fadeIn gap-4 sm:grid-cols-2 2xl:grid-cols-4">
       {questionGroups.map((group) => (
         <Card className="q-card" key={group.id}>
           <CardHeader className="flex flex-row items-center pb-2 text-lg  font-bold">
@@ -36,10 +36,12 @@ export async function QuestionGroupsList({userId} : { userId: string}) {
           </CardHeader>
           <CardContent>
             <div className="mb-4">
-              <div className="text-sm">Questions: <span className="text-second">{group.questionsCount}</span></div>
+              <div className="text-xs">
+                Questions: <span className="text-second">{group.questionsCount}</span>
+              </div>
               {group.lastScore !== null &&
-                <div className="text-sm">
-                  Last: <span className="font-medium text-primary">{group.lastScore}%</span>
+                <div className="text-xs">
+                  Last: <span className="font-bold text-primary">{group.lastScore}%</span>
                   <span className="text-second"> - {group.lastTryDate?.toLocaleString('fr-fr')}</span>
                 </div>
               }
