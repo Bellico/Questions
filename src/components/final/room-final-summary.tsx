@@ -1,7 +1,8 @@
 import { getRoomFinalScoreQuery } from '@/actions/queries'
 import { RoomFinalRetry } from '@/components/final/room-final-retry'
 import { Card, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Award, CheckCheck, XCircle } from 'lucide-react'
+import { diffDateToDhms } from '@/lib/utils'
+import { Award, Calendar, CalendarFold, CheckCheck, History, XCircle } from 'lucide-react'
 
 type RoomFinalSummaryProps = {
   roomId: string,
@@ -56,8 +57,46 @@ export async function RoomFinalSummary({roomId, shareLink, canRetry} : RoomFinal
             </div>
           </CardHeader>
         </Card>
-      </div>
 
+        <div className="flex gap-2 sm:gap-4">
+          <Card className="sm:flex-1">
+            <CardHeader className="p-0">
+              <div className="flex items-center space-x-4 p-4">
+                <Calendar className="size-6" />
+                <div className="space-y-2">
+                  <CardTitle className="text-base font-semibold">Start at</CardTitle>
+                  <CardDescription className="text-sm leading-none">{stats.dateStart?.toLocaleString('fr-fr')}</CardDescription>
+                </div>
+              </div>
+            </CardHeader>
+          </Card>
+
+          <Card className="sm:flex-1">
+            <CardHeader className="p-0">
+              <div className="flex items-center space-x-4 p-4">
+                <CalendarFold className="size-6" />
+                <div className="space-y-2">
+                  <CardTitle className="text-base font-semibold">End at</CardTitle>
+                  <CardDescription className="text-sm leading-none">{stats.dateEnd?.toLocaleString('fr-fr')}</CardDescription>
+                </div>
+              </div>
+            </CardHeader>
+          </Card>
+
+          <Card className="sm:flex-1">
+            <CardHeader className="p-0">
+              <div className="flex items-center space-x-4 p-4">
+                <History className="size-6" />
+                <div className="space-y-2">
+                  <CardTitle className="text-base font-semibold">Duration</CardTitle>
+                  <CardDescription className="text-sm leading-none">{diffDateToDhms(stats.dateStart!, stats.dateEnd!)}</CardDescription>
+                </div>
+              </div>
+            </CardHeader>
+          </Card>
+        </div>
+
+      </div>
     </section>
   )
 }

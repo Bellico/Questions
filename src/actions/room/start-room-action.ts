@@ -14,13 +14,14 @@ export const startRoomAction = async (data: RoomSettingsType): Promise<ActionRes
   await isGroupOwnerOrThrow(data.groupId, userId)
 
   const nextQuestionId = await computeNextQuestionQuery(data.groupId, data.withRandom, [])
+  const dateStart = new Date()
 
   try {
     const roomId = await prisma.$transaction(async (tx) => {
       const room = await tx.room.create({
         data: {
           groupId: data.groupId,
-          dateStart: new Date(),
+          dateStart,
           userId: userId,
           mode: data.mode,
           withRetry: data.withRetry > 0 ? Number(data.withRetry) : null,
@@ -35,7 +36,7 @@ export const startRoomAction = async (data: RoomSettingsType): Promise<ActionRes
         data: {
           roomId: room.id,
           order: 1,
-          dateStart: new Date(),
+          dateStart,
           questionId: nextQuestionId
         }
       })

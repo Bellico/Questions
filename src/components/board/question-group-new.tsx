@@ -25,7 +25,7 @@ export function QuestionGroupNew({className, children} : PropsWithChildren<{clas
 
   return (
     <div className={cn(className, 'rounded-lg border-2 border-dashed border-gray-300 hover:border-solid dark:border-gray-700/65',{
-      'border-solid border-4 border-primary dark:border-primary': fileEnter
+      'border-solid border-4 border-primary dark:border-primary p-2': fileEnter
     })}
     onDragOver={(e) => {
       e.preventDefault()

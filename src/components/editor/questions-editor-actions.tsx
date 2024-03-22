@@ -4,7 +4,7 @@ import { useAction } from '@/hooks/useAction'
 import { QuestionGroupType } from '@/lib/schema'
 import { ActionResultType, mapToArray } from '@/lib/utils'
 import { ArrowBigLeft, ArrowDownToLine } from 'lucide-react'
-import { redirect } from 'next/navigation'
+import { useRouter } from 'next/navigation'
 import { useEffect } from 'react'
 import { useShallow } from 'zustand/react/shallow'
 
@@ -15,20 +15,20 @@ type QuestionsEditorActionsProps = {
 
 export function QuestionsEditorActions({ useDraft, saveGroupAction }: QuestionsEditorActionsProps) {
 
+  const router = useRouter()
+  const requestAction = useAction()
+  const persist = useQuestionsEditorPersist()
+
   const [groupId, groupName, questionsMap] = useQuestionsEditorContext(
     useShallow((s) => [s.id, s.name, s.questionsMap]),
   )
-
-  const persist = useQuestionsEditorPersist()
 
   // Rehydrate draft from storage
   useEffect(() => {
     if (useDraft) persist?.rehydrate()
   }, [persist, useDraft])
 
-  const requestAction = useAction()
-
-  const onSubmitEditor = async () => {
+  async function onSubmitEditor() {
     const questionsToSave = mapToArray(questionsMap).filter(q => !!q.subject)
 
     requestAction(
@@ -39,15 +39,15 @@ export function QuestionsEditorActions({ useDraft, saveGroupAction }: QuestionsE
       }),
       () => {
         persist?.clearStorage()
-        redirect('/board')
+        router.back()
       },
       'Group ' + (!groupId ? 'created !' : 'updated !')
     )
   }
 
-  const onBack = () => {
+  function onBack() {
     persist?.clearStorage()
-    redirect('/board')
+    router.back()
   }
 
   return (

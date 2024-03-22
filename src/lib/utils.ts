@@ -94,6 +94,10 @@ export function computeScore(results: number[]){
   }
 }
 
+export function diffDateToDhms(start : Date, end: Date) {
+  return secondsToDhms(end.getTime() / 1000 - start.getTime() / 1000)
+}
+
 export function secondsToDhms(seconds : number) {
   var d = Math.floor(seconds / (3600*24))
   if(d > 0) return d + (d == 1 ? ' day' : ' days')

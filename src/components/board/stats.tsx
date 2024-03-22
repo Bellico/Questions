@@ -32,18 +32,8 @@ export const BoardStats = async ({ userId, groupId } : { userId: string , groupI
         <CardContent>
           <div className="text-2xl font-bold text-primary">{stats.avgScore !== null ? stats.avgScore + ' %' : '...'}</div>
           { stats.roomCount > 0 &&
-            <p className="text-second text-xs">{stats.roomCount} completed</p>
+            <p className="text-second text-xs">{stats.roomCount} ratings</p>
           }
-        </CardContent>
-      </Card>
-      <Card>
-        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium">Average response time</CardTitle>
-          <History className="size-4 text-gray-500 dark:text-gray-400" />
-        </CardHeader>
-        <CardContent>
-          <div className="text-2xl font-bold text-primary"> {stats.avgAnwserTime > 0 ? secondsToDhms(stats.avgAnwserTime) : '...'}</div>
-          {stats.totalTime > 0 && <p className="text-second text-xs">{secondsToDhms(stats.totalTime)} (total time)</p>}
         </CardContent>
       </Card>
       <Card>
@@ -54,6 +44,16 @@ export const BoardStats = async ({ userId, groupId } : { userId: string , groupI
         <CardContent>
           <div className="text-2xl font-bold text-primary">{stats.answerCount > 0 ? stats.answerFailedCount : '...'}</div>
           {stats.answerCount > 0 && <p className="text-second text-xs">{stats.answerCount} answers</p>}
+        </CardContent>
+      </Card>
+      <Card>
+        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+          <CardTitle className="text-sm font-medium">Average response time</CardTitle>
+          <History className="size-4 text-gray-500 dark:text-gray-400" />
+        </CardHeader>
+        <CardContent>
+          <div className="text-2xl font-bold text-primary"> {stats.avgAnwserTime > 0 ? secondsToDhms(stats.avgAnwserTime) : '...'}</div>
+          {stats.totalTime > 0 && <p className="text-second text-xs">{secondsToDhms(stats.totalTime)} (total time)</p>}
         </CardContent>
       </Card>
     </div>

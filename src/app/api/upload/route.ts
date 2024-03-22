@@ -1,5 +1,6 @@
 import { getSessionUserIdOrThrow } from '@/actions/queries'
 import prisma from '@/lib/prisma'
+import { createHash } from 'crypto'
 import { notFound } from 'next/navigation'
 import { NextRequest, NextResponse } from 'next/server'
 
@@ -14,13 +15,16 @@ export async function POST(request: NextRequest) {
   }
 
   const buffer = Buffer.from(await file.arrayBuffer())
+  const hash = createHash('sha256').update(buffer).digest('hex')
   const base64 =  buffer.toString('base64')
 
   const existing = await prisma.images.findFirst({
     where:{
       authorId: userId,
-      filetype: file.type,
-      name: file.name
+      hash
+    },
+    select:{
+      id: true
     }
   })
 
@@ -34,7 +38,8 @@ export async function POST(request: NextRequest) {
       filetype: file.type,
       authorId: userId,
       createdDate: new Date(),
-      base64
+      base64,
+      hash
     }
   })
 

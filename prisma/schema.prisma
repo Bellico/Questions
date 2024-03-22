@@ -139,6 +139,7 @@ model Images{
   name            String
   filetype        String
   base64          String
+  hash            String
   createdDate     DateTime
   authorId        String
 }

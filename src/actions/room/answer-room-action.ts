@@ -28,6 +28,7 @@ export const answerRoomAction = async (data: AnswerRoomType): Promise<ActionResu
   const answeredQuestionIds = await getAnsweredQuestionIdsInRoom(data.roomId)
   const nextQuestionId = await computeNextQuestionQuery(currentAnswerContext.room.groupId!, currentAnswerContext.room.withRandom, answeredQuestionIds)
   const withResult = currentAnswerContext.room.mode == RoomMode.Training
+  const dateEnd = new Date()
 
   try {
     await prisma.$transaction(async (tx) => {
@@ -38,7 +39,7 @@ export const answerRoomAction = async (data: AnswerRoomType): Promise<ActionResu
         },
         data: {
           achievement,
-          dateEnd: new Date(),
+          dateEnd,
           choices: {
             create: data.choices.map(rId => ({ responseId: rId}))
           }
@@ -51,7 +52,7 @@ export const answerRoomAction = async (data: AnswerRoomType): Promise<ActionResu
           data: {
             roomId: data.roomId,
             order: currentAnswerContext.order + 1,
-            dateStart: new Date(),
+            dateStart: dateEnd,
             questionId: nextQuestionId
           }
         })
@@ -78,7 +79,7 @@ export const answerRoomAction = async (data: AnswerRoomType): Promise<ActionResu
             score: score.score,
             successCount: score.success,
             failedCount: score.failed,
-            dateEnd: new Date(),
+            dateEnd
           },
         })
       }

@@ -538,7 +538,9 @@ export const getRoomFinalScoreQuery = async (roomId: string) => {
     select:{
       score: true,
       successCount: true,
-      failedCount: true
+      failedCount: true,
+      dateStart: true,
+      dateEnd: true,
     }
   })
 
@@ -546,7 +548,9 @@ export const getRoomFinalScoreQuery = async (roomId: string) => {
     score: results.score,
     success: results.successCount,
     failed: results.failedCount,
-    count : results.successCount! +  results.failedCount!
+    count : results.successCount! +  results.failedCount!,
+    dateStart: results.dateStart,
+    dateEnd: results.dateEnd,
   }
 }
 
@@ -562,6 +566,8 @@ export const getRoomFinalResumeQuery = async (roomId: string) => {
       id: true,
       achievement: true,
       order: true,
+      dateStart: true,
+      dateEnd: true,
       choices:{
         select:{
           responseId: true
@@ -710,17 +716,17 @@ export const getNextQuestionToAnswerQuery = async (roomId: string) : Promise<Roo
   return null
 }
 
-export const getRoomListQuery = async (groupId: string) => {
+export const getRoomBoardQuery = async (groupId: string, mode: RoomMode) => {
   return await prisma.room.findMany({
     where: {
       groupId: groupId,
-      mode: 'Rating',
+      mode,
       dateEnd:{
         not : null
       }
     },
     orderBy: {
-      dateStart: 'desc',
+      dateStart: 'asc',
     },
     select:{
       id: true,
@@ -738,4 +744,43 @@ export const getRoomListQuery = async (groupId: string) => {
       }
     }
   })
+}
+
+export const getAnwsersBoardQuery = async (groupId: string, userId: string) => {
+  return await prisma.$queryRaw`
+    SELECT
+      a."questionId",
+      CASE
+          WHEN (q."title" IS NOT NULL AND q."title" <> '')
+          THEN CONCAT('Question', ' ', q."order", ' ', '(', q."title", ')')
+          ELSE CONCAT('Question', ' ', q."order")
+      END AS "title",
+
+      CAST (SUM(
+        CASE WHEN a."achievement" = 100 THEN 1 ELSE 0 END
+      ) AS INTEGER) AS "successCount",
+      CAST (COUNT(*) AS INTEGER) AS "totalCount",
+
+      ROUND(AVG(
+        ((DATE_PART('day', a."dateEnd"::timestamp - a."dateStart"::timestamp) * 24 +
+        DATE_PART('hour', a."dateEnd"::timestamp - a."dateStart"::timestamp)) * 60 +
+        DATE_PART('minute', a."dateEnd"::timestamp - a."dateStart"::timestamp)) * 60 +
+        DATE_PART('second', a."dateEnd"::timestamp - a."dateStart"::timestamp)
+     )) AS "avgAnwserTime"
+
+     FROM "Answer" a
+     INNER JOIN "Room" r ON a."roomId" = r."id"
+     INNER JOIN "Question" q ON a."questionId" = q."id"
+     WHERE r."userId" = ${userId}
+     AND r."groupId" = ${groupId}
+     AND r."mode"::text = ${RoomMode.Rating}
+     AND a."questionId" IS NOT NULL
+     GROUP BY a."questionId", q."order", q."title"
+     ORDER BY q."order"` as [{
+      questionId: string,
+      title: string,
+      avgAnwserTime: number,
+      successCount: number,
+      totalCount: number
+    }]
 }
