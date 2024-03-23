@@ -1,4 +1,4 @@
-import { canViewRoomQuery } from '@/actions/queries'
+import { canViewFinalRoomQuery } from '@/actions/queries'
 import { Spinner } from '@/components/commons/spinner'
 import { RoomFinalResume } from '@/components/final/room-final-resume'
 import { RoomFinalSummary } from '@/components/final/room-final-summary'
@@ -14,7 +14,7 @@ export default async function RoomPage({
   searchParams?: { shareLink?: string }
 }) {
   const session = await auth()
-  const room = await canViewRoomQuery(params.id, session?.user.id, searchParams?.shareLink)
+  const room = await canViewFinalRoomQuery(params.id, session?.user.id, searchParams?.shareLink)
 
   if(!room || !room.withResults){
     redirect('/')

@@ -1,19 +1,24 @@
 'use client'
 
 import { Button } from '@/components/ui/button'
-import { LogOut } from 'lucide-react'
+import { Loader2, LogOut } from 'lucide-react'
 import { signOut } from 'next-auth/react'
 import { redirect } from 'next/navigation'
+import { useTransition } from 'react'
 
 export default function SignOutButton() {
+  const [isPending, startTransition] = useTransition()
+
   return (
     <Button size="icon"
       title='Sign out'
       onClick={() => {
-        signOut()
-        redirect('/')
+        startTransition(async () => {
+          await signOut()
+          redirect('/')
+        })
       }}>
-      <LogOut />
+      {isPending ? <Loader2 className="animate-spin" /> : <LogOut />}
     </Button>
   )
 }
