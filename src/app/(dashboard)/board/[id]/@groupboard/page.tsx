@@ -47,13 +47,12 @@ export default async function GroupBoardPage({
 
       <section>
         <div className="container">
-
           <Suspense fallback={<Spinner />}>
             <AnswersList userId={session?.user.id!} groupId={params.id} />
           </Suspense>
-
         </div>
       </section>
+
     </div>
   )
 }
