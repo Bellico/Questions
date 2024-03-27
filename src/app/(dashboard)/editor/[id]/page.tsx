@@ -4,7 +4,7 @@ import { QuestionsEditor } from '@/components/editor/questions-editor'
 import { auth } from '@/lib/auth'
 import { notFound } from 'next/navigation'
 
-export const maxDuration = 10
+export const maxDuration = 15
 
 export default async function EditorPage({
   params,

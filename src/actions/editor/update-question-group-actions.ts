@@ -108,7 +108,7 @@ export const updateQuestionGroupAction = async (data: QuestionGroupType): Promis
         }
       }
     }, {
-      timeout: 10000
+      timeout: 15000
     })
 
     revalidatePath('/board/')
