@@ -31,7 +31,7 @@ const defaultQuestion: QuestionType = {
   responses: [{
     id: null,
     text: '',
-    isCorrect: true
+    isCorrect: false
   },
   {
     id: null,

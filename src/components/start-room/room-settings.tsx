@@ -116,7 +116,7 @@ export function RoomSettings(settings: RoomSettingsType) {
                   <FormMessage />
                 </div>
                 <FormControl>
-                  <Input className="w-16" type="number" {...field} value={field.value || 0} min="0" max="3" />
+                  <Input className="w-16" type="number" inputMode="numeric" {...field} value={field.value || 0} min="0" max="3" />
                 </FormControl>
               </FormItem>
             )}
