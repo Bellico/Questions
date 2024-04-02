@@ -35,11 +35,11 @@ export default function SubscribeForm() {
 
   return (
     <>
-      <form id="form-subscribe" noValidate className="flex space-x-2" onSubmit={handleSubmit(signWithEmail)}>
-        <Input placeholder="Enter your email" type="email" {...register('email')} />
-        <Button type="submit" disabled={isSubmitting || !isValid} >
+      <form id="form-subscribe" noValidate className="m-2 flex space-x-2" onSubmit={handleSubmit(signWithEmail)}>
+        <Input className="p-6" placeholder="Enter your email" type="email" inputMode="email" {...register('email')} />
+        <Button className="p-6" type="submit" disabled={isSubmitting || !isValid} >
           {isSubmitting && <Loader2 className="-ml-1 mr-3 animate-spin" />}
-                    Sign In
+          Sign In
         </Button>
       </form>
 

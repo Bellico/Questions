@@ -59,10 +59,10 @@ export const randomSwName = () => swNames[Math.floor(Math.random() * swNames.len
 export const randomCommonName = () => commonNames[Math.floor(Math.random() * commonNames.length)]
 
 export function generateRandomGroup(questionCount: number = 6, responsesCount: number = 4){
-  let questions = []
+  let questions: any[] = []
   for (let q = 0; q < questionCount; q++) {
 
-    let responses = []
+    let responses: any[] = []
     for (let r = 0; r < responsesCount; r++) {
       const isGood = (q + r) % 2 == 0
       responses.push({

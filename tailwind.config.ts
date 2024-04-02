@@ -70,6 +70,11 @@ const config = {
         md: 'calc(var(--radius) - 2px)',
         sm: 'calc(var(--radius) - 4px)',
       },
+      dropShadow: {
+        'q-editor-icon': [
+          '27px 5px 1px rgb(0 0 0 / 7.4)',
+        ]
+      },
       keyframes: {
         wiggle: {
           from: { 'opacity': '0' },
