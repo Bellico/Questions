@@ -1,9 +1,11 @@
 Dockerfile
 .dockerignore
 node_modules
+backups
 npm-debug.log
 README.md
 .next
 .git
 .env
 .env.local
+.env.docker

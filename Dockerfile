@@ -19,7 +19,6 @@ COPY . .
 
 # Next.js collects completely anonymous telemetry data about general usage.
 # Learn more here: https://nextjs.org/telemetry
-# Uncomment the following line in case you want to disable telemetry during the build.
 ENV NEXT_TELEMETRY_DISABLED 1
 
 RUN npx prisma generate && npm run build
@@ -33,14 +32,12 @@ ENV NEXT_TELEMETRY_DISABLED 1
 
 RUN addgroup --system --gid 1001 nodejs && adduser --system --uid 1001 nextjs
 
-#COPY --from=builder /app/public ./public
-
 # Set the correct permission for prerender cache
 RUN mkdir .next
 RUN chown nextjs:nodejs .next
 
-# Automatically leverage output traces to reduce image size
-# https://nextjs.org/docs/advanced-features/output-file-tracing
+# COPY --from=builder /app/public ./public
+COPY --from=builder /app/prisma ./prisma
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 
@@ -50,14 +47,4 @@ EXPOSE 3000
 
 ENV PORT 3000
 
-ENV DATABASE_URL="postgresql://Bellico:KUM3ANxZQz0f@ep-orange-limit-a5nptu7z.us-east-2.aws.neon.tech/questions?sslmode=require"
-
-ENV RESEND_API_KEY="re_X1oLBet6_N3BKpztHDbQgHrsxrSqs45v3"
-
-ENV NEXTAUTH_SECRET="EC7++Oa6lqUrmViHM7q73O3DAMDseuuqpuqSY/ic45w="
-
-ENV PUBLIC_URL="https://questions-editor-preview.vercel.app"
-
-# server.js is created by next build from the standalone output
-# https://nextjs.org/docs/pages/api-reference/next-config-js/output
-CMD HOSTNAME="0.0.0.0" node server.js
+CMD npx prisma migrate deploy && HOSTNAME="0.0.0.0" node server.js
