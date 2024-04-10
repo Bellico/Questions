@@ -66,7 +66,7 @@ BACKUP_KEEP_DAYS = 7
 #### Build from docker-compose.yml
 
 ```
-docker-compose -f docker-compose.yml up -d --build
+ docker-compose -f docker-compose.yml up -d --build
 ```
 
 ## Run project
@@ -78,14 +78,25 @@ npm run dev
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-### For update prisma schema
+### Update prisma schema
 
 ```bash
 npx prisma validate
-npx prisma migrate dev --name init
+npx prisma migrate dev --name migration_name
+npx prisma migrate deploy or npx prisma db push
 (npx prisma generate)
-(npx prisma db push)
-(npx prisma migrate reset)
+```
+### Reset database
+
+```bash
+npx prisma migrate reset
+```
+### Squashing migrations
+
+```bash
+# > Delete migrations folder
+npx prisma migrate dev --name init --create-only
+npx prisma migrate resolve --applied xxxx_init
 ```
 
 ## Learn More

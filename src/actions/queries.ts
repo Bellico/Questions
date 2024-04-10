@@ -99,6 +99,23 @@ export const getGroupsListQuery = async (userId: string) => {
     _count: true,
   })
 
+  const activeRooms = await prisma.room.findMany({
+    where: {
+      dateStart: {
+        not: null,
+        gte: new Date(new Date().getTime() - 3600 * 1000),
+      },
+      userId: userId,
+      dateEnd: null,
+      groupId: {
+        in: groupIds
+      },
+    },
+    select:{
+      groupId: true
+    }
+  })
+
   const lastScoreByGroup = await prisma.questionGroup.findMany({
     where: {
       id: {
@@ -132,6 +149,7 @@ export const getGroupsListQuery = async (userId: string) => {
     name: g.name,
     version: g.version,
     questionsCount : g._count.questions,
+    roomInProgress: activeRooms.some(p => p.groupId ===g.id),
     resultsCount: resultsCountByGroup.find(rc => rc.groupId === g.id)?._count ?? 0,
     lastTryDate: lastScoreByGroup.find(sc => sc.id === g.id)?.rooms[0]?.dateEnd ?? null,
     lastScore: lastScoreByGroup.find(sc => sc.id === g.id)?.rooms[0]?.score ?? null,
@@ -187,6 +205,9 @@ export const getStatsQuery = async (userId: string) => {
   const roomScore = await prisma.room.aggregate({
     where: {
       userId: userId,
+      dateEnd: {
+        not: null
+      },
       mode: RoomMode.Rating,
     },
     _count: true,
@@ -199,6 +220,9 @@ export const getStatsQuery = async (userId: string) => {
     where: {
       room:{
         userId: userId,
+        dateEnd: {
+          not: null
+        },
         mode: RoomMode.Rating,
       }
     }
@@ -211,6 +235,9 @@ export const getStatsQuery = async (userId: string) => {
       },
       room:{
         userId: userId,
+        dateEnd: {
+          not: null
+        },
         mode: RoomMode.Rating,
       }
     }
@@ -225,6 +252,7 @@ export const getStatsQuery = async (userId: string) => {
     )) FROM "Answer" a
        INNER JOIN "Room" r ON a."roomId" = r."id"
        WHERE r."userId" = ${userId}
+       AND r."dateEnd" IS NOT NULL
        AND r."mode"::text = ${RoomMode.Rating}` as [{ round : number}]
 
   const [{ round: totalTime }] = await prisma.$queryRaw`
@@ -236,6 +264,7 @@ export const getStatsQuery = async (userId: string) => {
     )) FROM "Answer" a
        INNER JOIN "Room" r ON a."roomId" = r."id"
        WHERE r."userId" = ${userId}
+       AND r."dateEnd" IS NOT NULL
        AND r."mode"::text = ${RoomMode.Rating}` as [{ round : number}]
 
   return {

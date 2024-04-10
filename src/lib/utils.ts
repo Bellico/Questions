@@ -100,16 +100,21 @@ export function diffDateToDhms(start : Date, end: Date) {
 
 export function secondsToDhms(seconds : number) {
   var d = Math.floor(seconds / (3600*24))
-  if(d > 0) return d + (d == 1 ? ' day' : ' days')
-
   var h = Math.floor(seconds % (3600*24) / 3600)
-  if(h > 0) return h + (h == 1 ? ' hour' : ' hours')
-
   var m = Math.floor(seconds % 3600 / 60)
-  if(m > 0) return m + (m == 1 ? ' minute' : ' minutes')
-
   var s = Math.floor(seconds % 60)
-  return s + (s == 1 ? ' second' : ' seconds')
+
+  let label = ''
+
+  if(d > 0) label += ' ' + d + (d == 1 ? ' day' : ' days')
+
+  if(h > 0) label += ' ' + h + (h == 1 ? ' hour' : ' hours')
+
+  if(m > 0) label += ' ' + m + (m == 1 ? ' minute' : ' minutes')
+
+  label +=  ' ' + s + (s == 1 ? ' second' : ' seconds')
+
+  return label
 }
 
 export async function downloadBlob(res: Response) {

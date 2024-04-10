@@ -39,18 +39,24 @@ export async function QuestionGroupsList({userId} : { userId: string}) {
               <div className="text-xs">
                 Questions: <span className="text-second">{group.questionsCount}</span>
               </div>
-              {group.lastScore !== null &&
+              {group.roomInProgress &&
+                 <div className="text-xs ">
+                   Last: <span className="font-bold text-primary">In progress...</span>
+                 </div>
+              }
+              {!group.roomInProgress && group.lastScore !== null &&
                 <div className="text-xs">
                   Last: <span className="font-bold text-primary">{group.lastScore}%</span>
                   <span className="text-second"> - {group.lastTryDate?.toLocaleString('fr-fr')}</span>
                 </div>
               }
             </div>
+
             <div className="flex flex-wrap gap-4">
               <Link href={`/start/${group.id}`}>
                 <Button>
                   <Play className="mr-2 size-4" />
-                      Start
+                  {group.roomInProgress ? 'Continue' : 'Start' }
                 </Button>
               </Link>
 
@@ -77,7 +83,7 @@ export async function QuestionGroupsList({userId} : { userId: string}) {
                     <MoreHorizontal className="size-5" />
                   </Button>
                 </DropdownMenuTrigger>
-                <QuestionGroupsListActions groupId={group.id} />
+                <QuestionGroupsListActions groupId={group.id} roomInProgress={group.roomInProgress} />
               </DropdownMenu>
             </div>
           </CardContent>

@@ -1,6 +1,6 @@
 'use server'
 
-import { getSessionUserIdOrThrow, isGroupOwnerOrThrow } from '@/actions/queries'
+import { getActiveRoomQuery, getSessionUserIdOrThrow, isGroupOwnerOrThrow } from '@/actions/queries'
 import prisma from '@/lib/prisma'
 import { QuestionGroupSchema, QuestionGroupType } from '@/lib/schema'
 import { ActionResultType, ZparseOrError } from '@/lib/utils'
@@ -12,6 +12,14 @@ export const updateQuestionGroupAction = async (data: QuestionGroupType): Promis
 
   const userId = await getSessionUserIdOrThrow()
   await isGroupOwnerOrThrow(data.id!, userId)
+
+  const activeRoom = await getActiveRoomQuery(data.id!, userId)
+  if(activeRoom){
+    return {
+      success: false,
+      message: 'Group cannot be updated, finish your answers before',
+    }
+  }
 
   try {
     await prisma.$transaction(async (tx) => {

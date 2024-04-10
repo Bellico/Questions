@@ -1,7 +1,4 @@
 -- CreateEnum
-CREATE TYPE "RoomDisplay" AS ENUM ('Horizontal', 'Vertical');
-
--- CreateEnum
 CREATE TYPE "RoomMode" AS ENUM ('Training', 'Rating');
 
 -- CreateTable
@@ -89,15 +86,17 @@ CREATE TABLE "Room" (
     "groupId" TEXT NOT NULL,
     "userId" TEXT NOT NULL,
     "shareLink" TEXT,
-    "display" "RoomDisplay" NOT NULL,
+    "score" INTEGER,
+    "successCount" INTEGER,
+    "failedCount" INTEGER,
     "mode" "RoomMode" NOT NULL,
-    "withTimer" BOOLEAN NOT NULL,
+    "dateStart" TIMESTAMP(3),
+    "dateEnd" TIMESTAMP(3),
+    "withRetry" INTEGER,
     "withRandom" BOOLEAN NOT NULL,
     "withCorrection" BOOLEAN NOT NULL,
     "withResults" BOOLEAN NOT NULL,
     "withProgress" BOOLEAN NOT NULL,
-    "dateStart" TIMESTAMP(3),
-    "dateEnd" TIMESTAMP(3),
 
     CONSTRAINT "Room_pkey" PRIMARY KEY ("id")
 );
@@ -123,6 +122,19 @@ CREATE TABLE "Choices" (
     CONSTRAINT "Choices_pkey" PRIMARY KEY ("answerId","responseId")
 );
 
+-- CreateTable
+CREATE TABLE "Images" (
+    "id" TEXT NOT NULL,
+    "name" TEXT NOT NULL,
+    "filetype" TEXT NOT NULL,
+    "base64" TEXT NOT NULL,
+    "hash" TEXT NOT NULL,
+    "createdDate" TIMESTAMP(3) NOT NULL,
+    "authorId" TEXT NOT NULL,
+
+    CONSTRAINT "Images_pkey" PRIMARY KEY ("id")
+);
+
 -- CreateIndex
 CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
 
@@ -139,7 +151,7 @@ CREATE UNIQUE INDEX "VerificationToken_token_key" ON "VerificationToken"("token"
 CREATE UNIQUE INDEX "VerificationToken_identifier_token_key" ON "VerificationToken"("identifier", "token");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "QuestionGroup_name_key" ON "QuestionGroup"("name");
+CREATE UNIQUE INDEX "QuestionGroup_name_authorId_key" ON "QuestionGroup"("name", "authorId");
 
 -- AddForeignKey
 ALTER TABLE "Account" ADD CONSTRAINT "Account_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
