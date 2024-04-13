@@ -1,6 +1,6 @@
-import { QuestionsEditorState, QuestionsEditorStateProps, createQuestionsEditorStore } from '@/lib/questions-editor-store'
 import { QuestionGroupType } from '@/lib/schema'
 import { arrayToMap } from '@/lib/utils'
+import { QuestionsEditorState, QuestionsEditorStateProps, createQuestionsEditorStore } from '@/stores/questions-editor-store'
 import { PropsWithChildren, createContext, useContext, useRef } from 'react'
 import { useStore } from 'zustand'
 

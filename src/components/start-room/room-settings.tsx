@@ -15,6 +15,7 @@ import { Play } from 'lucide-react'
 import { redirect } from 'next/navigation'
 import { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
+import { useTranslation } from 'react-i18next'
 
 export function RoomSettings(settings: RoomSettingsType) {
   const form = useForm<RoomSettingsType>({
@@ -26,6 +27,7 @@ export function RoomSettings(settings: RoomSettingsType) {
   const { control, getValues, setValue, clearErrors } = form
   const { mode, withCorrection } = getValues()
 
+  const { t } = useTranslation('room')
   const requestAction = useAction()
 
   useEffect(() => {
@@ -54,7 +56,7 @@ export function RoomSettings(settings: RoomSettingsType) {
           name="mode"
           render={({ field }) => (
             <FormItem className="rounded-lg border bg-background p-4">
-              <FormLabel className="text-base">Mode</FormLabel>
+              <FormLabel className="text-base">{t('WithMode')}</FormLabel>
               <FormControl>
                 <div className="space-y-2">
                   <RadioGroup
@@ -65,19 +67,19 @@ export function RoomSettings(settings: RoomSettingsType) {
                       <FormControl>
                         <RadioGroupItem value="Training" />
                       </FormControl>
-                      <FormLabel className="font-normal">Training</FormLabel>
+                      <FormLabel className="font-normal">{t('Training')}</FormLabel>
                     </FormItem>
 
                     <FormItem className="flex items-center space-x-3 space-y-0">
                       <FormControl>
                         <RadioGroupItem value="Rating" />
                       </FormControl>
-                      <FormLabel className="font-normal">Rating</FormLabel>
+                      <FormLabel className="font-normal">{t('Rating')}</FormLabel>
                     </FormItem>
                   </RadioGroup>
                   <FormDescription>
-                    Training : Test your questions. Answers and results will not be saved.<br />
-                    Rating : Evaluate your knowledge and improve your score.
+                    {t('TrainingDesc')}<br />
+                    {t('RatingDesc')}
                   </FormDescription>
                 </div>
               </FormControl>
@@ -93,8 +95,8 @@ export function RoomSettings(settings: RoomSettingsType) {
             render={({ field }) => (
               <FormItem className="flex flex-row items-center justify-between rounded-lg border bg-background p-4">
                 <div className="space-y-0.5">
-                  <FormLabel className="text-base">Correction</FormLabel>
-                  <FormDescription>The correct answers will be displayed before moving on to the next question.</FormDescription>
+                  <FormLabel className="text-base">{t('WithCorrection')}</FormLabel>
+                  <FormDescription>{t('WithCorrectionDesc')}</FormDescription>
                 </div>
                 <FormControl>
                   <Switch checked={field.value} onCheckedChange={field.onChange} />
@@ -111,8 +113,8 @@ export function RoomSettings(settings: RoomSettingsType) {
             render={({ field }) => (
               <FormItem className="flex flex-row items-center justify-between rounded-lg border bg-background p-4">
                 <div className="space-y-0.5">
-                  <FormLabel className="text-base">Number of retries</FormLabel>
-                  <FormDescription>Adds retries before saving your scores definitely. (max: 3)</FormDescription>
+                  <FormLabel className="text-base">{t('WithRetry')}</FormLabel>
+                  <FormDescription>{t('WithRetryDesc')}</FormDescription>
                   <FormMessage />
                 </div>
                 <FormControl>
@@ -129,8 +131,8 @@ export function RoomSettings(settings: RoomSettingsType) {
           render={({ field }) => (
             <FormItem className="flex flex-row items-center justify-between rounded-lg border bg-background p-4">
               <div className="space-y-0.5">
-                <FormLabel className="text-base">Random</FormLabel>
-                <FormDescription>The questions will be displayed randomly.</FormDescription>
+                <FormLabel className="text-base">{t('WithRandom')}</FormLabel>
+                <FormDescription>{t('WithRandomDesc')}</FormDescription>
               </div>
               <FormControl>
                 <Switch checked={field.value} onCheckedChange={field.onChange} />
@@ -145,8 +147,8 @@ export function RoomSettings(settings: RoomSettingsType) {
           render={({ field }) => (
             <FormItem className="flex flex-row items-center justify-between rounded-lg border bg-background p-4">
               <div className="space-y-0.5">
-                <FormLabel className="text-base">Progress bar</FormLabel>
-                <FormDescription>Allows to know the progress status and the number of questions.</FormDescription>
+                <FormLabel className="text-base">{t('WithProgress')}</FormLabel>
+                <FormDescription>{t('WithProgressDesc')}</FormDescription>
               </div>
               <FormControl>
                 <Switch checked={field.value} onCheckedChange={field.onChange} />
@@ -161,8 +163,8 @@ export function RoomSettings(settings: RoomSettingsType) {
           render={({ field }) => (
             <FormItem className="flex flex-row items-center justify-between rounded-lg border bg-background p-4">
               <div className="space-y-0.5">
-                <FormLabel className="text-base">Summary</FormLabel>
-                <FormDescription>The summary of the results will be available at the end.</FormDescription>
+                <FormLabel className="text-base">{t('WithResults')}</FormLabel>
+                <FormDescription>{t('WithResultsDesc')}</FormDescription>
               </div>
               <FormControl>
                 <Switch checked={field.value} onCheckedChange={field.onChange} />
@@ -172,7 +174,7 @@ export function RoomSettings(settings: RoomSettingsType) {
         />
 
         <div className="space-x-4 text-center">
-          <Button onClick={(e) => { e.preventDefault(); start()}}><Play className="mr-2" />Start now</Button>
+          <Button onClick={(e) => { e.preventDefault(); start()}}><Play className="mr-2" />{t('Start')}</Button>
           <ShareDialog settingValues={getValues} />
         </div>
       </form>

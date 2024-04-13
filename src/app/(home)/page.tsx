@@ -1,5 +1,3 @@
-import { HomeFeatures } from '@/components/home-layout/features'
-import { HomeFooter } from '@/components/home-layout/footer'
 import { HomeHeader } from '@/components/home-layout/header'
 import { HomeHero } from '@/components/home-layout/hero'
 import { auth } from '@/lib/auth'

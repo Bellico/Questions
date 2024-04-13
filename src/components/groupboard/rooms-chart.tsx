@@ -1,6 +1,7 @@
 'use client'
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { useTranslation } from 'react-i18next'
 import { Line, LineChart, ResponsiveContainer, Tooltip } from 'recharts'
 
 type RoomLineType ={
@@ -8,12 +9,14 @@ type RoomLineType ={
 }
 
 export function RoomsChart({ data }: { data : RoomLineType[] }) {
+  const { t } = useTranslation('global')
+
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Progress evolution</CardTitle>
+        <CardTitle>{t('ProgressResults')}</CardTitle>
         <CardDescription>
-          Your last rating scores.
+          {t('ProgressResultsDesc')}
         </CardDescription>
       </CardHeader>
       <CardContent className="pb-4">
@@ -35,7 +38,7 @@ export function RoomsChart({ data }: { data : RoomLineType[] }) {
                       <div className="rounded-lg border bg-background p-2 shadow-sm">
                         <div className="flex flex-col">
                           <span className="text-[0.70rem] uppercase text-muted-foreground">
-                              Score
+                            {t('Score')}
                           </span>
                           <span className="font-bold">
                             {payload[0].value}

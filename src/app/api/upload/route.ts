@@ -1,12 +1,11 @@
-import { getSessionUserIdOrThrow } from '@/actions/queries'
 import prisma from '@/lib/prisma'
+import { getSessionUserIdOrThrow } from '@/queries/commons-queries'
 import { createHash } from 'crypto'
 import { notFound } from 'next/navigation'
 import { NextRequest, NextResponse } from 'next/server'
 
 export async function POST(request: NextRequest) {
   const userId = await getSessionUserIdOrThrow()
-
   const formData = await request.formData()
   const file = formData.get('image') as File | null
 

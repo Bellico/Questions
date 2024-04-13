@@ -1,5 +1,6 @@
-import { getRoomFinalResumeQuery } from '@/actions/queries'
 import { ArrayType, cn, diffDateToDhms } from '@/lib/utils'
+import { getRoomFinalResumeQuery } from '@/queries/pages-queries'
+import { translate } from '@/queries/utils-queries'
 import { CheckCheck, XCircle } from 'lucide-react'
 import dynamic from 'next/dynamic'
 
@@ -9,7 +10,9 @@ const QReaderMarkdown = dynamic(() => import('../mdx/mdx-markdown-reader'), {
 
 type RoomFinalResumeSectionPropsType = ArrayType<Awaited<ReturnType<typeof getRoomFinalResumeQuery>>>
 
-export function RoomFinalResumeSection({answerResume} : { answerResume: RoomFinalResumeSectionPropsType }) {
+export async function RoomFinalResumeSection({answerResume} : { answerResume: RoomFinalResumeSectionPropsType }) {
+
+  const { t } = await translate(['room', 'global'])
 
   if(answerResume.question == null){
     return(
@@ -20,7 +23,7 @@ export function RoomFinalResumeSection({answerResume} : { answerResume: RoomFina
             {answerResume.achievement == 100  && <CheckCheck className="mt-2 size-11 text-success" />}
             {answerResume.achievement! < 100  && <XCircle className="mt-2 size-11 text-destructive" />}
           </h1>
-          <h2 className="text-second">This question has been deleted</h2>
+          <h2 className="text-second">{t('QuestionDeleted')}</h2>
         </div>
       </section>
     )
@@ -53,7 +56,9 @@ export function RoomFinalResumeSection({answerResume} : { answerResume: RoomFina
         </div>
       </div>
 
-      <div className="absolute inset-x-0 bottom-4 text-center text-sm text-muted-foreground">Time: {diffDateToDhms(answerResume.dateStart, answerResume.dateEnd!)}</div>
+      <div className="absolute inset-x-0 bottom-4 text-center text-sm text-muted-foreground">
+        {t('Duration', { ns: 'global'})}: {diffDateToDhms(answerResume.dateStart, answerResume.dateEnd!, t)}
+      </div>
     </section>
   )
 }

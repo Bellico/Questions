@@ -1,0 +1,11 @@
+{
+  "Aborted": "Abandonné",
+  "GroupDeleted": "Groupe supprimé",
+  "GroupDuplicated": "Groupe dupliqué",
+  "GroupImported": "Groupe importé",
+  "GroupCreated": "Groupe créé",
+  "GroupUpdated": "Groupe mis à jour",
+  "RoomInProgress": "Le groupe ne peut pas être mis à jour, veuillez terminer vos réponses avant",
+  "ExistingGroup": "Un groupe nommé \"{{groupName}}\" existe déjà",
+  "ErrorServer": "Echec de l'action : {{message}}"
+}

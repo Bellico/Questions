@@ -1,62 +1,64 @@
 'use server'
 
-import { getSessionUserIdOrThrow, isGroupOwnerOrThrow } from '@/actions/queries'
+import { ActionResultType, withValidateAndSession } from '@/actions/wrapper-actions'
 import prisma from '@/lib/prisma'
 import { RoomShareSchema, RoomShareType } from '@/lib/schema'
-import { ActionResultType, ZparseOrError } from '@/lib/utils'
+import { isGroupOwnerOrThrow } from '@/queries/actions-queries'
+import { translate } from '@/queries/utils-queries'
 
-export const shareRoomAction = async (data: RoomShareType): Promise<ActionResultType<string>> => {
-  const errors = ZparseOrError(RoomShareSchema, data)
-  if (errors) return errors
+export const shareRoomAction = withValidateAndSession(
+  RoomShareSchema,
+  async (data: RoomShareType, userId: string): Promise<ActionResultType<string>> => {
 
-  const userId = await getSessionUserIdOrThrow()
-  await isGroupOwnerOrThrow(data.groupId, userId)
+    const { t } = await translate('actions')
 
-  let friend = await prisma.user.findUnique({
-    where:{
-      email: data.username
-    }
-  })
+    await isGroupOwnerOrThrow(data.groupId, userId)
 
-  try {
-    const room = await prisma.$transaction(async (tx) => {
-
-      if(!friend){
-        friend = await tx.user.create({
-          data:{
-            email: data.username
-          }
-        })
+    let friend = await prisma.user.findUnique({
+      where:{
+        email: data.username
       }
-
-      const room = await tx.room.create({
-        data: {
-          groupId: data.groupId,
-          userId: friend.id,
-          mode: data.mode,
-          withRetry: data.withRetry > 0 ? Number(data.withRetry) : null,
-          withResults: data.withResults,
-          withCorrection: data.withCorrection,
-          withRandom: data.withRandom,
-          withProgress: data.withProgress,
-          shareLink: crypto.randomUUID()
-        }
-      })
-
-      return room
     })
 
-    const shareUrl = `${process.env.PUBLIC_URL}/share/${room.id}/?shareLink=${room.shareLink}`
+    try {
+      const room = await prisma.$transaction(async (tx) => {
 
-    return {
-      success: true,
-      data: shareUrl
+        if(!friend){
+          friend = await tx.user.create({
+            data:{
+              email: data.username
+            }
+          })
+        }
+
+        const room = await tx.room.create({
+          data: {
+            groupId: data.groupId,
+            userId: friend.id,
+            mode: data.mode,
+            withRetry: data.withRetry > 0 ? Number(data.withRetry) : null,
+            withResults: data.withResults,
+            withCorrection: data.withCorrection,
+            withRandom: data.withRandom,
+            withProgress: data.withProgress,
+            shareLink: crypto.randomUUID()
+          }
+        })
+
+        return room
+      })
+
+      const shareUrl = `${process.env.PUBLIC_URL}/share/${room.id}/?shareLink=${room.shareLink}`
+
+      return {
+        success: true,
+        data: shareUrl
+      }
     }
-  }
-  catch (error: any) {
-    return {
-      success: false,
-      message: 'Database Error: Failed to share room: ' + error.message,
+    catch (error: any) {
+      return {
+        success: false,
+        message: t('ErrorServer', { message: error.message })
+      }
     }
-  }
-}
+  })

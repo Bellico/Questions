@@ -5,8 +5,10 @@ import { Button } from '@/components/ui/button'
 import { StepForward, Terminal } from 'lucide-react'
 import Link from 'next/link'
 import { useEffect, useRef, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 
 export const AlertDraft = () => {
+  const { t } = useTranslation('global')
   const [hasDraft, setHasDraft] = useState(false)
   let draftId = useRef<string | undefined>(undefined)
 
@@ -23,13 +25,13 @@ export const AlertDraft = () => {
   return (
     <Alert>
       <Terminal className="size-4" />
-      <AlertTitle>Draft not saved !</AlertTitle>
+      <AlertTitle>{t('DraftUnsaved')}</AlertTitle>
       <AlertDescription className="flex items-center justify-between">
-        <p>A current draft has not been saved you can continue it.</p>
+        <p>{t('DraftUnsavedDesc')}</p>
         <Link href={`/editor/${draftId.current || ''}?useDraft=true`}>
           <Button variant="secondary">
             <StepForward className="mr-2 size-4" />
-            Continue
+            {t('Continue')}
           </Button>
         </Link>
       </AlertDescription>

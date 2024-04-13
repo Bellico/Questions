@@ -3,17 +3,18 @@ import {
 } from '@tanstack/react-table'
 import { ArrowUpDown, TextSearch } from 'lucide-react'
 
-import { getRoomBoardQuery } from '@/actions/queries'
 import { Button } from '@/components/ui/button'
 import { ArrayType } from '@/lib/utils'
+import { getRoomBoardQuery } from '@/queries/pages-queries'
 import Link from 'next/link'
 
 type dataTableType = ArrayType<Awaited<ReturnType<typeof getRoomBoardQuery>>>
 
 export const RoomsTableColumns: (
   userId: string,
-  onRetry : (roomId: string) => Promise<void>
-) => ColumnDef<dataTableType>[] = (userId, onRetry) =>
+  onRetry : (roomId: string) => Promise<void>,
+  t : (key: string) => string
+) => ColumnDef<dataTableType>[] = (userId, onRetry, t) =>
   ([
     {
       id: 'who',
@@ -23,7 +24,7 @@ export const RoomsTableColumns: (
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
-          Who
+          {t('Who')}
           <ArrowUpDown className="ml-2 size-4" />
         </Button>
       ,
@@ -40,7 +41,7 @@ export const RoomsTableColumns: (
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
-          Score
+          {t('Score')}
           <ArrowUpDown className="ml-2 size-4" />
         </Button>
       ,
@@ -51,7 +52,7 @@ export const RoomsTableColumns: (
     },
     {
       accessorKey: 'successCount',
-      header: 'Success',
+      header: t('Success'),
       cell: ({ row }) =>
         <div>
           {row.getValue('successCount')} / {row.original.successCount! + row.original.failedCount!}
@@ -64,7 +65,7 @@ export const RoomsTableColumns: (
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
-          Start
+          {t('StartDate')}
           <ArrowUpDown className="ml-2 size-4" />
         </Button>
       ,
@@ -79,7 +80,7 @@ export const RoomsTableColumns: (
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
-          End
+          {t('EndDate')}
           <ArrowUpDown className="ml-2 size-4" />
         </Button>
       ,
@@ -95,14 +96,14 @@ export const RoomsTableColumns: (
           <Link href={`/results/${row.original.id}`}>
             <Button variant="outline">
               <TextSearch className="mr-2 size-4" />
-              Details
+              {t('Details')}
             </Button>
           </Link>
 
           {userId == row.original.user.id && row.original.withRetry !== null && row.original.withRetry > 0 &&
               <Button variant="destructive" onClick={() => onRetry(row.original.id)}>
                 <TextSearch className="mr-2 size-4" />
-                  Retry ({row.original.withRetry})
+                {t('Retry')} ({row.original.withRetry})
               </Button>
           }
         </div>

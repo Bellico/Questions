@@ -1,11 +1,11 @@
 'use client'
 
+import { ActionResultType } from '@/actions/wrapper-actions'
 import { QuestionsEditorAccordion } from '@/components/editor/questions-editor-accordion'
 import { QuestionsEditorActions } from '@/components/editor/questions-editor-actions'
 import { QuestionsEditorHeader } from '@/components/editor/questions-editor-header'
 import { QuestionsEditorProvider } from '@/components/providers/questions-editor-provider'
 import { QuestionGroupType } from '@/lib/schema'
-import { ActionResultType } from '@/lib/utils'
 
 type QuestionsEditorProps = {
   questionGroup?: QuestionGroupType,

@@ -1,8 +1,8 @@
-import { isRoomOwner } from '@/actions/queries'
 import { Spinner } from '@/components/commons/spinner'
 import { RoomFinalResume } from '@/components/final/room-final-resume'
 import { RoomFinalSummary } from '@/components/final/room-final-summary'
 import { auth } from '@/lib/auth'
+import { isRoomOwner } from '@/queries/actions-queries'
 import { notFound } from 'next/navigation'
 import { Suspense } from 'react'
 

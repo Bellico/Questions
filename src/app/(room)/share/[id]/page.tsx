@@ -1,6 +1,7 @@
-import { getGroupForShareQuery } from '@/actions/queries'
 import { startShareRoomAction } from '@/actions/room/start-share-room-action'
 import { Button } from '@/components/ui/button'
+import { getGroupForShareQuery } from '@/queries/pages-queries'
+import { translate } from '@/queries/utils-queries'
 import { redirect } from 'next/navigation'
 
 export default async function StartPage({
@@ -23,6 +24,8 @@ searchParams?: { shareLink?: string }
     redirect(`/room/${params.id}/?shareLink=${searchParams?.shareLink}`)
   }
 
+  const { t } = await translate('room')
+
   async function startShareRoom(){
     'use server'
     const result = await startShareRoomAction({
@@ -38,17 +41,17 @@ searchParams?: { shareLink?: string }
   return (
     <section className="flex min-h-[calc(100vh-65px)] flex-col items-center justify-center gap-8 px-4 text-center">
       <h1 className="text-3xl font-extrabold sm:text-4xl md:text-5xl">
-          You're invited on Questions Editor
+        {t('SharePageTitle')}
       </h1>
 
       <p className="text-gray-500 dark:text-gray-400">
-        Your friend has invited you to answer at {room?.group._count.questions} questions. Click the button below to get started.
+        {t('SharePageDesc', { questionCount: room.group._count.questions })}
       </p>
 
       <div className="w-full max-w-sm">
         <form action={startShareRoom} >
           <Button className="w-full">
-                Start to answer
+            {t('StartAnswer')}
           </Button>
         </form>
       </div>

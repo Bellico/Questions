@@ -1,5 +1,5 @@
-import { getSessionUserIdOrThrow } from '@/actions/queries'
 import prisma from '@/lib/prisma'
+import { getSessionUserIdOrThrow } from '@/queries/commons-queries'
 import { notFound } from 'next/navigation'
 import { NextRequest } from 'next/server'
 

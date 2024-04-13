@@ -8,6 +8,7 @@ import { DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuS
 import { useAction } from '@/hooks/useAction'
 import { downloadBlob } from '@/lib/utils'
 import { useRef } from 'react'
+import { useTranslation } from 'react-i18next'
 
 type QuestionsTableProps = {
   groupId: string,
@@ -17,12 +18,13 @@ type QuestionsTableProps = {
 export function QuestionGroupsListActions({ groupId, roomInProgress }: QuestionsTableProps) {
   const dropDownRef = useRef<HTMLDivElement>(null)
   const requestAction = useAction()
+  const { t } = useTranslation(['global', 'actions'])
 
   async function onAbortAction(){
     requestAction(
       () => abortRoomAction(groupId),
       () => {},
-      'Aborted'
+      t('Aborted', { ns: 'actions' })
     )
   }
 
@@ -30,7 +32,7 @@ export function QuestionGroupsListActions({ groupId, roomInProgress }: Questions
     requestAction(
       () => deleteQuestionGroupAction(groupId),
       () => {},
-      'Group deleted'
+      t('GroupDeleted', { ns: 'actions' })
     )
   }
 
@@ -38,7 +40,7 @@ export function QuestionGroupsListActions({ groupId, roomInProgress }: Questions
     requestAction(
       () => duplicateQuestionGroupAction(groupId),
       () => {},
-      'Group duplicated'
+      t('GroupDuplicated', { ns: 'actions' })
     )
   }
 
@@ -52,14 +54,14 @@ export function QuestionGroupsListActions({ groupId, roomInProgress }: Questions
       <DropdownMenuLabel>Actions</DropdownMenuLabel>
       <DropdownMenuSeparator />
       {roomInProgress &&
-        <YesNoDialogAction action={onAbortAction} titleDialog='Are you absolutely sure?' descDialog='You will lose your last answers.'>
-          <DropdownMenuItem className="text-destructive" onSelect={(e) => {e.preventDefault(); dropDownRef.current?.remove()}}>Abort</DropdownMenuItem>
+        <YesNoDialogAction action={onAbortAction} titleDialog={t('YesNoTitle')} descDialog={t('YesNoAbort')}>
+          <DropdownMenuItem className="text-destructive" onSelect={(e) => {e.preventDefault(); dropDownRef.current?.remove()}}>{t('Abort')}</DropdownMenuItem>
         </YesNoDialogAction>
       }
-      <DropdownMenuItem onClick={() => onExportAction()}>Export</DropdownMenuItem>
-      <DropdownMenuItem onClick={() => onDuplicateAction()}>Duplicate</DropdownMenuItem>
-      <YesNoDialogAction action={onDeleteAction} titleDialog='Are you absolutely sure?' descDialog='You will lose all scores and results for this group.'>
-        <DropdownMenuItem onSelect={(e) => {e.preventDefault(); dropDownRef.current?.remove()}}>Delete</DropdownMenuItem>
+      <DropdownMenuItem onClick={() => onExportAction()}>{t('Export')}</DropdownMenuItem>
+      <DropdownMenuItem onClick={() => onDuplicateAction()}>{t('Duplicate')}</DropdownMenuItem>
+      <YesNoDialogAction action={onDeleteAction} titleDialog={t('YesNoTitle')} descDialog={t('YesNoDelete')}>
+        <DropdownMenuItem onSelect={(e) => {e.preventDefault(); dropDownRef.current?.remove()}}>{t('Delete')}</DropdownMenuItem>
       </YesNoDialogAction>
     </DropdownMenuContent>
   )

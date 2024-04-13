@@ -1,9 +1,11 @@
-import { getRoomBoardQuery } from '@/actions/queries'
 import { RoomsChart } from '@/components/groupboard/rooms-chart'
 import { RoomsTable } from '@/components/groupboard/rooms-table'
+import { getRoomBoardQuery } from '@/queries/pages-queries'
+import { translate } from '@/queries/utils-queries'
 import { RoomMode } from '@prisma/client'
 
 export async function RoomsList({ userId, groupId, mode } : { userId: string, groupId: string, mode: RoomMode}) {
+  const { t } = await translate('global')
   const roomsList = await getRoomBoardQuery(groupId, mode)
 
   const chartDatas = roomsList
@@ -20,8 +22,8 @@ export async function RoomsList({ userId, groupId, mode } : { userId: string, gr
       </aside>
 
       <div className="space-y-2">
-        <h2 className="text-2xl font-bold ">{mode} results ({roomsList.length})</h2>
-        <p className="text-muted-foreground">Score history (me and sharelink).</p>
+        <h2 className="text-2xl font-bold "> {t('RatingResults')} ({roomsList.length})</h2>
+        <p className="text-muted-foreground"> {t('RatingResultsDesc')}</p>
         <RoomsTable roomsList={roomsList} userId={userId} />
       </div>
     </>

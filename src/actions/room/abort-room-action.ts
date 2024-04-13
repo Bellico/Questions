@@ -1,58 +1,59 @@
 'use server'
 
-import { getActiveRoomQuery, getSessionUserIdOrThrow } from '@/actions/queries'
+import { ActionResultType, withValidateAndSession } from '@/actions/wrapper-actions'
 import prisma from '@/lib/prisma'
-import { ActionResultType, ZparseOrError } from '@/lib/utils'
+import { getActiveRoomQuery } from '@/queries/commons-queries'
+import { translate } from '@/queries/utils-queries'
 import { revalidatePath } from 'next/cache'
 import { z } from 'zod'
 
-export const abortRoomAction = async (id : string): Promise<ActionResultType<void>> => {
-  const errors = ZparseOrError(z.string(), id)
+export const abortRoomAction = withValidateAndSession(
+  z.string(),
+  async (id: string, userId: string): Promise<ActionResultType<void>> => {
 
-  if (errors) return errors
+    const { t } = await translate('actions')
 
-  const userId = await getSessionUserIdOrThrow()
-  const activeRoom = await getActiveRoomQuery(id, userId)
+    const activeRoom = await getActiveRoomQuery(id, userId)
 
-  if (!activeRoom) {
-    throw new Error('403 Forbidden')
-  }
+    if (!activeRoom) {
+      throw new Error('403 Forbidden')
+    }
 
-  try {
-    await prisma.$transaction(async (tx) => {
+    try {
+      await prisma.$transaction(async (tx) => {
 
-      await tx.choices.deleteMany({
-        where: {
-          answer:{
+        await tx.choices.deleteMany({
+          where: {
+            answer:{
+              roomId: activeRoom.id
+            }
+          }
+        })
+
+        await tx.answer.deleteMany({
+          where: {
             roomId: activeRoom.id
           }
-        }
+        })
+
+        await tx.room.delete({
+          where:{
+            id: activeRoom.id
+          },
+        })
+
       })
 
-      await tx.answer.deleteMany({
-        where: {
-          roomId: activeRoom.id
-        }
-      })
+      revalidatePath('/board')
 
-      await tx.room.delete({
-        where:{
-          id: activeRoom.id
-        },
-      })
-
-    })
-
-    revalidatePath('/board')
-
-    return {
-      success: true
+      return {
+        success: true
+      }
     }
-  }
-  catch (error: any) {
-    return {
-      success: false,
-      message: 'Database Error: Failed to abort room: ' + error.message,
+    catch (error: any) {
+      return {
+        success: false,
+        message: t('ErrorServer', { message: error.message })
+      }
     }
-  }
-}
+  })

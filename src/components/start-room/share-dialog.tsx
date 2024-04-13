@@ -9,6 +9,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { Check, Copy, Loader2, Share } from 'lucide-react'
 import { useRef, useState } from 'react'
 import { useForm } from 'react-hook-form'
+import { useTranslation } from 'react-i18next'
 import { z } from 'zod'
 
 const ShareSchema = z.object({
@@ -19,6 +20,7 @@ type ShareSchemaType = z.infer<typeof ShareSchema>
 
 export function ShareDialog( {settingValues} : { settingValues: () => RoomSettingsType}) {
 
+  const { t } = useTranslation('room')
   const shareLinkRef = useRef<string>('')
   const [copied, setCopied] = useState(false)
 
@@ -43,15 +45,15 @@ export function ShareDialog( {settingValues} : { settingValues: () => RoomSettin
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="secondary"><Share className="mr-2" />Get a share link</Button>
+        <Button variant="secondary"><Share className="mr-2" />{t('ShareLink')}</Button>
       </DialogTrigger>
       <DialogContent>
         <form id="form-share" onSubmit={handleSubmit(share)}>
 
           <DialogHeader>
-            <DialogTitle>Share my questions</DialogTitle>
+            <DialogTitle>{t('ShareQuestions')}</DialogTitle>
             <DialogDescription>
-            You can ask anyone on your own questions, send him a link now.
+              {t('ShareQuestionsDesc')}
             </DialogDescription>
           </DialogHeader>
 
@@ -83,7 +85,7 @@ export function ShareDialog( {settingValues} : { settingValues: () => RoomSettin
             <DialogFooter>
               <Button type="submit" disabled={isSubmitting || !isValid}>
                 {isSubmitting && <Loader2 className="-ml-1 mr-3 animate-spin" />}
-                 Get a share link
+                {t('ShareLink')}
               </Button>
             </DialogFooter>
           }

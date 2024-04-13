@@ -1,6 +1,7 @@
-import { getActiveRoomQuery, getGroupForStartQuery, getLastSettingsRoomQuery } from '@/actions/queries'
 import { RoomSettings } from '@/components/start-room/room-settings'
 import { auth } from '@/lib/auth'
+import { getActiveRoomQuery } from '@/queries/commons-queries'
+import { getGroupForStartQuery, getLastSettingsRoomQuery } from '@/queries/pages-queries'
 import { notFound, redirect } from 'next/navigation'
 
 export default async function StartPage({

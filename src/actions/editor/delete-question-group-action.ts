@@ -1,63 +1,65 @@
 'use server'
 
-import { getSessionUserIdOrThrow, isGroupOwnerOrThrow } from '@/actions/queries'
+import { ActionResultType, withValidateAndSession } from '@/actions/wrapper-actions'
 import prisma from '@/lib/prisma'
-import { ActionResultType, ZparseOrError } from '@/lib/utils'
+import { isGroupOwnerOrThrow } from '@/queries/actions-queries'
+import { translate } from '@/queries/utils-queries'
 import { revalidatePath } from 'next/cache'
 import z from 'zod'
 
-export const deleteQuestionGroupAction = async (id: string): Promise<ActionResultType<void>> => {
-  const errors = ZparseOrError(z.string(), id)
-  if (errors) return errors
+export const deleteQuestionGroupAction = withValidateAndSession(
+  z.string(),
+  async (id: string, userId: string): Promise<ActionResultType<void>> => {
 
-  const userId = await getSessionUserIdOrThrow()
-  await isGroupOwnerOrThrow(id, userId)
+    const { t } = await translate('actions')
 
-  try {
-    await prisma.$transaction(async (tx) => {
+    await isGroupOwnerOrThrow(id, userId)
 
-      await tx.choices.deleteMany({
-        where: {
-          answer:{
+    try {
+      await prisma.$transaction(async (tx) => {
+
+        await tx.choices.deleteMany({
+          where: {
+            answer:{
+              room:{
+                groupId: id
+              }
+            }
+          }
+        })
+
+        await tx.answer.deleteMany({
+          where: {
             room:{
               groupId: id
             }
           }
-        }
-      })
+        })
 
-      await tx.answer.deleteMany({
-        where: {
-          room:{
+        await tx.room.deleteMany({
+          where: {
             groupId: id
           }
-        }
+        })
+
+        await tx.questionGroup.delete({
+          where: {
+            id: id
+          }
+        })
+
       })
 
-      await tx.room.deleteMany({
-        where: {
-          groupId: id
-        }
-      })
+      revalidatePath('/board')
 
-      await tx.questionGroup.delete({
-        where: {
-          id: id
-        }
-      })
-
-    })
-
-    revalidatePath('/board')
-
-    return {
-      success: true
+      return {
+        success: true
+      }
     }
-  }
-  catch (error: any) {
-    return {
-      success: false,
-      message: 'Database Error: Failed to delete questions group: ' + error.message,
+    catch (error: any) {
+      return {
+        success: false,
+        message: t('ErrorServer', { message: error.message })
+      }
     }
-  }
-}
+  })

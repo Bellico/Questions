@@ -6,6 +6,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { Loader2, MailCheck, MailWarning } from 'lucide-react'
 import { signIn } from 'next-auth/react'
 import { useForm } from 'react-hook-form'
+import { useTranslation } from 'react-i18next'
 import * as z from 'zod'
 
 const SignInSchema = z.object({
@@ -15,6 +16,7 @@ const SignInSchema = z.object({
 type SignInSchemaType = z.infer<typeof SignInSchema>
 
 export default function SubscribeForm() {
+  const { t } = useTranslation('global')
 
   const form = useForm<SignInSchemaType>({
     resolver: zodResolver(SignInSchema)
@@ -27,25 +29,30 @@ export default function SubscribeForm() {
   } = form
 
   const signWithEmail = async (data: SignInSchemaType) => {
+    // Fix "try another account" ==> invalid prisma session delete
+    await fetch('/api/clear-session', {
+      method: 'POST',
+    })
+
     const response = await signIn('email', { email: data.email, redirect: false })
     if (!response?.ok) {
-      setError('root.serverError', { type: 'custom', message: 'Error to send mail' })
+      setError('root.serverError', { type: 'custom', message: t('SignInError') })
     }
   }
 
   return (
     <>
       <form id="form-subscribe" noValidate className="m-2 flex space-x-2" onSubmit={handleSubmit(signWithEmail)}>
-        <Input className="p-6" placeholder="Enter your email" type="email" inputMode="email" {...register('email')} />
+        <Input className="p-6" placeholder={t('EnterMail')} type="email" inputMode="email" {...register('email')} />
         <Button className="p-6" type="submit" disabled={isSubmitting || !isValid} >
           {isSubmitting && <Loader2 className="-ml-1 mr-3 animate-spin" />}
-          Sign In
+          {t('SignIn')}
         </Button>
       </form>
 
       {isSubmitSuccessful && !isSubmitting &&
                 <p className="animate-wiggle font-semibold text-green-700">
-                  <MailCheck className="mr-2 inline" />Check your mail to sign in
+                  <MailCheck className="mr-2 inline" />{t('SignInSuccess')}
                 </p>}
 
       {errors.root?.serverError &&

@@ -1,11 +1,12 @@
 import { Confetti } from '@/components/commons/confetti'
 import { RoomFinalRetry } from '@/components/final/room-final-retry'
 import { Button } from '@/components/ui/button'
+import { translate } from '@/queries/utils-queries'
 import { ArrowDownToLine, Group } from 'lucide-react'
 import Link from 'next/link'
 import { PropsWithChildren } from 'react'
 
-export function RoomFinalHero({
+export async function RoomFinalHero({
   roomId,
   shareLink,
   canScroll,
@@ -19,6 +20,8 @@ export function RoomFinalHero({
   canRetry: boolean
   playConfetti: boolean
 }>) {
+  const { t } = await translate('room')
+
   return(
     <section className="relative flex min-h-[calc(100vh-65px)] items-center justify-center">
 
@@ -28,8 +31,8 @@ export function RoomFinalHero({
 
         <div className="animate-room-final">
           {playConfetti ?
-            <h1 className="rainbow_text_animated text-4xl font-extrabold tracking-tight sm:text-5xl md:text-6xl">Well done! Congratulations!</h1> :
-            <h1 className="text-4xl font-extrabold tracking-tight sm:text-5xl md:text-6xl">All questions are completed</h1>
+            <h1 className="rainbow_text_animated text-4xl font-extrabold tracking-tight sm:text-5xl md:text-6xl">{t('Congrats')}</h1> :
+            <h1 className="text-4xl font-extrabold tracking-tight sm:text-5xl md:text-6xl">{t('AllComplete')}</h1>
           }
         </div>
 
@@ -43,7 +46,7 @@ export function RoomFinalHero({
           <Link href={'/'}>
             <Button variant="secondary" className="mr-4 sm:w-36">
               <Group className="mr-2" />
-                Leave
+              {t('Leave')}
             </Button>
           </Link>
         </div>
@@ -52,7 +55,7 @@ export function RoomFinalHero({
 
       {canScroll &&
         <div className="absolute inset-x-0 bottom-0 flex animate-bounce flex-col items-center">
-          <p>Scroll to yours results</p>
+          <p>{t('Scroll')}</p>
           <ArrowDownToLine />
         </div>
       }

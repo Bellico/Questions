@@ -1,16 +1,17 @@
+import { Button } from '@/components/ui/button'
+import { ArrayType, secondsToDhms } from '@/lib/utils'
+import { getAnwsersBoardQuery } from '@/queries/pages-queries'
 import {
   ColumnDef
 } from '@tanstack/react-table'
 import { ArrowUpDown } from 'lucide-react'
 
-import { getAnwsersBoardQuery } from '@/actions/queries'
-import { Button } from '@/components/ui/button'
-import { ArrayType, secondsToDhms } from '@/lib/utils'
-
 type dataTableType = ArrayType<Awaited<ReturnType<typeof getAnwsersBoardQuery>>>
 
-export const AnswersTableColumns: ColumnDef<dataTableType>[] =
-  [
+export const AnswersTableColumns: (
+  t : (key: string) => string
+) => ColumnDef<dataTableType>[] = (t) =>
+  ([
     {
       accessorKey: 'order',
       header: ({ column }) =>
@@ -32,7 +33,7 @@ export const AnswersTableColumns: ColumnDef<dataTableType>[] =
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
-          Average Score
+          {t('AverageScore')}
           <ArrowUpDown className="ml-2 size-4" />
         </Button>
       ,
@@ -47,13 +48,13 @@ export const AnswersTableColumns: ColumnDef<dataTableType>[] =
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
-          Average Response Time
+          {t('AverageTime')}
           <ArrowUpDown className="ml-2 size-4" />
         </Button>
       ,
       cell: ({ row }) =>
         <div>
-          {secondsToDhms(row.getValue('avgAnwserTime'))}
+          {secondsToDhms(row.getValue('avgAnwserTime'), t)}
         </div>,
     },
-  ]
+  ])

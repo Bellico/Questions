@@ -1,7 +1,7 @@
 import { updateQuestionGroupAction } from '@/actions/editor/update-question-group-actions'
-import { getEditorQuery } from '@/actions/queries'
 import { QuestionsEditor } from '@/components/editor/questions-editor'
 import { auth } from '@/lib/auth'
+import { getEditorQuery } from '@/queries/pages-queries'
 import { notFound } from 'next/navigation'
 
 export default async function EditorPage({

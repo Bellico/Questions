@@ -12,6 +12,7 @@ import { Pencil, Trash2 } from 'lucide-react'
 import dynamic from 'next/dynamic'
 import { useEffect, useRef } from 'react'
 import { useFieldArray, useForm } from 'react-hook-form'
+import { useTranslation } from 'react-i18next'
 import { useShallow } from 'zustand/react/shallow'
 
 const QEditorMarkdown = dynamic(() => import('../mdx/mdx-markdown-editor'), {
@@ -32,6 +33,8 @@ export function QuestionsEditorSection({
 
   const canAutoAddResponse = useRef<boolean>(false)
   const qEditorMarkdownRef = useRef<MDXEditorMethods>(null)
+
+  const { t } = useTranslation('editor')
 
   const [updateQuestion, removeStoreResponse] = useQuestionsEditorContext(
     useShallow((s) => [s.updateQuestion, s.removeResponse]),
@@ -156,7 +159,7 @@ export function QuestionsEditorSection({
                       markdown={subject}
                       editorRef={qEditorMarkdownRef}
                       onChange={updateQuestionDebounced}
-                      placeholder="Write your question..." />
+                      placeholder={t('NextQuestion')} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -178,7 +181,7 @@ export function QuestionsEditorSection({
                         <FormControl>
                           <div className="mr-2 flex items-center space-x-2">
                             <Switch id={'q-' + indexQuestion + 'r-' + index} checked={field.value} onCheckedChange={field.onChange} className="data-[state=checked]:bg-success" name="isChecked" />
-                            <Label htmlFor={'q-' + indexQuestion + 'r-' + index}>{field.value ? 'Good' : 'Bad'}</Label>
+                            <Label htmlFor={'q-' + indexQuestion + 'r-' + index}>{field.value ? t('Good') : t('Bad')}</Label>
                           </div>
                         </FormControl>
                         <FormMessage />
@@ -192,7 +195,7 @@ export function QuestionsEditorSection({
                     render={({ field }) => (
                       <FormItem className="w-full">
                         <FormControl>
-                          <Input id={'qtext-' + indexQuestion + 'r-' + index} placeholder="Your next answer..." {...field} />
+                          <Input id={'qtext-' + indexQuestion + 'r-' + index} placeholder={t('NextResponse')} {...field} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -207,7 +210,7 @@ export function QuestionsEditorSection({
           </form>
         </Form>
 
-        <Button variant="link" onClick={addResponse} disabled={!isValid}>Add</Button>
+        <Button variant="link" onClick={addResponse} disabled={!isValid}>{t('AddResponse')}</Button>
       </div>
     </section>
   )

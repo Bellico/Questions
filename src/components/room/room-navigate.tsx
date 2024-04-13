@@ -1,7 +1,7 @@
 import { useRoomContext } from '@/components/providers/room-provider'
 import { Button } from '@/components/ui/button'
 import { ArrowBigLeftDash, ArrowBigRightDash } from 'lucide-react'
-import { FormEvent } from 'react'
+import { useTranslation } from 'react-i18next'
 import { useShallow } from 'zustand/react/shallow'
 
 type RoomNavigateProps = {
@@ -9,6 +9,8 @@ type RoomNavigateProps = {
 }
 
 export function RoomNavigate({navigate} : RoomNavigateProps) {
+
+  const { t } = useTranslation('room')
   const canGoPrev = useRoomContext(state => state.canGoPrev)
   const canGoNext = useRoomContext(state => state.canGoNext)
 
@@ -28,12 +30,12 @@ export function RoomNavigate({navigate} : RoomNavigateProps) {
     <div className="inset-x-0 z-10 mb-6 flex justify-between sm:absolute">
       <form action={navigateToPrev}>
         <Button variant="outline" type="submit" disabled={!canGoPrev} >
-          <ArrowBigLeftDash className="mr-2" /> Prev
+          <ArrowBigLeftDash className="mr-2" /> {t('Prev')}
         </Button>
       </form>
       <form action={navigateToNext}>
         <Button variant="outline" type="submit" disabled={!canGoNext} >
-          Next <ArrowBigRightDash className="ml-2" />
+          {t('Next')} <ArrowBigRightDash className="ml-2" />
         </Button>
       </form>
     </div>

@@ -1,4 +1,3 @@
-import { getGroupsListQuery } from '@/actions/queries'
 import { QuestionGroupNew } from '@/components/board/question-group-new'
 import { QuestionGroupsListActions } from '@/components/board/question-groups-list-actions'
 import { Button } from '@/components/ui/button'
@@ -7,16 +6,19 @@ import {
   DropdownMenu,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
+import { getGroupsListQuery } from '@/queries/pages-queries'
+import { translate } from '@/queries/utils-queries'
 import { BarChart3, Group, MoreHorizontal, Pencil, Play, Plus } from 'lucide-react'
 import Link from 'next/link'
 
 export async function QuestionGroupsList({userId} : { userId: string}) {
+  const { t } = await translate('global')
   const questionGroups = await getGroupsListQuery(userId)
 
   if (questionGroups.length == 0) {
     return(
       <QuestionGroupNew className="h-16">
-        <span>Add your first group of questions</span>
+        <span>{t('AddFirst')}</span>
       </QuestionGroupNew>
     )
   }
@@ -41,12 +43,12 @@ export async function QuestionGroupsList({userId} : { userId: string}) {
               </div>
               {group.roomInProgress &&
                  <div className="text-xs ">
-                   Last: <span className="font-bold text-primary">In progress...</span>
+                   {t('Last')}: <span className="font-bold text-primary">{t('Progress')}</span>
                  </div>
               }
               {!group.roomInProgress && group.lastScore !== null &&
                 <div className="text-xs">
-                  Last: <span className="font-bold text-primary">{group.lastScore}%</span>
+                  {t('Last')}: <span className="font-bold text-primary">{group.lastScore}%</span>
                   <span className="text-second"> - {group.lastTryDate?.toLocaleString('fr-fr')}</span>
                 </div>
               }
@@ -56,14 +58,14 @@ export async function QuestionGroupsList({userId} : { userId: string}) {
               <Link href={`/start/${group.id}`}>
                 <Button>
                   <Play className="mr-2 size-4" />
-                  {group.roomInProgress ? 'Continue' : 'Start' }
+                  {group.roomInProgress ? t('Continue') : t('Start') }
                 </Button>
               </Link>
 
               <Link href={`/editor/${group.id}`}>
                 <Button variant="secondary">
                   <Pencil className="mr-2 size-4" />
-                      Edit
+                  {t('Edit')}
                 </Button>
               </Link>
 
@@ -71,7 +73,7 @@ export async function QuestionGroupsList({userId} : { userId: string}) {
                 <Link href={`/board/${group.id}`}>
                   <Button variant="secondary">
                     <BarChart3 className="mr-2 size-4" />
-                      Results ({group.resultsCount})
+                    {t('Results')} ({group.resultsCount})
                   </Button>
                 </Link>
               }

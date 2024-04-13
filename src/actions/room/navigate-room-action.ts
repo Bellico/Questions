@@ -1,36 +1,35 @@
 'use server'
 
-import { canPlayRoomQuery, getNextQuestionToAnswerQuery, getSessionUserId } from '@/actions/queries'
+import { ActionResultType, withValidate } from '@/actions/wrapper-actions'
 import prisma from '@/lib/prisma'
 import { PrevNextRoomSchema, PrevNextRoomType, RoomQuestionNextType } from '@/lib/schema'
-import { ActionResultType, ZparseOrError } from '@/lib/utils'
+import { canPlayRoomQuery, getNextQuestionToAnswerQuery, getSessionUserId } from '@/queries/commons-queries'
 import { RoomMode } from '@prisma/client'
 
-export const navigateRoomAction = async (data: PrevNextRoomType): Promise<ActionResultType<RoomQuestionNextType>> => {
-  const errors = ZparseOrError(PrevNextRoomSchema, data)
-  if (errors) return errors
+export const navigateRoomAction = withValidate(
+  PrevNextRoomSchema,
+  async (data: PrevNextRoomType): Promise<ActionResultType<RoomQuestionNextType>> => {
 
-  const userId = await getSessionUserId()
+    const userId = await getSessionUserId()
+    const room = await canPlayRoomQuery(data.roomId, userId, data.shareLink)
 
-  const room = await canPlayRoomQuery(data.roomId, userId, data.shareLink)
+    if (!room || room.mode !== RoomMode.Training) {
+      throw new Error('403 Forbidden')
+    }
 
-  if (!room || room.mode !== RoomMode.Training) {
-    throw new Error('403 Forbidden')
-  }
+    const navigate = data.questionId ?
+      await getQuestionToNavigate(data.roomId, data.questionId) :
+      await getNextQuestionToAnswerQuery(data.roomId)
 
-  const navigate = data.questionId ?
-    await getQuestionToNavigate(data.roomId, data.questionId) :
-    await getNextQuestionToAnswerQuery(data.roomId)
+    if (!navigate) {
+      throw new Error('403 Forbidden')
+    }
 
-  if (!navigate) {
-    throw new Error('403 Forbidden')
-  }
-
-  return {
-    success: true,
-    data: navigate
-  }
-}
+    return {
+      success: true,
+      data: navigate
+    }
+  })
 
 const getQuestionToNavigate = async (roomId: string, questionId: string) : Promise<RoomQuestionNextType> => {
   const result = await prisma.answer.findFirstOrThrow({
