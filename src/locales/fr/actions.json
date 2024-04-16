@@ -7,5 +7,6 @@
   "GroupUpdated": "Groupe mis à jour",
   "RoomInProgress": "Le groupe ne peut pas être mis à jour, veuillez terminer vos réponses avant",
   "ExistingGroup": "Un groupe nommé \"{{groupName}}\" existe déjà",
-  "ErrorServer": "Echec de l'action : {{message}}"
+  "ErrorServer": "Echec de l'action : {{message}}",
+  "PreferencesUpdated": "Préférences mises à jour"
 }

@@ -26,7 +26,7 @@ export async function QuestionGroupsList({userId} : { userId: string}) {
   return (
     <div className="my-5 grid animate-fadeIn gap-4 sm:grid-cols-2 2xl:grid-cols-4">
       {questionGroups.map((group) => (
-        <Card className="q-card" key={group.id}>
+        <Card className="q-card relative" key={group.id}>
           <CardHeader className="flex flex-row items-center pb-2 text-lg  font-bold">
             <div>
               <Group className="mr-2 size-8" />
@@ -79,7 +79,7 @@ export async function QuestionGroupsList({userId} : { userId: string}) {
               }
 
               <DropdownMenu>
-                <DropdownMenuTrigger asChild>
+                <DropdownMenuTrigger asChild className="absolute right-6 top-6">
                   <Button variant="ghost" className="size-8 p-0">
                     <span className="sr-only">Open menu</span>
                     <MoreHorizontal className="size-5" />

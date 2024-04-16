@@ -3,15 +3,15 @@ import { useToast } from '@/components/ui/use-toast'
 import { useAppStore } from '@/stores/app-store'
 import { useEffect, useTransition } from 'react'
 
-export function useAction() {
+export function useAction(useAppLoader : boolean = true) {
   const { toast } = useToast()
   const [isPending, startTransition] = useTransition()
-  const setLoader = useAppStore((state) => state.setLoader)
+  const setLoader = useAppStore((state) => state.setAppLoading)
 
   useEffect(() => {
-    setLoader(isPending)
+    if (useAppLoader) setLoader(isPending)
     return () => setLoader(false)
-  },[setLoader, isPending])
+  },[setLoader, isPending, useAppLoader])
 
   async function requestAction<T> (
     action:  () => Promise<ActionResultType<T>>,

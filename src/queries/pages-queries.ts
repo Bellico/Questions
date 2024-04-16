@@ -3,10 +3,26 @@ import prisma from '@/lib/prisma'
 import { RoomProgressType } from '@/lib/schema'
 import { RoomMode } from '@prisma/client'
 
+export const getUsername = async (userId: string): Promise<string | null> => {
+  const user = await prisma.user.findUniqueOrThrow({
+    where: {
+      id: userId,
+    },
+    select:{
+      name: true
+    }
+  })
+
+  return user.name
+}
+
 export const getGroupName = async (groupId: string): Promise<string> => {
   const group = await prisma.questionGroup.findUniqueOrThrow({
     where: {
       id: groupId,
+    },
+    select:{
+      name: true
     }
   })
 

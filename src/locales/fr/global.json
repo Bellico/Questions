@@ -68,5 +68,11 @@
   "Second": "seconde",
   "Seconds": "secondes",
   "DraftUnsaved": "Un brouillon n'a pas été enregistré!",
-  "DraftUnsavedDesc": "Un brouillon en cours n'a pas été enregistré, vous pouvez le continuer."
+  "DraftUnsavedDesc": "Un brouillon en cours n'a pas été enregistré, vous pouvez le continuer.",
+  "Me": "moi",
+  "Language": "Langue",
+  "French": "Français",
+  "English": "Anglais",
+  "Preferences": "Préférences",
+  "PreferencesDesc": "Apportez des modifications à vos préférences."
 }

@@ -22,7 +22,8 @@ export default function SubscribeForm() {
     resolver: zodResolver(SignInSchema)
   })
 
-  const { handleSubmit,
+  const {
+    handleSubmit,
     register,
     setError,
     formState: { isSubmitting, isSubmitSuccessful, errors, isValid },

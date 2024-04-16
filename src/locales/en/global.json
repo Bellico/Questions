@@ -68,5 +68,11 @@
   "Second": "second",
   "Seconds": "seconds",
   "DraftUnsaved": "Draft not saved !",
-  "DraftUnsavedDesc": "A current draft has not been saved you can continue it."
+  "DraftUnsavedDesc": "A current draft has not been saved you can continue it.",
+  "Me": "me",
+  "Language": "Language",
+  "French": "French",
+  "English": "English",
+  "Preferences": "Preferences",
+  "PreferencesDesc": "Make changes to your preferences."
 }

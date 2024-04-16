@@ -67,6 +67,11 @@ export const PrevNextRoomSchema = z.object({
   shareLink: z.string().optional()
 })
 
+export const UserSettingsSchema = z.object({
+  locale: z.string().length(2),
+  username: z.string().min(3).nullable().or(z.literal(''))
+})
+
 export type ResponseType = z.infer<typeof ResponseSchema>
 export type QuestionType = z.infer<typeof QuestionSchema>
 export type QuestionGroupType = z.infer<typeof QuestionGroupSchema>
@@ -76,6 +81,7 @@ export type RoomShareType = z.infer<typeof RoomShareSchema>
 export type RoomStartType = z.infer<typeof RoomStartSchema>
 export type AnswerRoomType = z.infer<typeof AnswerRoomSchema>
 export type PrevNextRoomType = z.infer<typeof PrevNextRoomSchema>
+export type UserSettingsType = z.infer<typeof UserSettingsSchema>
 
 export type RoomQuestionNextType = {
   questionId: string,

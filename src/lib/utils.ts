@@ -102,3 +102,7 @@ export async function downloadBlob(res: Response) {
   link.setAttribute('download', fileName)
   link.click()
 }
+
+export function capitalize(name: string) {
+  return name.charAt(0).toUpperCase() + name.slice(1)
+}

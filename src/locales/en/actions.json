@@ -7,5 +7,6 @@
   "GroupUpdated": "Group updated",
   "RoomInProgress" : "Group cannot be updated, finish your answers before",
   "ExistingGroup" : "Question group with name \"{{groupName}}\" already exists",
-  "ErrorServer": "Action failed: {{message}}"
+  "ErrorServer": "Action failed: {{message}}",
+  "PreferencesUpdated": "Preferences updated"
 }
