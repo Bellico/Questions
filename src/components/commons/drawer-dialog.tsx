@@ -43,7 +43,7 @@ export function DrawerDialog({ trigger, title, description, children }: PropsWit
           <DialogTrigger asChild>
             {trigger}
           </DialogTrigger>
-          <DialogContent className="sm:max-w-screen-md">
+          <DialogContent className="sm:max-w-screen-sm">
             <DialogHeader>
               <DialogTitle>{title}</DialogTitle>
               {description &&
