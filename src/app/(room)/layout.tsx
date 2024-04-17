@@ -1,5 +1,5 @@
-import { RoomHeader } from '@/components/board-layout/header'
 import { Loader } from '@/components/commons/loader'
+import { RoomHeader } from '@/components/layouts/room-header'
 import { Toaster } from '@/components/ui/toaster'
 import React from 'react'
 

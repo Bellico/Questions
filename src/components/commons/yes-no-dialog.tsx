@@ -18,7 +18,7 @@ type YesNoDialogActionProps ={
   action: () => void | Promise<unknown>
 }
 
-export const YesNoDialogAction = ({
+export const YesNoDialog = ({
   titleDialog,
   descDialog,
   action,

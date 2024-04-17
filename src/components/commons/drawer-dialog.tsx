@@ -20,30 +20,33 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from '@/components/ui/drawer'
-import { useMediaQuery } from '@/hooks/use-media-query'
+import { useMediaQuery } from '@/hooks/useMediaQuery'
+import { cn } from '@/lib/utils'
 import { useAppStore } from '@/stores/app-store'
 import { PropsWithChildren } from 'react'
 import { useTranslation } from 'react-i18next'
 
 type DrawerDialogProps = {
+  dialogId: string,
   title: string,
   description?: string
+  className?: string,
   trigger: any
 }
 
-export function DrawerDialog({ trigger, title, description, children }: PropsWithChildren<DrawerDialogProps>) {
+export function DrawerDialog({ dialogId, trigger, title, description, className, children }: PropsWithChildren<DrawerDialogProps>) {
   const { t } = useTranslation('global')
-  const [open, setOpen, isDialogLoading ] = useAppStore((s) => [s.userDialogOpen, s.setUserDialogOpen, s.isDialogLoading])
+  const [open, setDialogOpen, isDialogLoading ] = useAppStore((s) => [s.dialogOpen(dialogId), s.setDialogOpen, s.isDialogLoading])
   const isDesktop = useMediaQuery('(min-width: 768px)')
 
   if (isDesktop) {
     return (
       <>
-        <Dialog open={open} onOpenChange={setOpen}>
+        <Dialog open={open} onOpenChange={(isOpen => setDialogOpen(dialogId, isOpen))}>
           <DialogTrigger asChild>
             {trigger}
           </DialogTrigger>
-          <DialogContent className="sm:max-w-screen-sm">
+          <DialogContent className={cn('max-w-screen-sm', className)}>
             <DialogHeader>
               <DialogTitle>{title}</DialogTitle>
               {description &&
@@ -61,7 +64,7 @@ export function DrawerDialog({ trigger, title, description, children }: PropsWit
   }
 
   return (
-    <Drawer open={open} onOpenChange={setOpen}>
+    <Drawer open={open} onOpenChange={(isOpen => setDialogOpen(dialogId, isOpen))}>
       <DrawerTrigger asChild>
         {trigger}
       </DrawerTrigger>

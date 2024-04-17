@@ -1,8 +1,8 @@
 'use client'
 
 import { retryRoomAction } from '@/actions/room/retry-room-action'
+import { RoomsTableColumns } from '@/components/board-group/rooms-table-columns'
 import { DataTable } from '@/components/commons/data-table'
-import { RoomsTableColumns } from '@/components/groupboard/rooms-table-columns'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { useAction } from '@/hooks/useAction'
 import { useDataTable } from '@/hooks/useDataTable'

@@ -1,5 +1,5 @@
-import { RoomsChart } from '@/components/groupboard/rooms-chart'
-import { RoomsTable } from '@/components/groupboard/rooms-table'
+import { RoomsChart } from '@/components/board-group/rooms-chart'
+import { RoomsTable } from '@/components/board-group/rooms-table'
 import { getRoomBoardQuery } from '@/queries/pages-queries'
 import { translate } from '@/queries/utils-queries'
 import { RoomMode } from '@prisma/client'

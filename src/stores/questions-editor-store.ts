@@ -82,8 +82,8 @@ export const createQuestionsEditorStore = (initProps?: Partial<QuestionsEditorSt
 
     removeQuestion: (keyMap: string) => set((state) => {
       const newMap = new Map(state.questionsMap)
-            newMap.delete(keyMap)!
-            return { questionsMap: newMap }
+      newMap.delete(keyMap)!
+      return { questionsMap: newMap }
     }),
 
     updateQuestion: (keyMap: string, newValues: Omit<QuestionType, 'id' | 'order'>) => set((state) => {

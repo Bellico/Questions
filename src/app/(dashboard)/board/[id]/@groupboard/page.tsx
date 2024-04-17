@@ -1,6 +1,6 @@
+import { AnswersList } from '@/components/board-group/answers-list'
+import { RoomsList } from '@/components/board-group/rooms-list'
 import { Spinner } from '@/components/commons/spinner'
-import { AnswersList } from '@/components/groupboard/answers-list'
-import { RoomsList } from '@/components/groupboard/rooms-list'
 import { Button } from '@/components/ui/button'
 import { auth } from '@/lib/auth'
 import { isGroupOwner } from '@/queries/commons-queries'

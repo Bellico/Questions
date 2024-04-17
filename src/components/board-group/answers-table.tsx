@@ -1,7 +1,7 @@
 'use client'
 
+import { AnswersTableColumns } from '@/components/board-group/answers-table-columns'
 import { DataTable } from '@/components/commons/data-table'
-import { AnswersTableColumns } from '@/components/groupboard/answers-table-columns'
 import { useDataTable } from '@/hooks/useDataTable'
 import { ArrayType } from '@/lib/utils'
 import { getAnwsersBoardQuery } from '@/queries/pages-queries'

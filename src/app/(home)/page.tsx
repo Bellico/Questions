@@ -1,5 +1,5 @@
-import { HomeHeader } from '@/components/home-layout/header'
-import { HomeHero } from '@/components/home-layout/hero'
+import { HomeHeader } from '@/components/layouts/home-header'
+import { HomeHero } from '@/components/layouts/home-hero'
 import { auth } from '@/lib/auth'
 import { redirect } from 'next/navigation'
 

@@ -1,5 +1,5 @@
-import { AnwsersChart } from '@/components/groupboard/answers-chart'
-import { AnswersTable } from '@/components/groupboard/answers-table'
+import { AnwsersChart } from '@/components/board-group/answers-chart'
+import { AnswersTable } from '@/components/board-group/answers-table'
 import { getAnwsersBoardQuery } from '@/queries/pages-queries'
 import { translate } from '@/queries/utils-queries'
 

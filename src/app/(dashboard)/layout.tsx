@@ -1,5 +1,5 @@
-import { BoardHeader } from '@/components/board-layout/header'
 import { Loader } from '@/components/commons/loader'
+import { BoardHeader } from '@/components/layouts/board-header'
 import { Toaster } from '@/components/ui/toaster'
 import { auth } from '@/lib/auth'
 import { getUsername } from '@/queries/pages-queries'

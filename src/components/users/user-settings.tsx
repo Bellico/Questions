@@ -8,14 +8,14 @@ import { Label } from '@/components/ui/label'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { useAction } from '@/hooks/useAction'
 import { UserSettingsSchema, UserSettingsType } from '@/lib/schema'
-import { useAppStore } from '@/stores/app-store'
+import { USER_DIALOG, useAppStore } from '@/stores/app-store'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 
 export function UserSettings(data: UserSettingsType) {
-  const  [setUserDialogOpen, setDialogLoading] = useAppStore((s) => [s.setUserDialogOpen, s.setDialogLoading])
+  const  [setDialogOpen, setDialogLoading] = useAppStore((s) => [s.setDialogOpen, s.setDialogLoading])
   const { t } = useTranslation(['global', 'actions'])
   const router = useRouter()
 
@@ -32,7 +32,7 @@ export function UserSettings(data: UserSettingsType) {
     requestAction(
       () => updateUserSettingsAction(data),
       () => {
-        setUserDialogOpen(false)
+        setDialogOpen(USER_DIALOG, false)
         router.refresh()
       },
       t('PreferencesUpdated', { ns: 'actions'})

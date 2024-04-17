@@ -3,10 +3,13 @@
 import { deleteQuestionGroupAction } from '@/actions/editor/delete-question-group-action'
 import { duplicateQuestionGroupAction } from '@/actions/editor/duplicate-question-group-action'
 import { abortRoomAction } from '@/actions/room/abort-room-action'
-import { YesNoDialogAction } from '@/components/commons/yes-no-dialog'
+import { DrawerDialog } from '@/components/commons/drawer-dialog'
+import { YesNoDialog } from '@/components/commons/yes-no-dialog'
 import { DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator } from '@/components/ui/dropdown-menu'
+import { UserGroupsSharing } from '@/components/users/user-groups-sharing'
 import { useAction } from '@/hooks/useAction'
 import { downloadBlob } from '@/lib/utils'
+import { SHARE_DIALOG } from '@/stores/app-store'
 import { useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 
@@ -49,20 +52,48 @@ export function QuestionGroupsListActions({ groupId, roomInProgress }: Questions
     await downloadBlob(res)
   }
 
+  function closeDropDownHack(e){
+    e.preventDefault(); dropDownRef.current?.remove()
+  }
+
   return (
     <DropdownMenuContent ref={dropDownRef} align="end">
       <DropdownMenuLabel>Actions</DropdownMenuLabel>
       <DropdownMenuSeparator />
+
+      <DrawerDialog
+        dialogId={SHARE_DIALOG}
+        title={t('Preferences')}
+        description={t('PreferencesDesc')}
+        className='max-w-screen-lg'
+        trigger={
+          <DropdownMenuItem onSelect={closeDropDownHack}>
+            {t('Share')}
+          </DropdownMenuItem>}>
+        <UserGroupsSharing />
+      </DrawerDialog>
+
       {roomInProgress &&
-        <YesNoDialogAction action={onAbortAction} titleDialog={t('YesNoTitle')} descDialog={t('YesNoAbort')}>
-          <DropdownMenuItem className="text-destructive" onSelect={(e) => {e.preventDefault(); dropDownRef.current?.remove()}}>{t('Abort')}</DropdownMenuItem>
-        </YesNoDialogAction>
+        <YesNoDialog action={onAbortAction} titleDialog={t('YesNoTitle')} descDialog={t('YesNoAbort')}>
+          <DropdownMenuItem className="text-destructive" onSelect={closeDropDownHack}>
+            {t('Abort')}
+          </DropdownMenuItem>
+        </YesNoDialog>
       }
-      <DropdownMenuItem onClick={() => onExportAction()}>{t('Export')}</DropdownMenuItem>
-      <DropdownMenuItem onClick={() => onDuplicateAction()}>{t('Duplicate')}</DropdownMenuItem>
-      <YesNoDialogAction action={onDeleteAction} titleDialog={t('YesNoTitle')} descDialog={t('YesNoDelete')}>
-        <DropdownMenuItem onSelect={(e) => {e.preventDefault(); dropDownRef.current?.remove()}}>{t('Delete')}</DropdownMenuItem>
-      </YesNoDialogAction>
+
+      <DropdownMenuItem onClick={() => onExportAction()}>{
+        t('Export')}
+      </DropdownMenuItem>
+
+      <DropdownMenuItem onClick={() => onDuplicateAction()}>
+        {t('Duplicate')}
+      </DropdownMenuItem>
+
+      <YesNoDialog action={onDeleteAction} titleDialog={t('YesNoTitle')} descDialog={t('YesNoDelete')}>
+        <DropdownMenuItem onSelect={closeDropDownHack}>
+          {t('Delete')}
+        </DropdownMenuItem>
+      </YesNoDialog>
     </DropdownMenuContent>
   )
 }
