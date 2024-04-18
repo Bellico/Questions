@@ -78,10 +78,10 @@ export function GroupsUsersSharing({ groupId } : GroupsUsersSharingProps) {
     if(!user) return 'invalid'
 
     return(
-      <div className="text-sm">
+      <label htmlFor={userId} className="text-sm">
         {user.name && <h3 className="">{user.name}</h3>}
-        <p className="text-gray-500">{user.email}</p>
-      </div>
+        <span className="text-gray-500">{user.email}</span>
+      </label>
     )
   }
 
@@ -128,8 +128,8 @@ export function GroupsUsersSharing({ groupId } : GroupsUsersSharingProps) {
           </Select>
         </div>
 
-        <div className="flex justify-end">
-          <DialogTrigger className="hidden sm:block" asChild>
+        <div className="flex flex-col md:flex-row md:justify-end">
+          <DialogTrigger className="hidden md:block" asChild>
             <Button variant="ghost">Cancel</Button>
           </DialogTrigger>
           <Button type="submit">{t('Save')}</Button>

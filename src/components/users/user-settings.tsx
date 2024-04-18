@@ -82,8 +82,8 @@ export function UserSettings(data: UserSettingsType & { email: string}) {
           )}
         />
 
-        <div className="flex justify-end">
-          <DialogTrigger className="hidden sm:block" asChild>
+        <div className="flex flex-col md:flex-row md:justify-end">
+          <DialogTrigger className="hidden md:block" asChild>
             <Button variant="ghost">{t('Cancel')}</Button>
           </DialogTrigger>
           <Button type="submit" disabled={!isValid}>{t('Save')}</Button>
