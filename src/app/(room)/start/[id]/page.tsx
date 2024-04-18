@@ -1,6 +1,7 @@
-import { getActiveRoomQuery, getGroupForStartQuery, getLastSettingsRoomQuery } from '@/actions/queries'
 import { RoomSettings } from '@/components/start-room/room-settings'
 import { auth } from '@/lib/auth'
+import { canAccessGroup, getGroupInProgressQuery } from '@/queries/commons-queries'
+import { getGroupForStartQuery, getLastSettingsRoomQuery } from '@/queries/pages-queries'
 import { notFound, redirect } from 'next/navigation'
 
 export default async function StartPage({
@@ -13,17 +14,21 @@ params: { id: string }
     redirect('/')
   }
 
-  const group = await getGroupForStartQuery(params.id, session.user.id!)
-  if (!group) {
+  const canAccess = await canAccessGroup(params.id, session.user.id!)
+  if (!canAccess.canAccess) {
     notFound()
   }
 
-  const activeRoom = await getActiveRoomQuery(group.id, session.user.id!)
-  if(activeRoom){
-    redirect(`/room/${activeRoom.id}`)
+  const group = await getGroupForStartQuery(params.id)
+  const activeRooms = await getGroupInProgressQuery([group.id], session.user.id!)
+  if(activeRooms.length > 0){
+    redirect(`/room/${activeRooms[0].id}`)
   }
 
   const lastSettings = await getLastSettingsRoomQuery(group.id, session.user.id!)
+  if(!canAccess.isAuthor){
+    lastSettings.mode = 'Rating'
+  }
 
   return (
     <section className="animate-moveToLeft">
@@ -37,7 +42,7 @@ params: { id: string }
           {group._count.questions} questions
         </p>
 
-        <RoomSettings {...lastSettings} />
+        <RoomSettings {...lastSettings} isAuthor={canAccess.isAuthor} />
       </div>
     </section>
   )

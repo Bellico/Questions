@@ -10,6 +10,7 @@ import {
   AlertDialogTrigger
 } from '@/components/ui/alert-dialog'
 import { PropsWithChildren } from 'react'
+import { useTranslation } from 'react-i18next'
 
 type YesNoDialogActionProps ={
   titleDialog : string,
@@ -17,12 +18,15 @@ type YesNoDialogActionProps ={
   action: () => void | Promise<unknown>
 }
 
-export const YesNoDialogAction = ({
+export const YesNoDialog = ({
   titleDialog,
   descDialog,
   action,
   children
 }: PropsWithChildren<YesNoDialogActionProps>) => {
+
+  const { t } = useTranslation(['global'])
+
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>
@@ -34,8 +38,8 @@ export const YesNoDialogAction = ({
           {descDialog && <AlertDialogDescription>{descDialog}</AlertDialogDescription>}
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel>Cancel</AlertDialogCancel>
-          <AlertDialogAction onClick={() => action()}>Continue</AlertDialogAction>
+          <AlertDialogCancel>{t('Cancel')}</AlertDialogCancel>
+          <AlertDialogAction onClick={() => action()}>{t('Continue')}</AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>

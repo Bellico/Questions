@@ -1,0 +1,14 @@
+{
+  "Aborted": "Aborted",
+  "GroupDeleted": "Group deleted",
+  "GroupDuplicated": "Group duplicated",
+  "GroupImported": "Group imported",
+  "GroupCreated": "Group created",
+  "GroupUpdated": "Group updated",
+  "RoomInProgress" : "Group cannot be updated, finish your answers before",
+  "SharedGroup": "Disable sharing before deleting this group",
+  "ExistingGroup" : "Question group with name \"{{groupName}}\" already exists",
+  "ErrorServer": "Action failed: {{message}}",
+  "PreferencesUpdated": "Preferences updated",
+  "GroupsUsersShared": "Share applied"
+}

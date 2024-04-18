@@ -1,4 +1,4 @@
-import { RoomState, RoomStateProps, createRoomStore } from '@/lib/room-store'
+import { RoomState, RoomStateProps, createRoomStore } from '@/stores/room-store'
 import { PropsWithChildren, createContext, useContext, useRef } from 'react'
 import { useStore } from 'zustand'
 

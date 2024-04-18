@@ -1,11 +1,13 @@
+import { ActionResultType } from '@/actions/wrapper-actions'
 import { useQuestionsEditorContext, useQuestionsEditorPersist } from '@/components/providers/questions-editor-provider'
 import { Button } from '@/components/ui/button'
 import { useAction } from '@/hooks/useAction'
 import { QuestionGroupType } from '@/lib/schema'
-import { ActionResultType, mapToArray } from '@/lib/utils'
+import { mapToArray } from '@/lib/utils'
 import { ArrowBigLeft, ArrowDownToLine } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { useEffect } from 'react'
+import { useTranslation } from 'react-i18next'
 import { useShallow } from 'zustand/react/shallow'
 
 type QuestionsEditorActionsProps = {
@@ -15,6 +17,7 @@ type QuestionsEditorActionsProps = {
 
 export function QuestionsEditorActions({ useDraft, saveGroupAction }: QuestionsEditorActionsProps) {
 
+  const { t } = useTranslation(['global', 'actions'])
   const router = useRouter()
   const requestAction = useAction()
   const persist = useQuestionsEditorPersist()
@@ -41,7 +44,7 @@ export function QuestionsEditorActions({ useDraft, saveGroupAction }: QuestionsE
         persist?.clearStorage()
         router.back()
       },
-      'Group ' + (!groupId ? 'created !' : 'updated !')
+      !groupId ? t('GroupCreated', { ns: 'actions'}) : t('GroupUpdated', { ns: 'actions'})
     )
   }
 
@@ -53,11 +56,11 @@ export function QuestionsEditorActions({ useDraft, saveGroupAction }: QuestionsE
   return (
     <div className="my-12 flex justify-center">
       <form id="form-save-editor" action={onSubmitEditor}>
-        <Button className="mr-2" size="lg"><ArrowDownToLine className="mr-2 size-4" />Save</Button>
+        <Button className="mr-2" size="lg"><ArrowDownToLine className="mr-2 size-4" />{t('Save')}</Button>
       </form>
 
       <form id="form-back-editor" action={onBack}>
-        <Button variant="secondary" size="lg"><ArrowBigLeft className="mr-2 size-4" />Back</Button>
+        <Button variant="secondary" size="lg"><ArrowBigLeft className="mr-2 size-4" />{t('Back')}</Button>
       </form>
     </div>
   )

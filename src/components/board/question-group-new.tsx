@@ -6,10 +6,12 @@ import { cn } from '@/lib/utils'
 import { FileUp } from 'lucide-react'
 import Link from 'next/link'
 import { PropsWithChildren, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 
 export function QuestionGroupNew({className, children} : PropsWithChildren<{className? : string}>) {
   const [fileEnter, setFileEnter] = useState(false)
   const requestAction = useAction()
+  const { t } = useTranslation(['actions'])
 
   const onDrop = async (groupName : string, questions: any) => {
     requestAction(
@@ -19,7 +21,7 @@ export function QuestionGroupNew({className, children} : PropsWithChildren<{clas
         questions: questions
       }),
       () => {},
-      'Group imported!'
+      t('GroupImported')
     )
   }
 
@@ -56,7 +58,7 @@ export function QuestionGroupNew({className, children} : PropsWithChildren<{clas
     }}
     >
       <Link href="/editor">
-        <div className="pointer-events-none flex h-full items-center justify-center text-sm text-gray-400">
+        <div className="pointer-events-none flex h-full min-h-[100px] items-center justify-center text-sm text-gray-400">
           { fileEnter ? <FileUp className="scale-150 animate-scaleUp text-primary" /> : children }
         </div>
       </Link>

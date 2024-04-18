@@ -9,16 +9,18 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { Check, Copy, Loader2, Share } from 'lucide-react'
 import { useRef, useState } from 'react'
 import { useForm } from 'react-hook-form'
+import { useTranslation } from 'react-i18next'
 import { z } from 'zod'
 
 const ShareSchema = z.object({
-  username: z.string().min(3)
-}).refine(v => !!v.username)
+  usermail: z.string().email()
+}).refine(v => !!v.usermail)
 
 type ShareSchemaType = z.infer<typeof ShareSchema>
 
 export function ShareDialog( {settingValues} : { settingValues: () => RoomSettingsType}) {
 
+  const { t } = useTranslation('room')
   const shareLinkRef = useRef<string>('')
   const [copied, setCopied] = useState(false)
 
@@ -26,13 +28,14 @@ export function ShareDialog( {settingValues} : { settingValues: () => RoomSettin
     resolver: zodResolver(ShareSchema)
   })
 
-  const { handleSubmit,
+  const {
+    handleSubmit,
     register,
     formState: { isSubmitting, isSubmitSuccessful, isValid },
   } = form
 
-  const share = async ({username}: ShareSchemaType) => {
-    const shareValues = { username, ...settingValues()}
+  const share = async ({usermail}: ShareSchemaType) => {
+    const shareValues = { usermail, ...settingValues()}
     var result = await shareRoomAction(shareValues)
 
     if(result.success){
@@ -43,26 +46,28 @@ export function ShareDialog( {settingValues} : { settingValues: () => RoomSettin
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="secondary"><Share className="mr-2" />Get a share link</Button>
+        <Button variant="secondary"><Share className="mr-2" />{t('ShareLink')}</Button>
       </DialogTrigger>
       <DialogContent>
         <form id="form-share" onSubmit={handleSubmit(share)}>
 
           <DialogHeader>
-            <DialogTitle>Share my questions</DialogTitle>
+            <DialogTitle>{t('ShareQuestions')}</DialogTitle>
             <DialogDescription>
-            You can ask anyone on your own questions, send him a link now.
+              {t('ShareQuestionsDesc')}
             </DialogDescription>
           </DialogHeader>
 
           {!isSubmitSuccessful &&
             <div className="flex items-center gap-4 py-4">
-              <Label htmlFor="username">Username</Label>
+              <Label htmlFor="usermail">{(t('Usermail'))}:</Label>
               <Input
-                id="username"
+                id="usermail"
+                type="email"
+                inputMode="email"
                 className="col-span-3"
-                placeholder="A name or email"
-                {...register('username')}/>
+                placeholder={(t('Usermail'))}
+                {...register('usermail')}/>
             </div>
           }
 
@@ -83,7 +88,7 @@ export function ShareDialog( {settingValues} : { settingValues: () => RoomSettin
             <DialogFooter>
               <Button type="submit" disabled={isSubmitting || !isValid}>
                 {isSubmitting && <Loader2 className="-ml-1 mr-3 animate-spin" />}
-                 Get a share link
+                {t('ShareLink')}
               </Button>
             </DialogFooter>
           }

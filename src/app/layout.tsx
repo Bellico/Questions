@@ -1,4 +1,6 @@
 import { ThemeProvider } from '@/components/providers/theme-provider'
+import TranslationsProvider from '@/components/providers/translations-provider'
+import { translate } from '@/queries/utils-queries'
 import type { Metadata, Viewport } from 'next'
 import { Inter } from 'next/font/google'
 import React from 'react'
@@ -19,11 +21,15 @@ export const viewport: Viewport = {
   maximumScale: 1,
 }
 
-export default function RootLayout({
+const i18nNamespaces = ['global', 'actions', 'editor', 'room']
+
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
+  const { locale, resources } = await translate(i18nNamespaces)
+
   return (
     <html lang="en" suppressHydrationWarning={true} className={inter.className}>
       <body className="overflow-x-hidden">
@@ -32,7 +38,13 @@ export default function RootLayout({
           defaultTheme="system"
           enableSystem
           disableTransitionOnChange>
-          {children}
+
+          <TranslationsProvider
+            namespaces={i18nNamespaces}
+            locale={locale}
+            resources={resources}>
+            {children}
+          </TranslationsProvider>
         </ThemeProvider>
       </body>
     </html>

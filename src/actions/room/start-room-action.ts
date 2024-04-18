@@ -1,60 +1,70 @@
 'use server'
 
-import { computeNextQuestionQuery, getSessionUserIdOrThrow, isGroupOwnerOrThrow } from '@/actions/queries'
+import { ActionResultType, withValidateAndSession } from '@/actions/wrapper-actions'
 import prisma from '@/lib/prisma'
 import { RoomSettingsSchema, RoomSettingsType } from '@/lib/schema'
-import { ActionResultType, ZparseOrError } from '@/lib/utils'
+import { computeNextQuestionQuery } from '@/queries/actions-queries'
+import { canAccessGroup } from '@/queries/commons-queries'
+import { translate } from '@/queries/utils-queries'
 import { revalidatePath } from 'next/cache'
 
-export const startRoomAction = async (data: RoomSettingsType): Promise<ActionResultType<string>> => {
-  const errors = ZparseOrError(RoomSettingsSchema, data)
-  if (errors) return errors
+export const startRoomAction = withValidateAndSession(
+  RoomSettingsSchema,
+  async (data: RoomSettingsType, userId: string): Promise<ActionResultType<string>> => {
 
-  const userId = await getSessionUserIdOrThrow()
-  await isGroupOwnerOrThrow(data.groupId, userId)
+    const { t } = await translate('actions')
 
-  const nextQuestionId = await computeNextQuestionQuery(data.groupId, data.withRandom, [])
-  const dateStart = new Date()
+    const canAccess = await canAccessGroup(data.groupId, userId)
+    if (!canAccess.canAccess) {
+      throw new Error('401 Unauthorized')
+    }
 
-  try {
-    const roomId = await prisma.$transaction(async (tx) => {
-      const room = await tx.room.create({
-        data: {
-          groupId: data.groupId,
-          dateStart,
-          userId: userId,
-          mode: data.mode,
-          withRetry: data.withRetry > 0 ? Number(data.withRetry) : null,
-          withResults: data.withResults,
-          withCorrection: data.withCorrection,
-          withRandom: data.withRandom,
-          withProgress: data.withProgress
-        }
+    if (!canAccess.isAuthor && data.mode === 'Training') {
+      throw new Error('401 Unauthorized')
+    }
+
+    const nextQuestionId = await computeNextQuestionQuery(data.groupId, data.withRandom, [])
+    const dateStart = new Date()
+
+    try {
+      const roomId = await prisma.$transaction(async (tx) => {
+        const room = await tx.room.create({
+          data: {
+            groupId: data.groupId,
+            dateStart,
+            userId: userId,
+            mode: data.mode,
+            withRetry: data.withRetry > 0 ? Number(data.withRetry) : null,
+            withResults: data.withResults,
+            withCorrection: data.withCorrection,
+            withRandom: data.withRandom,
+            withProgress: data.withProgress
+          }
+        })
+
+        await tx.answer.create({
+          data: {
+            roomId: room.id,
+            order: 1,
+            dateStart,
+            questionId: nextQuestionId
+          }
+        })
+
+        return room.id
       })
 
-      await tx.answer.create({
-        data: {
-          roomId: room.id,
-          order: 1,
-          dateStart,
-          questionId: nextQuestionId
-        }
-      })
+      revalidatePath('/start/')
 
-      return room.id
-    })
-
-    revalidatePath('/start/')
-
-    return {
-      success: true,
-      data: roomId
+      return {
+        success: true,
+        data: roomId
+      }
     }
-  }
-  catch (error: any) {
-    return {
-      success: false,
-      message: 'Database Error: Failed to start room: ' + error.message,
+    catch (error: any) {
+      return {
+        success: false,
+        message: t('ErrorServer', { message: error.message })
+      }
     }
-  }
-}
+  })

@@ -1,16 +1,17 @@
+import { ActionResultType } from '@/actions/wrapper-actions'
 import { useToast } from '@/components/ui/use-toast'
-import { dispatchLoader } from '@/hooks/useLoader'
-import { ActionResultType } from '@/lib/utils'
+import { useAppStore } from '@/stores/app-store'
 import { useEffect, useTransition } from 'react'
 
-export function useAction() {
+export function useAction(useAppLoader : boolean = true) {
   const { toast } = useToast()
   const [isPending, startTransition] = useTransition()
+  const setLoader = useAppStore((state) => state.setAppLoading)
 
   useEffect(() => {
-    dispatchLoader(isPending)
-    return () => dispatchLoader(false)
-  },[isPending])
+    if (useAppLoader) setLoader(isPending)
+    return () => setLoader(false)
+  },[setLoader, isPending, useAppLoader])
 
   async function requestAction<T> (
     action:  () => Promise<ActionResultType<T>>,

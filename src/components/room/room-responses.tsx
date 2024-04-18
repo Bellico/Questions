@@ -4,6 +4,7 @@ import { Checkbox } from '@/components/ui/checkbox'
 import { Form, FormControl, FormField, FormItem } from '@/components/ui/form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
+import { useTranslation } from 'react-i18next'
 import { z } from 'zod'
 
 const RoomResponsesSchema = z.object({
@@ -23,6 +24,7 @@ type RoomResponsesProps = {
 }
 
 export function RoomResponses({submitAnswerChoices }: RoomResponsesProps) {
+  const { t } = useTranslation('global')
   const currentQuestion = useRoomContext(state => state.currentQuestion)
   const responses = currentQuestion.responses.map(r => ({...r, isCorrect : false}))
 
@@ -72,7 +74,7 @@ export function RoomResponses({submitAnswerChoices }: RoomResponsesProps) {
         </div>
 
         <Button className="m-auto mt-4 block h-12 w-full sm:h-10 sm:w-36" type="submit" disabled={!isValid || isSubmitted}>
-            Submit
+          {t('Submit')}
         </Button>
       </form>
     </Form>

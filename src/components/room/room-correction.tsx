@@ -2,12 +2,15 @@ import { useRoomContext } from '@/components/providers/room-provider'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
 import { cn } from '@/lib/utils'
+import { useTranslation } from 'react-i18next'
 
 type RoomCorrectionProps = {
   goToNext: () => void
 }
 
 export function RoomCorrection({ goToNext }: RoomCorrectionProps) {
+  const { t } = useTranslation('global')
+
   const currentQuestion = useRoomContext(state => state.currentQuestion)
   const canGoNext = useRoomContext(state => state.canGoNext)
   const {correction, choices} = currentQuestion.navigate!
@@ -38,7 +41,7 @@ export function RoomCorrection({ goToNext }: RoomCorrectionProps) {
       {!canGoNext &&
         <form onSubmit={(e) => { e.preventDefault(); goToNext()}}>
           <Button className="m-auto mt-4 block h-12 w-full sm:h-10 sm:w-36" type="submit">
-              Next
+            {t('Next')}
           </Button>
         </form>
       }

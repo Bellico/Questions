@@ -1,6 +1,7 @@
-import { canPlayRoomQuery, getNextQuestionToAnswerQuery, getProgressInfosRoomQuery, getProgressInfosWithRandomQuery } from '@/actions/queries'
 import { Room } from '@/components/room/room'
 import { auth } from '@/lib/auth'
+import { canPlayRoomQuery, getNextQuestionToAnswerQuery } from '@/queries/commons-queries'
+import { getProgressInfosRoomQuery, getProgressInfosWithRandomQuery } from '@/queries/pages-queries'
 import { RoomMode } from '@prisma/client'
 import { notFound, redirect } from 'next/navigation'
 

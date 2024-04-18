@@ -1,0 +1,52 @@
+version: '3'
+
+services:
+  next-app:
+    container_name: questions-app
+    image: bellico/questions-editor:latest
+    # build:
+    #   context: .
+    #   dockerfile: ./Dockerfile
+    env_file:
+      - .env.docker
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: always
+    ports:
+      - 3000:3000
+
+  postgres:
+    container_name: questions-base
+    image: postgres
+    env_file:
+      - .env.docker
+    restart: always
+    ports:
+      - 5436:5432
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test:
+        ["CMD", "pg_isready", "-U", "Bellico", "-d", "questions"]
+      interval: 5s
+      timeout: 10s
+      retries: 5
+
+  pgbackups:
+    container_name: questions-backups
+    image: prodrigestivill/postgres-backup-local
+    restart: always
+    user: postgres:postgres
+    volumes:
+        - ./backups:/backups
+    links:
+        - postgres
+    env_file:
+      - .env.docker
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+volumes:
+  pgdata: {}

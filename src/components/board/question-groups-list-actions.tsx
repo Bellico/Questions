@@ -2,25 +2,40 @@
 
 import { deleteQuestionGroupAction } from '@/actions/editor/delete-question-group-action'
 import { duplicateQuestionGroupAction } from '@/actions/editor/duplicate-question-group-action'
-import { YesNoDialogAction } from '@/components/commons/yes-no-dialog'
+import { abortRoomAction } from '@/actions/room/abort-room-action'
+import { DrawerDialog } from '@/components/commons/drawer-dialog'
+import { YesNoDialog } from '@/components/commons/yes-no-dialog'
 import { DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator } from '@/components/ui/dropdown-menu'
+import { GroupsUsersSharing } from '@/components/users/groups-users-sharing'
 import { useAction } from '@/hooks/useAction'
 import { downloadBlob } from '@/lib/utils'
+import { SHARE_DIALOG } from '@/stores/app-store'
 import { useRef } from 'react'
+import { useTranslation } from 'react-i18next'
 
 type QuestionsTableProps = {
-  groupId: string
+  groupId: string,
+  roomInProgress: boolean
 }
 
-export function QuestionGroupsListActions({ groupId }: QuestionsTableProps) {
+export function QuestionGroupsListActions({ groupId, roomInProgress }: QuestionsTableProps) {
   const dropDownRef = useRef<HTMLDivElement>(null)
   const requestAction = useAction()
+  const { t } = useTranslation(['global', 'actions'])
+
+  async function onAbortAction(){
+    requestAction(
+      () => abortRoomAction(groupId),
+      () => {},
+      t('Aborted', { ns: 'actions' })
+    )
+  }
 
   async function onDeleteAction(){
     requestAction(
       () => deleteQuestionGroupAction(groupId),
       () => {},
-      'Group deleted'
+      t('GroupDeleted', { ns: 'actions' })
     )
   }
 
@@ -28,7 +43,7 @@ export function QuestionGroupsListActions({ groupId }: QuestionsTableProps) {
     requestAction(
       () => duplicateQuestionGroupAction(groupId),
       () => {},
-      'Group duplicated'
+      t('GroupDuplicated', { ns: 'actions' })
     )
   }
 
@@ -37,15 +52,47 @@ export function QuestionGroupsListActions({ groupId }: QuestionsTableProps) {
     await downloadBlob(res)
   }
 
+  function closeDropDownHack(e){
+    e.preventDefault(); dropDownRef.current?.remove()
+  }
+
   return (
     <DropdownMenuContent ref={dropDownRef} align="end">
       <DropdownMenuLabel>Actions</DropdownMenuLabel>
       <DropdownMenuSeparator />
-      <DropdownMenuItem onClick={() => onExportAction()}>Export</DropdownMenuItem>
-      <DropdownMenuItem onClick={() => onDuplicateAction()}>Duplicate</DropdownMenuItem>
-      <YesNoDialogAction action={onDeleteAction} titleDialog='Are you absolutely sure?' descDialog='You will lose all scores and results for this group.'>
-        <DropdownMenuItem onSelect={(e) => {e.preventDefault(); dropDownRef.current?.remove()}}>Delete</DropdownMenuItem>
-      </YesNoDialogAction>
+
+      {roomInProgress &&
+        <YesNoDialog action={onAbortAction} titleDialog={t('YesNoTitle')} descDialog={t('YesNoAbort')}>
+          <DropdownMenuItem className="text-destructive" onSelect={closeDropDownHack}>
+            {t('Abort')}
+          </DropdownMenuItem>
+        </YesNoDialog>
+      }
+
+      <DrawerDialog
+        dialogId={SHARE_DIALOG}
+        title={t('UserGroupsSharing')}
+        description={t('UserGroupsSharingDesc')}
+        trigger={
+          <DropdownMenuItem onSelect={closeDropDownHack}>
+            {t('Share')}
+          </DropdownMenuItem>}>
+        <GroupsUsersSharing groupId={groupId} />
+      </DrawerDialog>
+
+      <DropdownMenuItem onClick={() => onExportAction()}>{
+        t('Export')}
+      </DropdownMenuItem>
+
+      <DropdownMenuItem onClick={() => onDuplicateAction()}>
+        {t('Duplicate')}
+      </DropdownMenuItem>
+
+      <YesNoDialog action={onDeleteAction} titleDialog={t('YesNoTitle')} descDialog={t('YesNoDelete')}>
+        <DropdownMenuItem onSelect={closeDropDownHack}>
+          {t('Delete')}
+        </DropdownMenuItem>
+      </YesNoDialog>
     </DropdownMenuContent>
   )
 }

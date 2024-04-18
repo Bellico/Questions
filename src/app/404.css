@@ -1,9 +1,3 @@
-@import url('https://fonts.googleapis.com/css?family=Fira+Mono:400');
-
-.container_404{
-  font-family: 'Fira Mono', monospace;
-}
-
 .title_404{
   animation: glitch 1s linear infinite;
 }

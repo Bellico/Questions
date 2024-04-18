@@ -1,7 +1,6 @@
 import { commonNames, swNames } from '@/lib/collection-names'
 import { clsx, type ClassValue } from 'clsx'
 import { twMerge } from 'tailwind-merge'
-import { ZodType } from 'zod'
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -10,32 +9,6 @@ export function cn(...inputs: ClassValue[]) {
 export type ArrayType<T> = T extends (infer Item)[] ? Item : T
 
 export const sleep = (s: number) => new Promise((r) => setTimeout(r, s * 1000))
-
-export type ActionResultType<T> = {
-  success: boolean
-  message?: string
-  data?: T
-  errors?: unknown
-  errorFormat?: unknown
-  issues?: unknown
-}
-
-export const ZparseOrError = <T extends ZodType>(
-  schema: T,
-  value: unknown,
-): void | ActionResultType<any> => {
-  const validatedFields = schema.safeParse(value)
-
-  if (!validatedFields.success) {
-    return {
-      success: false,
-      message: 'Validation failed',
-      errors: validatedFields.error.flatten().fieldErrors,
-      errorFormat: validatedFields.error.format(),
-      issues: validatedFields.error.issues,
-    }
-  }
-}
 
 export const mapToArray = <T>(map: Map<string, T>): T[] =>
   Array.from(map, ([_, value]) => value)
@@ -59,10 +32,10 @@ export const randomSwName = () => swNames[Math.floor(Math.random() * swNames.len
 export const randomCommonName = () => commonNames[Math.floor(Math.random() * commonNames.length)]
 
 export function generateRandomGroup(questionCount: number = 6, responsesCount: number = 4){
-  let questions = []
+  let questions: any[] = []
   for (let q = 0; q < questionCount; q++) {
 
-    let responses = []
+    let responses: any[] = []
     for (let r = 0; r < responsesCount; r++) {
       const isGood = (q + r) % 2 == 0
       responses.push({
@@ -94,22 +67,27 @@ export function computeScore(results: number[]){
   }
 }
 
-export function diffDateToDhms(start : Date, end: Date) {
-  return secondsToDhms(end.getTime() / 1000 - start.getTime() / 1000)
+export function diffDateToDhms(start : Date, end: Date, t : (key: string) => string) {
+  return secondsToDhms(end.getTime() / 1000 - start.getTime() / 1000, t)
 }
 
-export function secondsToDhms(seconds : number) {
+export function secondsToDhms(seconds : number, t : (key: string, o: any) => string) {
   var d = Math.floor(seconds / (3600*24))
-  if(d > 0) return d + (d == 1 ? ' day' : ' days')
-
   var h = Math.floor(seconds % (3600*24) / 3600)
-  if(h > 0) return h + (h == 1 ? ' hour' : ' hours')
-
   var m = Math.floor(seconds % 3600 / 60)
-  if(m > 0) return m + (m == 1 ? ' minute' : ' minutes')
-
   var s = Math.floor(seconds % 60)
-  return s + (s == 1 ? ' second' : ' seconds')
+
+  let label = ''
+
+  if(d > 0) label += ' ' + d + ' ' + (d == 1 ? t('Day', { ns: 'global'}) : t('Days', { ns: 'global'}))
+
+  if(h > 0) label += ' ' + h + ' ' + (h == 1 ? t('Hour', { ns: 'global'}) : t('Hours', { ns: 'global'}))
+
+  if(m > 0) label += ' ' + m + ' ' + (m == 1 ? 'minute' : 'minutes')
+
+  label +=  ' ' + s + ' ' + (s == 1 ? t('Second', { ns: 'global'}) : t('Seconds', { ns: 'global'}))
+
+  return label
 }
 
 export async function downloadBlob(res: Response) {
@@ -123,4 +101,8 @@ export async function downloadBlob(res: Response) {
   link.href = url
   link.setAttribute('download', fileName)
   link.click()
+}
+
+export function capitalize(name: string) {
+  return name.charAt(0).toUpperCase() + name.slice(1)
 }

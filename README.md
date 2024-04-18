@@ -19,25 +19,54 @@ NEXTAUTH_SECRET = "*******"
 PUBLIC_URL = "https://yourdomain.com"
 ```
 
-## Local database install
+## Use a local database
 
 #### Create a postgre database with docker
 
 ```
-docker run --name postgres -e POSTGRES_DB=questions -e POSTGRES_USER=Bellico -e POSTGRES_PASSWORD=myPassWord1234 -p 5432:5432 -d postgres
+docker run --name postgres -e POSTGRES_DB=questions -e POSTGRES_USER=Bellico -e POSTGRES_PASSWORD=***** -p 5432:5432 -d postgres
 ```
 
 #### Override **`.env`** with a **`.env.local`**
 
 ```bash
-DATABASE_URL = "postgresql://Bellico:myPassWord1234@localhost:5432/questions"
+DATABASE_URL = "postgresql://Bellico:*****@localhost:5432/questions"
 ```
 
 #### Migrate the local database
 
 ```bash
 npx prisma migrate deploy
-npx prisma db seed
+(npx prisma db seed)
+```
+
+## Use docker-compose
+
+#### Override **`.env`** with a **`.env.docker`**
+
+```bash
+# Service postgres
+POSTGRES_HOST = "questions-base"
+POSTGRES_DB = "questions"
+POSTGRES_USER = "Bellico"
+POSTGRES_PASSWORD = "*******"
+
+# Service next-app
+DATABASE_URL = postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:5432/${POSTGRES_DB}
+
+# If your app is deployed
+NEXTAUTH_URL = "yourdomain.com"
+
+# Service backups : You can configure the backups servive if needed
+# See: https://github.com/prodrigestivill/docker-postgres-backup-local
+SCHEDULE=@daily
+BACKUP_KEEP_DAYS = 7
+```
+
+#### Build from docker-compose.yml
+
+```
+ docker-compose -f docker-compose.yml up -d --build
 ```
 
 ## Run project
@@ -49,17 +78,25 @@ npm run dev
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
-
-### For update prisma schema
+### Update prisma schema
 
 ```bash
 npx prisma validate
-npx prisma migrate dev --name init
+npx prisma migrate dev --name migration_name
+npx prisma migrate deploy or npx prisma db push
 (npx prisma generate)
-(npx prisma db push)
-(npx prisma migrate reset)
+```
+### Reset database
+
+```bash
+npx prisma migrate reset
+```
+### Squashing migrations
+
+```bash
+# > Delete migrations folder
+npx prisma migrate dev --name init --create-only
+npx prisma migrate resolve --applied xxxx_init
 ```
 
 ## Learn More

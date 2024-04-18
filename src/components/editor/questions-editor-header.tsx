@@ -4,6 +4,7 @@ import { useDebounce } from '@/hooks/useDebounce'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Pencil } from 'lucide-react'
 import { useForm } from 'react-hook-form'
+import { useTranslation } from 'react-i18next'
 import { z } from 'zod'
 
 export const GroupNameFormSchema = z.object({
@@ -13,10 +14,13 @@ export const GroupNameFormSchema = z.object({
 export type GroupNameFormType = z.infer<typeof GroupNameFormSchema>;
 
 export function QuestionsEditorHeader() {
+
+  const { t } = useTranslation('editor')
+
   const groupName = useQuestionsEditorContext(state => state.name)
   const updateGroupName = useQuestionsEditorContext(state => state.updateGroupName)
 
-  const { register, getValues, formState: { errors, isValid }, handleSubmit } = useForm<GroupNameFormType>({
+  const { register, getValues, formState: { errors }, handleSubmit } = useForm<GroupNameFormType>({
     resolver: zodResolver(GroupNameFormSchema),
     values: { groupName },
     mode: 'onBlur'
@@ -33,7 +37,7 @@ export function QuestionsEditorHeader() {
         <Pencil className="absolute right-3 top-1/2 size-5 -translate-y-1/2" />
         <Input
           className="my-20 border-0 p-3 text-center text-3xl font-semibold hover:ring-1 hover:ring-secondary sm:py-7 sm:text-5xl"
-          placeholder="Enter a group's name"
+          placeholder={t('GroupName')}
           type="text"
           {...register('groupName')}
         />

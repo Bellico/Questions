@@ -1,8 +1,8 @@
-import { canViewFinalRoomQuery } from '@/actions/queries'
 import { Spinner } from '@/components/commons/spinner'
 import { RoomFinalResume } from '@/components/final/room-final-resume'
 import { RoomFinalSummary } from '@/components/final/room-final-summary'
 import { auth } from '@/lib/auth'
+import { canViewFinalRoomQuery } from '@/queries/pages-queries'
 import { redirect } from 'next/navigation'
 import { Suspense } from 'react'
 

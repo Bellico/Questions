@@ -7,8 +7,11 @@ import { useAccordion } from '@/hooks/useAccordion'
 import { DndContext, DragEndEvent } from '@dnd-kit/core'
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable'
 import { ChevronsDownUp, ChevronsUpDown } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 
 export function QuestionsEditorAccordion() {
+
+  const { t } = useTranslation(['global', 'editor'])
 
   const questionsMap = useQuestionsEditorContext(state => state.questionsMap)
   const lastQuestionAdded = useQuestionsEditorContext(state => state.lastQuestionAdded)
@@ -37,8 +40,8 @@ export function QuestionsEditorAccordion() {
 
               <AccordionItem key={key} id={'q-' + key} value={key}>
                 <QuestionsEditorAccordionHeader keyMap={key} title={value.title} index={index} responseCount={value.responses.length}>
-                  {questionsMap.size > 1 && <Button className="mr-2 text-xs md:text-sm" variant="destructive" onClick={() => removeQuestion(key)}>Remove</Button>}
-                  <Button className="mr-2 text-xs md:text-sm" variant="outline" onClick={() => toggleExpand(key)}>{accordionState.includes(key) ? 'Hide' : 'Show'}</Button>
+                  {questionsMap.size > 1 && <Button className="mr-2 text-xs md:text-sm" variant="destructive" onClick={() => removeQuestion(key)}>{t('Remove')}</Button>}
+                  <Button className="mr-2 text-xs md:text-sm" variant="outline" onClick={() => toggleExpand(key)}>{accordionState.includes(key) ? t('Hide') : t('Show')}</Button>
                   <Button className="mr-2 hidden md:inline" variant="ghost" onClick={() => expandAll()}><ChevronsUpDown className="size-3" /></Button>
                   <Button variant="ghost" onClick={() => collapseAll()}><ChevronsDownUp className="size-3" /></Button>
                 </QuestionsEditorAccordionHeader>
@@ -55,7 +58,7 @@ export function QuestionsEditorAccordion() {
       </Accordion>
 
       <Button variant="secondary" size="lg" onClick={() => addNewQuestion()} className="w-full">
-        Add new question
+        {t('AddQuestion', { ns: 'editor'} )}
       </Button>
     </>
   )

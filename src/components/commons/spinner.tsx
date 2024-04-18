@@ -8,25 +8,10 @@ export const Spinner = ({ className } : { className? : string}) => {
   )
 }
 
-export const SectionSpinner = ({ title, className}: { title?: string, className?: string }) => {
+export const OverloadSpinner = ({ overloadPage } : { overloadPage? : boolean}) => {
   return (
-    <section className={cn(className)}>
-      <div className="container">
-        {title && (
-          <h1 className="title">
-            {title}
-          </h1>
-        )}
-        <Spinner />
-      </div>
-    </section>
-  )
-}
-
-export const OverloadSpinner = () => {
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-100/75 dark:bg-black/75">
-      <span className="spinner page-spinner"></span>
+    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-slate-100/75 dark:bg-black/75">
+      <span className={cn('spinner', { 'page-spinner': overloadPage ?? true})}></span>
     </div>
   )
 }

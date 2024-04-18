@@ -1,9 +1,11 @@
-import { getGroupName, isGroupOwner } from '@/actions/queries'
+import { AnswersList } from '@/components/board-group/answers-list'
+import { RoomsList } from '@/components/board-group/rooms-list'
 import { Spinner } from '@/components/commons/spinner'
-import { AnswersList } from '@/components/groupboard/answers-list'
-import { RoomsList } from '@/components/groupboard/rooms-list'
 import { Button } from '@/components/ui/button'
 import { auth } from '@/lib/auth'
+import { isGroupOwner } from '@/queries/commons-queries'
+import { getGroupName } from '@/queries/pages-queries'
+import { translate } from '@/queries/utils-queries'
 import { Pencil, Play } from 'lucide-react'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
@@ -14,6 +16,9 @@ export default async function GroupBoardPage({
 }: {
   params: { id: string }
 }) {
+
+  const { t } = await translate('global')
+
   const session = await auth()
   const isOwner = await isGroupOwner(params.id, session!.user.id!)
 
@@ -30,11 +35,11 @@ export default async function GroupBoardPage({
 
           <div className="my-12 flex justify-center">
             <Link href={`/start/${params.id}`}>
-              <Button className="mr-2" size="lg"><Play className="mr-2 size-4" />Start</Button>
+              <Button className="mr-2" size="lg"><Play className="mr-2 size-4" />{t('Start')}</Button>
             </Link>
 
             <Link href={`/editor/${params.id}`}>
-              <Button variant="secondary" size="lg"><Pencil className="mr-2 size-4" />Edit</Button>
+              <Button variant="secondary" size="lg"><Pencil className="mr-2 size-4" />{t('Edit')}</Button>
             </Link>
           </div>
 

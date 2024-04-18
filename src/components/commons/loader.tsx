@@ -1,11 +1,11 @@
 'use client'
 
 import { OverloadSpinner } from '@/components/commons/spinner'
-import { useLoader } from '@/hooks/useLoader'
+import { useAppStore } from '@/stores/app-store'
 
 export function Loader() {
-  const {loading } = useLoader()
+  const isAppLoading = useAppStore((state) => state.isAppLoading)
 
-  if(loading) return <OverloadSpinner />
+  if(isAppLoading) return <OverloadSpinner />
   else null
 }
