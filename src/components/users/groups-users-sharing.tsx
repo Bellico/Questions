@@ -71,8 +71,6 @@ export function GroupsUsersSharing({ groupId } : GroupsUsersSharingProps) {
       },
       t('GroupsUsersShared', { ns: 'actions'})
     )
-
-    setDialogOpen(SHARE_DIALOG, false)
   }
 
   function getUserTemplate(userId: string){
