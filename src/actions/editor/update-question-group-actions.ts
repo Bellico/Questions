@@ -4,7 +4,7 @@ import { ActionResultType, withValidateAndSession } from '@/actions/wrapper-acti
 import prisma from '@/lib/prisma'
 import { QuestionGroupSchema, QuestionGroupType } from '@/lib/schema'
 import { isGroupOwnerOrThrow } from '@/queries/actions-queries'
-import { getActiveRoomQuery } from '@/queries/commons-queries'
+import { getGroupInProgressQuery } from '@/queries/commons-queries'
 import { translate } from '@/queries/utils-queries'
 
 import { revalidatePath } from 'next/cache'
@@ -17,8 +17,8 @@ export const updateQuestionGroupAction = withValidateAndSession(
 
     await isGroupOwnerOrThrow(data.id!, userId)
 
-    const activeRoom = await getActiveRoomQuery(data.id!, userId)
-    if(activeRoom){
+    const activeRooms = await getGroupInProgressQuery([data.id!], userId)
+    if(activeRooms.length > 0){
       return {
         success: false,
         message: t('RoomInProgress'),

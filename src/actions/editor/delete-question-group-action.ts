@@ -15,6 +15,19 @@ export const deleteQuestionGroupAction = withValidateAndSession(
 
     await isGroupOwnerOrThrow(id, userId)
 
+    const isSharing = await prisma.groupsUsers.findFirst({
+      where: {
+        groupId: id,
+      },
+    })
+
+    if(isSharing !== null){
+      return {
+        success: false,
+        message: t('SharedGroup'),
+      }
+    }
+
     try {
       await prisma.$transaction(async (tx) => {
 

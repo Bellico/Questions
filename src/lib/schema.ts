@@ -45,7 +45,7 @@ export const RoomSettingsSchema = RoomSettingsBaseSchema
   .refine(v => v.mode === RoomMode.Rating && v.withCorrection ? false: true)
 
 export const RoomShareSchema = z.object({
-  username: z.string(),
+  usermail: z.string().email(),
 }).merge(RoomSettingsBaseSchema)
   .refine(v => v.mode === RoomMode.Rating && v.withCorrection ? false: true)
 
@@ -72,6 +72,11 @@ export const UserSettingsSchema = z.object({
   username: z.string().min(3).nullable().or(z.literal(''))
 })
 
+export const GroupUsersSchema = z.object({
+  groupId: z.string(),
+  userIdsToShared: z.array(z.string())
+})
+
 export type ResponseType = z.infer<typeof ResponseSchema>
 export type QuestionType = z.infer<typeof QuestionSchema>
 export type QuestionGroupType = z.infer<typeof QuestionGroupSchema>
@@ -82,6 +87,7 @@ export type RoomStartType = z.infer<typeof RoomStartSchema>
 export type AnswerRoomType = z.infer<typeof AnswerRoomSchema>
 export type PrevNextRoomType = z.infer<typeof PrevNextRoomSchema>
 export type UserSettingsType = z.infer<typeof UserSettingsSchema>
+export type GroupUsersType = z.infer<typeof GroupUsersSchema>
 
 export type RoomQuestionNextType = {
   questionId: string,

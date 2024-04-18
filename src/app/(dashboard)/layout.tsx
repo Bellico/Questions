@@ -18,11 +18,11 @@ export default async function BoardLayout({
   }
 
   const locale = cookies().get('locale')?.value ?? 'en'
-  const username = await getUsername(session.user.id!)
+  const user = await getUsername(session.user.id!)
 
   return (
     <>
-      <BoardHeader locale={locale} username={username} />
+      <BoardHeader locale={locale} {...user} />
       <main>
         {children}
       </main>

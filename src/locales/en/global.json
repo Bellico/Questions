@@ -27,6 +27,7 @@
   "Next": "Next",
   "ResponseCount": "{{count}} responses(s)",
   "Username": "Username",
+  "Usermail": "Mail",
   "Score": "Score",
   "Success": "Success",
   "Failed": "Failed",
@@ -34,6 +35,8 @@
   "Progress": "In progress...",
   "BoardStats": "Board Stats",
   "Questions": "Questions",
+  "SharingQuestions": "Sharing Questions",
+  "Author": "Author",
   "Groups": "Groups",
   "AverageTime": "Average response time",
   "AverageScore": "Average Score",
@@ -51,7 +54,7 @@
   "Duration": "Duration",
   "AnswersSummary": "Answers Summary",
   "RatingResults": "Rating results",
-  "RatingResultsDesc": "Score history (me and sharelink).",
+  "RatingResultsDesc": "Score history (me and shared).",
   "AverageResults": "Average by questions",
   "AverageResultsDesc": "Score detailed by questions (only me).",
   "ProgressResults": "Progress evolution",
@@ -62,6 +65,7 @@
   "Details": "Details",
   "AllUsers" : "All users",
   "FilterUsers" : "Filter users",
+  "AddUser" : "Add user",
   "Day": "day",
   "Days": "days",
   "Hour": "hour",
@@ -75,5 +79,7 @@
   "French": "French",
   "English": "English",
   "Preferences": "Preferences",
-  "PreferencesDesc": "Make changes to your preferences."
+  "PreferencesDesc": "Manage your account preferences.",
+  "UserGroupsSharing": "Share to other users",
+  "UserGroupsSharingDesc": "Select users to grant access to this group."
 }

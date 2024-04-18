@@ -13,8 +13,8 @@ import { useTranslation } from 'react-i18next'
 import { z } from 'zod'
 
 const ShareSchema = z.object({
-  username: z.string().min(3)
-}).refine(v => !!v.username)
+  usermail: z.string().email()
+}).refine(v => !!v.usermail)
 
 type ShareSchemaType = z.infer<typeof ShareSchema>
 
@@ -28,13 +28,14 @@ export function ShareDialog( {settingValues} : { settingValues: () => RoomSettin
     resolver: zodResolver(ShareSchema)
   })
 
-  const { handleSubmit,
+  const {
+    handleSubmit,
     register,
     formState: { isSubmitting, isSubmitSuccessful, isValid },
   } = form
 
-  const share = async ({username}: ShareSchemaType) => {
-    const shareValues = { username, ...settingValues()}
+  const share = async ({usermail}: ShareSchemaType) => {
+    const shareValues = { usermail, ...settingValues()}
     var result = await shareRoomAction(shareValues)
 
     if(result.success){
@@ -59,12 +60,14 @@ export function ShareDialog( {settingValues} : { settingValues: () => RoomSettin
 
           {!isSubmitSuccessful &&
             <div className="flex items-center gap-4 py-4">
-              <Label htmlFor="username">Username</Label>
+              <Label htmlFor="usermail">{(t('Usermail'))}:</Label>
               <Input
-                id="username"
+                id="usermail"
+                type="email"
+                inputMode="email"
                 className="col-span-3"
-                placeholder="A name or email"
-                {...register('username')}/>
+                placeholder={(t('Usermail'))}
+                {...register('usermail')}/>
             </div>
           }
 

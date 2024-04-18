@@ -3,7 +3,8 @@
 import { ActionResultType, withValidateAndSession } from '@/actions/wrapper-actions'
 import prisma from '@/lib/prisma'
 import { RoomSettingsSchema, RoomSettingsType } from '@/lib/schema'
-import { computeNextQuestionQuery, isGroupOwnerOrThrow } from '@/queries/actions-queries'
+import { computeNextQuestionQuery } from '@/queries/actions-queries'
+import { canAccessGroup } from '@/queries/commons-queries'
 import { translate } from '@/queries/utils-queries'
 import { revalidatePath } from 'next/cache'
 
@@ -13,7 +14,14 @@ export const startRoomAction = withValidateAndSession(
 
     const { t } = await translate('actions')
 
-    await isGroupOwnerOrThrow(data.groupId, userId)
+    const canAccess = await canAccessGroup(data.groupId, userId)
+    if (!canAccess.canAccess) {
+      throw new Error('401 Unauthorized')
+    }
+
+    if (!canAccess.isAuthor && data.mode === 'Training') {
+      throw new Error('401 Unauthorized')
+    }
 
     const nextQuestionId = await computeNextQuestionQuery(data.groupId, data.withRandom, [])
     const dateStart = new Date()

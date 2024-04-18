@@ -20,6 +20,7 @@ model User {
   sessions            Session[]
   questionGroups      QuestionGroup[]
   rooms               Room[]
+  sharedGroups        GroupsUsers[]
 }
 
 model Account {
@@ -67,8 +68,9 @@ model QuestionGroup {
   authorId     String
   author       User     @relation(fields: [authorId], references: [id])
   rooms        Room[]
+  sharedUsers  GroupsUsers[]
 
-   @@unique([name, authorId])
+  @@unique([name, authorId])
 }
 
 model Question {
@@ -132,6 +134,15 @@ model Choices{
   response        Response @relation(fields: [responseId], references: [id], onDelete: Cascade)
 
   @@id([answerId, responseId])
+}
+
+model GroupsUsers{
+  groupId        String
+  group          QuestionGroup @relation(fields: [groupId], references: [id])
+  userId         String
+  user           User @relation(fields: [userId], references: [id])
+
+  @@id([groupId, userId])
 }
 
 model Images{

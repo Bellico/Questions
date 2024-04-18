@@ -16,7 +16,7 @@ export const shareRoomAction = withValidateAndSession(
 
     let friend = await prisma.user.findUnique({
       where:{
-        email: data.username
+        email: data.usermail
       }
     })
 
@@ -26,7 +26,7 @@ export const shareRoomAction = withValidateAndSession(
         if(!friend){
           friend = await tx.user.create({
             data:{
-              email: data.username
+              email: data.usermail
             }
           })
         }

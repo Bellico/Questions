@@ -1,5 +1,6 @@
 import { AlertDraft } from '@/components/board/alert-draft'
 import { QuestionGroupsList } from '@/components/board/question-groups-list'
+import { SharingGroupsList } from '@/components/board/sharing-groups-list'
 import { BoardStats } from '@/components/board/stats'
 import { Spinner } from '@/components/commons/spinner'
 import { auth } from '@/lib/auth'
@@ -30,6 +31,16 @@ export default async function BoardPage() {
 
           <Suspense fallback={<Spinner />}>
             <QuestionGroupsList userId={session?.user.id!} />
+          </Suspense>
+
+        </div>
+      </section>
+
+      <section>
+        <div className="container">
+
+          <Suspense fallback={<Spinner />}>
+            <SharingGroupsList userId={session?.user.id!} />
           </Suspense>
 
         </div>

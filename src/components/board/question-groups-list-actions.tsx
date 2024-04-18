@@ -6,7 +6,7 @@ import { abortRoomAction } from '@/actions/room/abort-room-action'
 import { DrawerDialog } from '@/components/commons/drawer-dialog'
 import { YesNoDialog } from '@/components/commons/yes-no-dialog'
 import { DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator } from '@/components/ui/dropdown-menu'
-import { UserGroupsSharing } from '@/components/users/user-groups-sharing'
+import { GroupsUsersSharing } from '@/components/users/groups-users-sharing'
 import { useAction } from '@/hooks/useAction'
 import { downloadBlob } from '@/lib/utils'
 import { SHARE_DIALOG } from '@/stores/app-store'
@@ -61,18 +61,6 @@ export function QuestionGroupsListActions({ groupId, roomInProgress }: Questions
       <DropdownMenuLabel>Actions</DropdownMenuLabel>
       <DropdownMenuSeparator />
 
-      <DrawerDialog
-        dialogId={SHARE_DIALOG}
-        title={t('Preferences')}
-        description={t('PreferencesDesc')}
-        className='max-w-screen-lg'
-        trigger={
-          <DropdownMenuItem onSelect={closeDropDownHack}>
-            {t('Share')}
-          </DropdownMenuItem>}>
-        <UserGroupsSharing />
-      </DrawerDialog>
-
       {roomInProgress &&
         <YesNoDialog action={onAbortAction} titleDialog={t('YesNoTitle')} descDialog={t('YesNoAbort')}>
           <DropdownMenuItem className="text-destructive" onSelect={closeDropDownHack}>
@@ -80,6 +68,17 @@ export function QuestionGroupsListActions({ groupId, roomInProgress }: Questions
           </DropdownMenuItem>
         </YesNoDialog>
       }
+
+      <DrawerDialog
+        dialogId={SHARE_DIALOG}
+        title={t('UserGroupsSharing')}
+        description={t('UserGroupsSharingDesc')}
+        trigger={
+          <DropdownMenuItem onSelect={closeDropDownHack}>
+            {t('Share')}
+          </DropdownMenuItem>}>
+        <GroupsUsersSharing groupId={groupId} />
+      </DrawerDialog>
 
       <DropdownMenuItem onClick={() => onExportAction()}>{
         t('Export')}

@@ -17,7 +17,7 @@ import { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 
-export function RoomSettings(settings: RoomSettingsType) {
+export function RoomSettings(settings: RoomSettingsType & { isAuthor: boolean}) {
   const form = useForm<RoomSettingsType>({
     resolver: zodResolver(RoomSettingsSchema),
     values: settings,
@@ -65,7 +65,7 @@ export function RoomSettings(settings: RoomSettingsType) {
                     className="flex gap-6">
                     <FormItem className="flex items-center space-x-3 space-y-0">
                       <FormControl>
-                        <RadioGroupItem value="Training" />
+                        <RadioGroupItem value="Training" disabled={!settings.isAuthor} />
                       </FormControl>
                       <FormLabel className="font-normal">{t('Training')}</FormLabel>
                     </FormItem>
@@ -173,9 +173,9 @@ export function RoomSettings(settings: RoomSettingsType) {
           )}
         />
 
-        <div className="space-x-4 text-center">
+        <div className="grid items-center justify-center gap-4 text-center sm:flex">
           <Button onClick={(e) => { e.preventDefault(); start()}}><Play className="mr-2" />{t('Start')}</Button>
-          <ShareDialog settingValues={getValues} />
+          {settings.isAuthor && <ShareDialog settingValues={getValues} />}
         </div>
       </form>
     </Form>

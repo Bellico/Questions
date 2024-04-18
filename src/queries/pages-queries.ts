@@ -1,19 +1,24 @@
 
 import prisma from '@/lib/prisma'
 import { RoomProgressType } from '@/lib/schema'
+import { getGroupInProgressQuery, getLastScoreByGroupQuery } from '@/queries/commons-queries'
 import { RoomMode } from '@prisma/client'
 
-export const getUsername = async (userId: string): Promise<string | null> => {
+export const getUsername = async (userId: string): Promise<{username: string | null, email: string}> => {
   const user = await prisma.user.findUniqueOrThrow({
     where: {
       id: userId,
     },
     select:{
-      name: true
+      name: true,
+      email: true
     }
   })
 
-  return user.name
+  return {
+    username: user.name,
+    email: user.email!
+  }
 }
 
 export const getGroupName = async (groupId: string): Promise<string> => {
@@ -39,13 +44,14 @@ export const getGroupsListQuery = async (userId: string) => {
     },
     include: {
       _count: {
-        select: { questions: true },
+        select: { questions: true, sharedUsers: true },
       },
     }
   })
 
   const groupIds = groupList.map(g => g.id)
-
+  const activeRooms = await getGroupInProgressQuery(groupIds, userId)
+  const lastScoreByGroup = await getLastScoreByGroupQuery(groupIds, userId)
   const resultsCountByGroup = await prisma.room.groupBy({
     by: ['groupId'],
     where: {
@@ -60,60 +66,58 @@ export const getGroupsListQuery = async (userId: string) => {
     _count: true,
   })
 
-  const activeRooms = await prisma.room.findMany({
-    where: {
-      dateStart: {
-        not: null,
-        gte: new Date(new Date().getTime() - 3600 * 1000),
-      },
-      userId: userId,
-      dateEnd: null,
-      groupId: {
-        in: groupIds
-      },
-    },
-    select:{
-      groupId: true
-    }
-  })
-
-  const lastScoreByGroup = await prisma.questionGroup.findMany({
-    where: {
-      id: {
-        in: groupIds
-      },
-    },
-    select:{
-      id: true,
-      rooms: {
-        where:{
-          mode: 'Rating',
-          userId: userId,
-          dateEnd: {
-            not: null
-          },
-        },
-        orderBy : {
-          dateEnd: 'desc'
-        },
-        take: 1,
-        select:{
-          score: true,
-          dateEnd: true
-        }
-      }
-    }
-  })
-
   return groupList.map(g => ({
     id: g.id,
     name: g.name,
     version: g.version,
     questionsCount : g._count.questions,
+    isShared : g._count.sharedUsers > 0,
     roomInProgress: activeRooms.some(p => p.groupId ===g.id),
     resultsCount: resultsCountByGroup.find(rc => rc.groupId === g.id)?._count ?? 0,
     lastTryDate: lastScoreByGroup.find(sc => sc.id === g.id)?.rooms[0]?.dateEnd ?? null,
     lastScore: lastScoreByGroup.find(sc => sc.id === g.id)?.rooms[0]?.score ?? null,
+  }))
+}
+
+export const getSharingGroupsListQuery = async (userId: string) => {
+  const groupsUsers =  await prisma.groupsUsers.findMany({
+    where: {
+      userId: userId,
+    },
+    orderBy: {
+      group:{
+        name: 'asc'
+      }
+    },
+    include: {
+      group:{
+        include:{
+          author:{
+            select:{
+              name: true,
+              email: true,
+            }
+          },
+          _count: {
+            select: { questions: true },
+          },
+        }
+      }
+    }
+  })
+
+  const groupIds = groupsUsers.map(g => g.groupId)
+  const activeRooms = await getGroupInProgressQuery(groupIds, userId)
+  const lastScoreByGroup = await getLastScoreByGroupQuery(groupIds, userId)
+
+  return groupsUsers.map(g => ({
+    id: g.group.id,
+    name: g.group.name,
+    questionsCount : g.group._count.questions,
+    author: g.group.author.name ?? g.group.author.email,
+    roomInProgress: activeRooms.some(p => p.groupId === g.groupId),
+    lastTryDate: lastScoreByGroup.find(sc => sc.id === g.groupId)?.rooms[0]?.dateEnd ?? null,
+    lastScore: lastScoreByGroup.find(sc => sc.id === g.groupId)?.rooms[0]?.score ?? null,
   }))
 }
 
@@ -320,11 +324,10 @@ export const getGroupStatsQuery = async (userId: string, groupId: string) => {
   }
 }
 
-export const getGroupForStartQuery = async (groupId: string, userId: string) => {
-  return await prisma.questionGroup.findUnique({
+export const getGroupForStartQuery = async (groupId: string) => {
+  return await prisma.questionGroup.findUniqueOrThrow({
     where: {
       id: groupId,
-      authorId: userId,
     },
     include: {
       _count: {
@@ -614,6 +617,7 @@ export const getRoomBoardQuery = async (groupId: string, mode: RoomMode) => {
       user: {
         select: {
           id: true,
+          name: true,
           email: true
         }
       }

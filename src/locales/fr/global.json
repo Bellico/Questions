@@ -27,6 +27,7 @@
   "Next": "Suivant",
   "ResponseCount": "{{count}} réponse(s)",
   "Username": "Nom d'utilisateur",
+  "Usermail": "Email",
   "Score": "Score",
   "Success": "Réussi",
   "Failed": "Échoué",
@@ -34,6 +35,8 @@
   "Progress": "En cours...",
   "BoardStats": "Statistiques",
   "Questions": "Questions",
+  "SharingQuestions": "Questions partagéés",
+  "Author": "Autheur",
   "Groups": "Groupes",
   "AverageTime": "Temps de réponse moyen",
   "AverageScore": "Score moyen",
@@ -51,7 +54,7 @@
   "Duration": "Durée",
   "AnswersSummary": "Résumé des réponses",
   "RatingResults": "Résultats d'évaluations",
-  "RatingResultsDesc": "Historique des scores (moi et lien de partage).",
+  "RatingResultsDesc": "Historique des scores (moi et partagé).",
   "AverageResults": "Moyenne par questions",
   "AverageResultsDesc": "Score détaillé par questions (uniquement moi).",
   "ProgressResults": "Evolution de votre progression",
@@ -62,6 +65,7 @@
   "Details": "Détails",
   "AllUsers" : "Tous les utilisateurs",
   "FilterUsers" : "Filter par utilisateur",
+  "AddUser" : "Ajouter un utilisateur",
   "Day": "jour",
   "Days": "jours",
   "Hour": "heure",
@@ -75,5 +79,7 @@
   "French": "Français",
   "English": "Anglais",
   "Preferences": "Préférences",
-  "PreferencesDesc": "Apportez des modifications à vos préférences."
+  "PreferencesDesc": "Gérez les préférences de votre compte.",
+  "UserGroupsSharing": "Partager à d'autres utilisateurs",
+  "UserGroupsSharingDesc": "Sélectionnez les utilisateurs pour accorder l'accès à ce groupe."
 }

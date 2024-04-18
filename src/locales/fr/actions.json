@@ -6,7 +6,9 @@
   "GroupCreated": "Groupe créé",
   "GroupUpdated": "Groupe mis à jour",
   "RoomInProgress": "Le groupe ne peut pas être mis à jour, veuillez terminer vos réponses avant",
+  "SharedGroup": "Désactiver le partage avant de supprimer ce groupe",
   "ExistingGroup": "Un groupe nommé \"{{groupName}}\" existe déjà",
   "ErrorServer": "Echec de l'action : {{message}}",
-  "PreferencesUpdated": "Préférences mises à jour"
+  "PreferencesUpdated": "Préférences mises à jour",
+  "GroupsUsersShared": "Partage appliqué"
 }

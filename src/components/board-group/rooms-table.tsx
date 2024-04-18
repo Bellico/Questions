@@ -17,12 +17,12 @@ type dataTableType = ArrayType<Awaited<ReturnType<typeof getRoomBoardQuery>>>
 export function RoomsTable({ userId, roomsList } : { userId: string, roomsList: dataTableType[]} ) {
 
   const { t } = useTranslation('global')
+  const requestAction = useAction()
 
   const columns = RoomsTableColumns(userId, onRetryAction, t)
   const table = useDataTable(roomsList, columns)
   const userSelect = [...new Set(roomsList.map(r => r.user.email!))].sort()
-
-  const requestAction = useAction()
+  const userMap = new Map(roomsList.map(item => [item.user.email, {email:  item.user.email!, name: item.user.name}]))
 
   // Query list sort by dateStart asc for chart => make a sort desc for table
   useEffect(() => {
@@ -52,8 +52,8 @@ export function RoomsTable({ userId, roomsList } : { userId: string, roomsList: 
           </SelectTrigger>
           <SelectContent side="bottom">
             <SelectItem value='all'>{t('AllUsers')}</SelectItem>
-            {userSelect.map((user) => (
-              <SelectItem key={user} value={user}>{user}</SelectItem>
+            {userSelect.map((email) => (
+              <SelectItem key={email} value={email}>{userMap.get(email)?.name ?? email}</SelectItem>
             ))}
           </SelectContent>
         </Select>

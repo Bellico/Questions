@@ -1,4 +1,5 @@
 import prisma from '@/lib/prisma'
+import { isGroupOwnerOrThrow } from '@/queries/actions-queries'
 import { getSessionUserIdOrThrow } from '@/queries/commons-queries'
 import { notFound } from 'next/navigation'
 import { NextRequest } from 'next/server'
@@ -9,6 +10,8 @@ export async function GET(request: NextRequest) {
   const id = url.searchParams.get('id')
 
   if(!id) notFound()
+
+  await isGroupOwnerOrThrow(id, userId)
 
   var group = await prisma.questionGroup.findUniqueOrThrow({
     where:{

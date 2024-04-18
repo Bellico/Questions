@@ -14,7 +14,7 @@ type BoardHeaderProps = {
   username: string | null
 }
 
-export const BoardHeader = async (props: BoardHeaderProps) => {
+export const BoardHeader = async (props: BoardHeaderProps & { email: string}) => {
   const { t } = await translate('global')
 
   return (

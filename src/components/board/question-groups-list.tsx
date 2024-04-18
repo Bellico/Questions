@@ -8,7 +8,7 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { getGroupsListQuery } from '@/queries/pages-queries'
 import { translate } from '@/queries/utils-queries'
-import { BarChart3, Group, MoreHorizontal, Pencil, Play, Plus } from 'lucide-react'
+import { BarChart3, Group, MoreHorizontal, Pencil, Play, Plus, Users } from 'lucide-react'
 import Link from 'next/link'
 
 export async function QuestionGroupsList({userId} : { userId: string}) {
@@ -17,7 +17,7 @@ export async function QuestionGroupsList({userId} : { userId: string}) {
 
   if (questionGroups.length == 0) {
     return(
-      <QuestionGroupNew className="h-16">
+      <QuestionGroupNew>
         <span>{t('AddFirst')}</span>
       </QuestionGroupNew>
     )
@@ -54,7 +54,7 @@ export async function QuestionGroupsList({userId} : { userId: string}) {
               }
             </div>
 
-            <div className="flex flex-wrap gap-4">
+            <div className="flex flex-wrap gap-2 sm:gap-4">
               <Link href={`/start/${group.id}`}>
                 <Button>
                   <Play className="mr-2 size-4" />
@@ -77,17 +77,21 @@ export async function QuestionGroupsList({userId} : { userId: string}) {
                   </Button>
                 </Link>
               }
+            </div>
 
+            <div className="absolute right-6 top-6 flex items-center gap-2">
+              {group.isShared && <Users className="text-second"/>}
               <DropdownMenu>
-                <DropdownMenuTrigger asChild className="absolute right-6 top-6">
+                <DropdownMenuTrigger asChild>
                   <Button variant="ghost" className="size-8 p-0">
                     <span className="sr-only">Open menu</span>
-                    <MoreHorizontal className="size-5" />
+                    <MoreHorizontal  className="size-5" />
                   </Button>
                 </DropdownMenuTrigger>
                 <QuestionGroupsListActions groupId={group.id} roomInProgress={group.roomInProgress} />
               </DropdownMenu>
             </div>
+
           </CardContent>
         </Card>
       ))}

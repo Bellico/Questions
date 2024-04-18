@@ -2,7 +2,7 @@
 
 import { ActionResultType, withValidateAndSession } from '@/actions/wrapper-actions'
 import prisma from '@/lib/prisma'
-import { getActiveRoomQuery } from '@/queries/commons-queries'
+import { getGroupInProgressQuery } from '@/queries/commons-queries'
 import { translate } from '@/queries/utils-queries'
 import { revalidatePath } from 'next/cache'
 import { z } from 'zod'
@@ -13,11 +13,12 @@ export const abortRoomAction = withValidateAndSession(
 
     const { t } = await translate('actions')
 
-    const activeRoom = await getActiveRoomQuery(id, userId)
-
-    if (!activeRoom) {
+    const activeRooms = await getGroupInProgressQuery([id], userId)
+    if (activeRooms.length === 0) {
       throw new Error('403 Forbidden')
     }
+
+    const activeRoomId = activeRooms[0].id
 
     try {
       await prisma.$transaction(async (tx) => {
@@ -25,20 +26,20 @@ export const abortRoomAction = withValidateAndSession(
         await tx.choices.deleteMany({
           where: {
             answer:{
-              roomId: activeRoom.id
+              roomId: activeRoomId
             }
           }
         })
 
         await tx.answer.deleteMany({
           where: {
-            roomId: activeRoom.id
+            roomId: activeRoomId
           }
         })
 
         await tx.room.delete({
           where:{
-            id: activeRoom.id
+            id: activeRoomId
           },
         })
 

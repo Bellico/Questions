@@ -31,8 +31,9 @@ export const RoomsTableColumns: (
       cell: ({ row }) =>
         <div className="flex items-center gap-2">
           {/* eslint-disable @next/next/no-img-element */}
-          <img src={`https://api.dicebear.com/8.x/initials/svg?size=32&seed=${row.original.user.email}`} alt="avatar"/>
-          {row.original.user.email} {row.original.user.id === userId && `(${t('Me')})`}
+          <img src={`https://api.dicebear.com/8.x/initials/svg?size=32&seed=${row.original.user.name ?? row.original.user.email}`} alt="avatar"/>
+          {row.original.user.name ?? row.original.user.email}
+          {row.original.user.id === userId ? ` (${t('Me')})` : row.original.user.name ? ` (${row.original.user.email})`: '' }
         </div>,
     },
     {

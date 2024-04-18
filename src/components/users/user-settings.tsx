@@ -2,6 +2,7 @@
 
 import { updateUserSettingsAction } from '@/actions/users/update-user-settings-action'
 import { Button } from '@/components/ui/button'
+import { DialogTrigger } from '@/components/ui/dialog'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -14,10 +15,11 @@ import { useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 
-export function UserSettings(data: UserSettingsType) {
-  const  [setDialogOpen, setDialogLoading] = useAppStore((s) => [s.setDialogOpen, s.setDialogLoading])
-  const { t } = useTranslation(['global', 'actions'])
+export function UserSettings(data: UserSettingsType & { email: string}) {
   const router = useRouter()
+  const { t } = useTranslation(['global', 'actions'])
+  const [setDialogOpen, setDialogLoading] = useAppStore((s) => [s.setDialogOpen, s.setDialogLoading])
+  const requestAction = useAction(false)
 
   const form = useForm<UserSettingsType>({
     resolver: zodResolver(UserSettingsSchema),
@@ -25,7 +27,6 @@ export function UserSettings(data: UserSettingsType) {
   })
 
   const {control, register, handleSubmit, formState: { isValid} } = form
-  const requestAction = useAction(false)
 
   const updateUserSettings = async (data: UserSettingsType) => {
     setDialogLoading(true)
@@ -45,7 +46,7 @@ export function UserSettings(data: UserSettingsType) {
 
         <div className="grid gap-2">
           <Label htmlFor="username">{t('Username')}</Label>
-          <Input id="username" {...register('username')} />
+          <Input id="username" placeholder={data.email} {...register('username')} />
         </div>
 
         <FormField
@@ -80,7 +81,13 @@ export function UserSettings(data: UserSettingsType) {
             </FormItem>
           )}
         />
-        <Button type="submit" disabled={!isValid}>{t('Save')}</Button>
+
+        <div className="flex justify-end">
+          <DialogTrigger className="hidden sm:block" asChild>
+            <Button variant="ghost">{t('Cancel')}</Button>
+          </DialogTrigger>
+          <Button type="submit" disabled={!isValid}>{t('Save')}</Button>
+        </div>
       </form>
     </Form>
   )
