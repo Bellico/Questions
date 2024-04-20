@@ -7,7 +7,6 @@ import { computeScore } from '@/lib/utils'
 import { computeNextQuestionQuery } from '@/queries/actions-queries'
 import { getNextQuestionToAnswerQuery, getSessionUserId } from '@/queries/commons-queries'
 import { translate } from '@/queries/utils-queries'
-import { RoomMode } from '@prisma/client'
 
 export const answerRoomAction = withValidate(
   AnswerRoomSchema,
@@ -32,7 +31,6 @@ export const answerRoomAction = withValidate(
 
     const answeredQuestionIds = await getAnsweredQuestionIdsInRoom(data.roomId)
     const nextQuestionId = await computeNextQuestionQuery(currentAnswerContext.room.groupId!, currentAnswerContext.room.withRandom, answeredQuestionIds)
-    const withResult = currentAnswerContext.room.mode == RoomMode.Training
     const dateEnd = new Date()
 
     try {
@@ -105,7 +103,7 @@ export const answerRoomAction = withValidate(
         result: {
           id: currentAnswerContext.question?.id!,
           title : currentAnswerContext.question?.title || `Question ${currentAnswerContext.order}`,
-          hasGood : withResult ? achievement === 100 : null,
+          hasGood : currentAnswerContext.room.withProgressState ? achievement === 100 : null,
           correction: currentAnswerContext.room.withCorrection ? goodResponseIds : null
         }
       }
@@ -140,7 +138,8 @@ const canAnswerQuestion = async (roomId: string, questionId: string, userId?: st
           groupId: true,
           mode: true,
           withCorrection: true,
-          withRandom: true
+          withRandom: true,
+          withProgressState: true
         }
       },
       question:{

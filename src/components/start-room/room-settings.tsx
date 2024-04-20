@@ -25,20 +25,27 @@ export function RoomSettings(settings: RoomSettingsType & { isAuthor: boolean}) 
   })
 
   const { control, getValues, setValue, clearErrors } = form
-  const { mode, withCorrection } = getValues()
+  const { mode, withProgress,  withCorrection } = getValues()
 
   const { t } = useTranslation('room')
   const requestAction = useAction()
 
   useEffect(() => {
-    if(mode === RoomMode.Rating && withCorrection)
-      setValue('withCorrection', false)
+    // Correction is only in Training
+    if(mode === RoomMode.Rating && withCorrection) setValue('withCorrection', false)
 
+    // Result in progress bar needs progressbar
+    if(!withProgress) setValue('withProgressState', false)
+
+    // Correction means result in progress bar by default
+    if(withCorrection && withProgress) setValue('withProgressState', true)
+
+    // Retries only in Rating
     if(mode === RoomMode.Training) {
       setValue('withRetry', 0)
       clearErrors('withRetry')
     }
-  }, [setValue, clearErrors, mode, withCorrection])
+  }, [setValue, clearErrors, mode, withCorrection, withProgress])
 
   async function start(){
     requestAction(
@@ -127,6 +134,22 @@ export function RoomSettings(settings: RoomSettingsType & { isAuthor: boolean}) 
 
         <FormField
           control={form.control}
+          name="withNavigate"
+          render={({ field }) => (
+            <FormItem className="flex flex-row items-center justify-between rounded-lg border bg-background p-4">
+              <div className="space-y-0.5">
+                <FormLabel className="text-base">{t('withNavigate')}</FormLabel>
+                <FormDescription>{t('withNavigateDesc')}</FormDescription>
+              </div>
+              <FormControl>
+                <Switch checked={field.value} onCheckedChange={field.onChange} />
+              </FormControl>
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
           name="withRandom"
           render={({ field }) => (
             <FormItem className="flex flex-row items-center justify-between rounded-lg border bg-background p-4">
@@ -156,6 +179,24 @@ export function RoomSettings(settings: RoomSettingsType & { isAuthor: boolean}) 
             </FormItem>
           )}
         />
+
+        {withProgress &&
+          <FormField
+            control={form.control}
+            name="withProgressState"
+            render={({ field }) => (
+              <FormItem className="flex flex-row items-center justify-between rounded-lg border bg-background p-4">
+                <div className="space-y-0.5">
+                  <FormLabel className="text-base">{t('WithProgressState')}</FormLabel>
+                  <FormDescription>{t('WithProgressStateDesc')}</FormDescription>
+                </div>
+                <FormControl>
+                  <Switch checked={field.value} onCheckedChange={field.onChange} />
+                </FormControl>
+              </FormItem>
+            )}
+          />
+        }
 
         <FormField
           control={form.control}

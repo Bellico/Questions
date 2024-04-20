@@ -9,7 +9,7 @@ type RoomProps = {
   currentQuestion: RoomQuestionNextType
   progress: RoomProgressType[]
   withProgress: boolean
-  canNavigate: boolean
+  withNavigate: boolean
   shareLink?: string
 }
 
@@ -18,7 +18,7 @@ export function Room(props: RoomProps) {
     <RoomProvider value={{...props}}>
       <RoomDisplay
         roomId={props.roomId}
-        canNavigate={props.canNavigate}
+        withNavigate={props.withNavigate}
         withProgress={props.withProgress}
         shareLink={props.shareLink} />
     </RoomProvider>

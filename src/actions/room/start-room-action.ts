@@ -38,7 +38,9 @@ export const startRoomAction = withValidateAndSession(
             withResults: data.withResults,
             withCorrection: data.withCorrection,
             withRandom: data.withRandom,
-            withProgress: data.withProgress
+            withProgress: data.withProgress,
+            withProgressState: data.withProgress && data.withProgressState,
+            withNavigate: data.withNavigate
           }
         })
 

@@ -4,7 +4,6 @@ import { ActionResultType, withValidate } from '@/actions/wrapper-actions'
 import prisma from '@/lib/prisma'
 import { PrevNextRoomSchema, PrevNextRoomType, RoomQuestionNextType } from '@/lib/schema'
 import { canPlayRoomQuery, getNextQuestionToAnswerQuery, getSessionUserId } from '@/queries/commons-queries'
-import { RoomMode } from '@prisma/client'
 
 export const navigateRoomAction = withValidate(
   PrevNextRoomSchema,
@@ -13,7 +12,7 @@ export const navigateRoomAction = withValidate(
     const userId = await getSessionUserId()
     const room = await canPlayRoomQuery(data.roomId, userId, data.shareLink)
 
-    if (!room || room.mode !== RoomMode.Training) {
+    if (!room || !room.withNavigate) {
       throw new Error('403 Forbidden')
     }
 

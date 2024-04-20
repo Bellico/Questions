@@ -2,7 +2,6 @@ import { Room } from '@/components/room/room'
 import { auth } from '@/lib/auth'
 import { canPlayRoomQuery, getNextQuestionToAnswerQuery } from '@/queries/commons-queries'
 import { getProgressInfosRoomQuery, getProgressInfosWithRandomQuery } from '@/queries/pages-queries'
-import { RoomMode } from '@prisma/client'
 import { notFound, redirect } from 'next/navigation'
 
 export default async function RoomPage({
@@ -24,17 +23,16 @@ searchParams?: { shareLink?: string }
     redirect('/')
   }
 
-  const isTraining = room.mode === RoomMode.Training
   const progress = room.withRandom ?
-    await getProgressInfosWithRandomQuery(room.id, room.groupId!, isTraining):
-    await getProgressInfosRoomQuery(room.id, room.groupId!, isTraining)
+    await getProgressInfosWithRandomQuery(room.id, room.groupId!, room.withProgressState):
+    await getProgressInfosRoomQuery(room.id, room.groupId!, room.withProgressState)
 
   return (
     <Room
       roomId={room.id}
       currentQuestion={nextQuestion}
       progress={progress}
-      canNavigate={isTraining}
+      withNavigate={room.withNavigate}
       withProgress={room.withProgress}
       shareLink={searchParams?.shareLink} />
   )

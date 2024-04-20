@@ -109,6 +109,8 @@ model Room {
   withRetry         Int?
   withRandom        Boolean
   withCorrection    Boolean
+  withProgressState Boolean
+  withNavigate      Boolean
   withResults       Boolean
   withProgress      Boolean
   answers           Answer[]
