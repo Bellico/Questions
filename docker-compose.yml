@@ -3,10 +3,10 @@ version: '3'
 services:
   next-app:
     container_name: questions-app
-    image: bellico/questions-editor:latest
-    # build:
-    #   context: .
-    #   dockerfile: ./Dockerfile
+    # image: bellico/questions-editor:latest
+    build:
+      context: .
+      dockerfile: ./Dockerfile
     env_file:
       - .env.docker
     depends_on:
