@@ -375,7 +375,9 @@ export const getLastSettingsRoomQuery = async (groupId: string, userId: string) 
       withRetry: true,
       withCorrection: true,
       withResults: true,
-      withProgress: true
+      withProgress: true,
+      withProgressState: true,
+      withNavigate: true
     }
   })
 
@@ -394,7 +396,9 @@ export const getLastSettingsRoomQuery = async (groupId: string, userId: string) 
         withRandom: true,
         withCorrection: true,
         withResults: true,
-        withProgress: true
+        withProgress: true,
+        withProgressState: true,
+        withNavigate: true
       }
     })
   }
@@ -408,6 +412,8 @@ export const getLastSettingsRoomQuery = async (groupId: string, userId: string) 
     withCorrection: false,
     withResults: false,
     withProgress: false,
+    withProgressState: false,
+    withNavigate: false
   }
 
   return {...settings, withRetry: settings.withRetry ?? 0, groupId}

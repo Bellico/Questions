@@ -41,6 +41,8 @@ export const shareRoomAction = withValidateAndSession(
             withCorrection: data.withCorrection,
             withRandom: data.withRandom,
             withProgress: data.withProgress,
+            withProgressState: data.withProgress && data.withProgressState,
+            withNavigate: data.withNavigate,
             shareLink: crypto.randomUUID()
           }
         })

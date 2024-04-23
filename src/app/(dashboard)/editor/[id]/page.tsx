@@ -12,13 +12,7 @@ export default async function EditorPage({
   searchParams: { useDraft: boolean }
 }) {
   const session = await auth()
-
   const useDraft = Boolean(searchParams.useDraft)
-
-  if (useDraft) {
-    return <QuestionsEditor useDraft saveGroupAction={updateQuestionGroupAction} />
-  }
-
   const questionGroup = await getEditorQuery(params.id, session?.user.id!)
 
   if (!questionGroup) {
@@ -27,6 +21,7 @@ export default async function EditorPage({
 
   return (
     <QuestionsEditor
+      useDraft={useDraft}
       questionGroup={questionGroup}
       saveGroupAction={updateQuestionGroupAction}
     />

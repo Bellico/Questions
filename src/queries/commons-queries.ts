@@ -75,9 +75,10 @@ export const canPlayRoomQuery = async (roomId: string, userId?: string, shareLin
     select: {
       id: true,
       groupId: true,
-      mode: true,
       withRandom: true,
-      withProgress: true
+      withProgress: true,
+      withProgressState: true,
+      withNavigate: true
     }
   })
 }

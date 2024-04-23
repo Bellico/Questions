@@ -5,7 +5,7 @@ import * as z from 'zod'
 
 export const ResponseSchema = z.object({
   id: z.string().nullable(),
-  text: z.string().min(2, 'At least 2 characters expected').max(250).or(z.literal('')),
+  text: z.string().min(2, 'At least 2 characters expected').max(550).or(z.literal('')),
   isCorrect: z.boolean(),
 })
 
@@ -38,16 +38,20 @@ const RoomSettingsBaseSchema = z.object({
   withRandom: z.boolean(),
   withCorrection: z.boolean(),
   withResults: z.boolean(),
-  withProgress: z.boolean()
+  withProgress: z.boolean(),
+  withProgressState: z.boolean(),
+  withNavigate: z.boolean()
 })
 
 export const RoomSettingsSchema = RoomSettingsBaseSchema
   .refine(v => v.mode === RoomMode.Rating && v.withCorrection ? false: true)
+  .refine(v => v.withProgressState && !v.withProgress ? false : true )
 
 export const RoomShareSchema = z.object({
   usermail: z.string().email(),
 }).merge(RoomSettingsBaseSchema)
   .refine(v => v.mode === RoomMode.Rating && v.withCorrection ? false: true)
+  .refine(v => v.withProgressState && !v.withProgress ? false : true )
 
 export const RoomStartSchema = z.object({
   roomId: z.string(),

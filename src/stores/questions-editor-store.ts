@@ -140,7 +140,7 @@ export const createQuestionsEditorStore = (initProps?: Partial<QuestionsEditorSt
     })
 
   }), {
-    name: 'q-editor',
+    name: (initProps?.id ?? '00') + '-q-draft-editor',
     storage,
     skipHydration: true,
   }))

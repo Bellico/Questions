@@ -4,8 +4,10 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Switch } from '@/components/ui/switch'
+import { Textarea } from '@/components/ui/textarea'
 import { useDebounce } from '@/hooks/useDebounce'
 import { QuestionFormSchema, QuestionFormType, QuestionType } from '@/lib/schema'
+import { numberToChar } from '@/lib/utils'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { MDXEditorMethods } from '@mdxeditor/editor'
 import { Pencil, Trash2 } from 'lucide-react'
@@ -169,7 +171,7 @@ export function QuestionsEditorSection({
             {/* Responses */}
             {responseFields.map((item, index) => (
               <div key={index} className="w-full space-y-2">
-                <FormLabel htmlFor={'qtext-' + indexQuestion + 'r-' + index}>Response {index + 1}</FormLabel>
+                <FormLabel htmlFor={'qtext-' + indexQuestion + 'r-' + index}>{t('Response')} {index + 1}</FormLabel>
                 <div className="flex items-center rounded-xl border p-2 has-[.bad]:bg-destructive/5 has-[.good]:bg-success/5">
 
                   <FormField
@@ -195,7 +197,7 @@ export function QuestionsEditorSection({
                     render={({ field }) => (
                       <FormItem className="w-full">
                         <FormControl>
-                          <Input id={'qtext-' + indexQuestion + 'r-' + index} placeholder={t('NextResponse')} {...field} />
+                          <Textarea className="min-h-[90px]" id={'qtext-' + indexQuestion + 'r-' + index} placeholder={t('NextResponse') + ' ' + numberToChar(index)} {...field} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>

@@ -27,7 +27,7 @@ export function RoomNavigate({navigate} : RoomNavigateProps) {
   }
 
   return (
-    <div className="inset-x-0 z-10 mb-6 flex justify-between sm:absolute">
+    <div className="inset-x-4 z-10 mb-6 flex justify-between sm:absolute">
       <form action={navigateToPrev}>
         <Button variant="outline" type="submit" disabled={!canGoPrev} >
           <ArrowBigLeftDash className="mr-2" /> {t('Prev')}

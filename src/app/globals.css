@@ -92,45 +92,37 @@
   margin-top: 1.25em;
   margin-bottom: 1.25em;
 }
-
 .q-editor-markdown h2 {
   font-size: 1.5em;
   font-weight: 700;
   margin-top: 1.25em;
   margin-bottom: 1.25em;
 }
-
 .q-editor-markdown h3 {
   font-size: 1.25em;
   font-weight: 600;
   margin-top: 1.25em;
   margin-bottom: 1.25em;
 }
-
 .q-editor-markdown p {
   margin-top: 1.25em;
   margin-bottom: 1.25em;
 }
-
 .q-editor-markdown ol {
   list-style: auto;
   padding-left: 1.625em
 }
-
 .q-editor-markdown ul {
   list-style: outside;
   padding-left: 1.625em
 }
-
 .q-editor-markdown li {
   padding-left: 0.625em
 }
-
 .q-editor-markdown a {
   text-decoration: underline;
   cursor: pointer
 }
-
 .q-editor-markdown blockquote {
   font-weight: 500;
   font-style: italic;
@@ -138,7 +130,6 @@
   border-left-color: #e5e7eb;
   padding-left: 1em;
 }
-
 .q-editor-markdown code {
   background-color: hsl(210 16.7% 97.6%);
   color: hsl(322 75% 46%);
@@ -146,28 +137,20 @@
   padding-left: 0.25rem;
   padding-right: 0.25rem;
 }
-
 .mdxeditor-popup-container button {
   color: hsl(var(--foreground));
   background: hsl(var(--background));
 }
-
 .q-editor-markdown {
   color: hsl(var(--foreground));
 }
-
 .mdxeditor-toolbar {
   background-color: hsl(var(--background));
   color: hsl(var(--foreground));
 }
-
 .mdxeditor-popup-container {
   display: none
 }
 .mdxeditor-popup-container:has(div) {
   display: block
-}
-
-.progress-room {
-  background: repeating-linear-gradient(-45deg, hsl(var(--primary) / 0.1), hsl(var(--primary) / 0.1) 15px,  hsl(var(--accent)) 50px,  hsl(var(--accent)) 80px);
 }
