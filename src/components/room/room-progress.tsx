@@ -29,7 +29,7 @@ export function RoomProgress({ withNavigate, navigate } : RoomProgressProps) {
   }
 
   async function navigateTo(questionId: string | null, isAnswer: boolean) {
-    if(withNavigate && questionId && currentQuestion.questionId !== questionId) {
+    if(withNavigate && questionId && currentQuestion.questionId !== questionId && isAnswer) {
       await navigate(questionId)
     }
   }
@@ -40,8 +40,9 @@ export function RoomProgress({ withNavigate, navigate } : RoomProgressProps) {
         {progress.map((q, i) => (
           <div
             key={i}
-            className={cn('relative flex flex-1 items-center justify-around overflow-hidden border-r-2 border-accent text-center last:border-none',{
-              'cursor-pointer hover:bg-primary': withNavigate && q.id && currentQuestion.questionId !== q.id,
+            className={cn('relative flex flex-1 items-center justify-around overflow-hidden border-r-2 border-accent text-center',{
+              'cursor-pointer hover:bg-primary': withNavigate && q.id && currentQuestion.questionId !== q.id && q.isAnswer,
+              'border border-black/75 dark:border-white/75': currentQuestion.questionId === q.id && q.id !== progressingId && q.isAnswer
             })}
             onClick={() => navigateTo(q.id, q.isAnswer)}
           >

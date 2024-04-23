@@ -29,7 +29,7 @@ export function RoomCorrection({ goToNext }: RoomCorrectionProps) {
 
             <div className="relative size-full">
               <label className="flex size-full cursor-pointer items-center justify-start overflow-hidden" htmlFor={'qr-' + index}>
-                <span className="py-5 pl-5 pr-16">{item.text}</span>
+                <span className="whitespace-break-spaces py-5 pl-5 pr-16">{item.text}</span>
               </label>
               <Checkbox id={'qr-' + index} defaultChecked={item.isCorrect} className="absolute right-5 top-2/4 mt-[-14px] size-7" disabled={true} />
             </div>

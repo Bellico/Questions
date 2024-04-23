@@ -7,6 +7,7 @@ import { Switch } from '@/components/ui/switch'
 import { Textarea } from '@/components/ui/textarea'
 import { useDebounce } from '@/hooks/useDebounce'
 import { QuestionFormSchema, QuestionFormType, QuestionType } from '@/lib/schema'
+import { numberToChar } from '@/lib/utils'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { MDXEditorMethods } from '@mdxeditor/editor'
 import { Pencil, Trash2 } from 'lucide-react'
@@ -196,7 +197,7 @@ export function QuestionsEditorSection({
                     render={({ field }) => (
                       <FormItem className="w-full">
                         <FormControl>
-                          <Textarea className="min-h-[90px]" id={'qtext-' + indexQuestion + 'r-' + index} placeholder={t('NextResponse')} {...field} />
+                          <Textarea className="min-h-[90px]" id={'qtext-' + indexQuestion + 'r-' + index} placeholder={t('NextResponse') + ' ' + numberToChar(index)} {...field} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>

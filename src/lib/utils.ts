@@ -106,3 +106,8 @@ export async function downloadBlob(res: Response) {
 export function capitalize(name: string) {
   return name.charAt(0).toUpperCase() + name.slice(1)
 }
+
+
+export function numberToChar(number: number) {
+  return String.fromCharCode(65 + number)
+}

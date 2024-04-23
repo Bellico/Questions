@@ -130,7 +130,7 @@ export function GroupsUsersSharing({ groupId } : GroupsUsersSharingProps) {
 
         <div className="flex flex-col md:flex-row md:justify-end">
           <DialogTrigger className="hidden md:block" asChild>
-            <Button variant="ghost">Cancel</Button>
+            <Button variant="ghost">{t('Cancel')}</Button>
           </DialogTrigger>
           <Button type="submit">{t('Save')}</Button>
         </div>
