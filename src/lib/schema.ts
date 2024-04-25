@@ -73,7 +73,9 @@ export const PrevNextRoomSchema = z.object({
 
 export const UserSettingsSchema = z.object({
   locale: z.string().length(2),
-  username: z.string().min(3).nullable().or(z.literal(''))
+  username: z.string().min(3).nullable().or(z.literal('')),
+  usePassword: z.boolean(),
+  password: z.string().min(8).nullish().or(z.literal('')),
 })
 
 export const GroupUsersSchema = z.object({
