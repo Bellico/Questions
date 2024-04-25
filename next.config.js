@@ -5,7 +5,7 @@ const nextConfig = {
     return [
       {
         // matching all API routes
-        source: '/*',
+        source: '/:path*',
         headers: [
           // { key: 'Access-Control-Allow-Credentials', value: 'true' },
           { key: 'Access-Control-Allow-Origin', value: 'https://blog.logrocket.com' }, // replace this your actual origin
