@@ -19,6 +19,6 @@ export async function POST(request: NextRequest) {
   })
 
   return NextResponse.json({
-    goToLogin: user && user.password !== null
+    goToLogin: Boolean(user && user.password !== null)
   })
 }
