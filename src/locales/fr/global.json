@@ -2,11 +2,15 @@
   "Home.Title": "Bienvenue sur questions editor",
   "Home.Text" : "Créez, partagez et apprenez, tout simplement",
   "Home.HelpText" : "Inscrivez-vous pour découvrir.",
+  "Home.EnterPassword": "Saisissez votre mot de passe pour continuer",
+  "EnterPassword": "Saisissez votre mot de passe",
+  "ForgotPassword":"Mot de passe oublié? Utilisez le lien magique.",
   "EnterMail": "Saisissez votre email",
   "SignIn": "Se connecter",
   "SignOut": "Se deconnecter",
   "SignInSuccess": "Vérifiez votre email pour vous connecter",
   "SignInError": "Erreur lors de l'envoi du mail",
+  "InvalidCredentials": "Identifiants invalides",
   "Start": "Démarrer",
   "Edit": "Modifier",
   "Results": "Résultats",
@@ -85,5 +89,8 @@
   "Preferences": "Préférences",
   "PreferencesDesc": "Gérez les préférences de votre compte.",
   "UserGroupsSharing": "Partager à d'autres utilisateurs",
-  "UserGroupsSharingDesc": "Sélectionnez les utilisateurs pour accorder l'accès à ce groupe."
+  "UserGroupsSharingDesc": "Sélectionnez les utilisateurs pour accorder l'accès à ce groupe.",
+  "UsePassword": "Utiliser une connexion par mot de passe",
+  "UsePasswordDesc": "Conseil: Utiliser un mot de passe fort (min 8 car.)",
+  "Password": "Mot de passe"
 }

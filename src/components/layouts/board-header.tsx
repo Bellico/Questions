@@ -11,7 +11,8 @@ import Link from 'next/link'
 
 type BoardHeaderProps = {
   locale: string,
-  username: string | null
+  username: string | null,
+  usePassword: boolean,
 }
 
 export const BoardHeader = async (props: BoardHeaderProps & { email: string}) => {
@@ -39,7 +40,7 @@ export const BoardHeader = async (props: BoardHeaderProps & { email: string}) =>
             title={t('Preferences')}
             description={t('PreferencesDesc')}
             trigger={<Button size="icon" variant="outline"><UserRoundCog /></Button>}>
-            <UserSettings {...props} />
+            <UserSettings {...props} password={null} />
           </DrawerDialog>
           {/* Theme toggle */}
           <ThemeToggle />

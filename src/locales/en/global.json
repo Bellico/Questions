@@ -2,11 +2,15 @@
   "Home.Title": "Welcome to your questions editor",
   "Home.Text" : "Create share learn, simply",
   "Home.HelpText" : "Sign up to discover.",
+  "Home.EnterPassword": "Enter your password to continue",
+  "EnterPassword": "Enter your password",
+  "ForgotPassword":"Forgot your password? Use magic link.",
   "EnterMail": "Enter your email",
   "SignIn": "Sign In",
   "SignOut": "Sign out",
   "SignInSuccess": "Check your mail to sign in",
   "SignInError": "Error to send mail",
+  "InvalidCredentials": "Invalid Credentials",
   "Start": "Start",
   "Edit": "Edit",
   "Results": "Results",
@@ -85,5 +89,8 @@
   "Preferences": "Preferences",
   "PreferencesDesc": "Manage your account preferences.",
   "UserGroupsSharing": "Share to other users",
-  "UserGroupsSharingDesc": "Select users to grant access to this group."
+  "UserGroupsSharingDesc": "Select users to grant access to this group.",
+  "UsePassword": "Use password to login",
+  "UsePasswordDesc": "Tip: Use a strong password (min 8 char.)",
+  "Password": "Password"
 }

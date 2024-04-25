@@ -4,20 +4,22 @@ import { RoomProgressType } from '@/lib/schema'
 import { getGroupInProgressQuery, getLastScoreByGroupQuery } from '@/queries/commons-queries'
 import { RoomMode } from '@prisma/client'
 
-export const getUsername = async (userId: string): Promise<{username: string | null, email: string}> => {
+export const getUsername = async (userId: string): Promise<{username: string | null, email: string, usePassword: boolean }> => {
   const user = await prisma.user.findUniqueOrThrow({
     where: {
       id: userId,
     },
     select:{
       name: true,
-      email: true
+      email: true,
+      password: true,
     }
   })
 
   return {
     username: user.name,
-    email: user.email!
+    email: user.email!,
+    usePassword: user.password !== null
   }
 }
 

@@ -34,7 +34,7 @@ const html = `
             </div>
 
             <div style="background-color: #000; color: #fafafa;padding: 30px 0;">
-                <div style="text-align: center;font-size: 0.8rem;">© 2024 Bellico</div>
+                <div style="text-align: center;font-size: 0.8rem;">© 2024 Questions Editor</div>
             </div>
         </div>
     </body>
