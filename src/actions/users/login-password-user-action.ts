@@ -38,11 +38,15 @@ export const loginPasswordUserAction = withValidate(
       data:{
         userId: user.id,
         sessionToken:  randomUUID(),
-        expires: new Date(Date.now() + maxAge * 1000)
+        expires: new Date(Date.now() + maxAge * 1000),
       }
     })
 
-    cookies().set('next-auth.session-token', session.sessionToken, { expires: session.expires })
+    const cookieName = process.env.NODE_ENV === 'production' ? '__Secure-next-auth.session-token' : 'next-auth.session-token'
+    cookies().set(cookieName, session.sessionToken, {
+      expires: session.expires,
+      httpOnly: process.env.NODE_ENV === 'production',
+      secure: process.env.NODE_ENV === 'production'})
 
     return {
       success: true
