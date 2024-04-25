@@ -56,7 +56,7 @@ export default function LoginForm({ email } : { email : string} ) {
     <>
       <form id="form-login" className="w-full max-w-sm space-y-4" onSubmit={handleSubmit(signWithPassword)}>
         <Input className="p-6" placeholder={t('EnterPassword')} type="password" autoComplete="on" {...register('password')} />
-        <Button type="submit" className="w-full p-6" disabled={!isValid}>
+        <Button type="submit" className="w-full p-6" disabled={isSubmitting || !isValid}>
           {isSubmitting && <Loader2 className="-ml-1 mr-3 animate-spin" />}
           {t('SignIn')}
         </Button>
