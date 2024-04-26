@@ -46,7 +46,9 @@ export const loginPasswordUserAction = withValidate(
     cookies().set(cookieName, session.sessionToken, {
       expires: session.expires,
       httpOnly: process.env.NODE_ENV === 'production',
-      secure: process.env.NODE_ENV === 'production'})
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax'
+    })
 
     return {
       success: true

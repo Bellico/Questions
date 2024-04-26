@@ -44,7 +44,7 @@ export const AlertDraft = () => {
             {t('DraftUnsaved')} {' '}
             <span className="text-primary">({draft.name || 'New'})</span>
           </AlertTitle>
-          <AlertDescription className="flex items-center justify-between">
+          <AlertDescription className="flex gap-2 max-sm:flex-col sm:items-center sm:justify-between">
             <p>{t('DraftUnsavedDesc')}</p>
             <div className='space-x-4'>
               <Button variant="destructive" onClick={() => deleteDraft(draft.key)}>
