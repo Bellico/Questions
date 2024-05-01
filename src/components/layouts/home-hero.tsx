@@ -26,7 +26,7 @@ export const HomeHero = () => {
               {t('Home.Text')}
             </motion.p>
           </div>
-          <motion.div {...show_time(0.2)} className="w-full max-w-[29rem] space-y-2">
+          <motion.div {...show_time(0.2)} className="w-full max-w-sm space-y-2 lg:max-w-[29rem]">
             <SubscribeForm />
             <p className="text-second text-xs">
               {t('Home.HelpText')}

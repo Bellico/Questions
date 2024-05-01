@@ -89,7 +89,7 @@ export function UserSettings(data: UserSettingsType & { email: string}) {
                 <FormLabel>{t('Password')}</FormLabel>
                 <div className="flex items-center">
                   <FormControl>
-                    <Input type={showPassword ? 'text' : 'password'} placeholder={data.usePassword ? '*******' : undefined } {...register('password')} />
+                    <Input type={showPassword ? 'text' : 'password'} placeholder={data.usePassword ? '*******' : t('Password') } {...register('password')} />
                   </FormControl>
                   <Eye className={cn('absolute right-10', { 'hidden' : showPassword })} onClick={() => setShowPassword(!showPassword)} />
                   <EyeOff className={cn('absolute right-10', { 'hidden' : !showPassword })} onClick={() => setShowPassword(!showPassword)} />

@@ -57,9 +57,9 @@ export default function SubscribeForm() {
 
   return (
     <>
-      <form id="form-subscribe" noValidate className="m-2 flex space-x-2" onSubmit={handleSubmit(signWithEmail)}>
-        <Input className="p-6" placeholder={t('EnterMail')} type="email" inputMode="email" autoComplete="on" {...register('email')} />
-        <Button className="p-6" type="submit" disabled={isSubmitting || !isValid} >
+      <form id="form-subscribe" noValidate className="m-2 flex flex-col gap-4 lg:flex-row lg:gap-2" onSubmit={handleSubmit(signWithEmail)}>
+        <Input className=" p-6" placeholder={t('EnterMail')} type="email" inputMode="email" autoComplete="on" {...register('email')} />
+        <Button className="w-full p-6 lg:flex-1" type="submit" disabled={isSubmitting || !isValid} >
           {isSubmitting && <Loader2 className="-ml-1 mr-3 animate-spin" />}
           {t('SignIn')}
         </Button>

@@ -3,8 +3,9 @@
 import { loginPasswordUserAction } from '@/actions/users/login-password-user-action'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import { cn } from '@/lib/utils'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Loader2, MailCheck, MailWarning } from 'lucide-react'
+import { Eye, EyeOff, Loader2, MailCheck, MailWarning } from 'lucide-react'
 import { signIn } from 'next-auth/react'
 import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
@@ -20,6 +21,7 @@ type LoginType = z.infer<typeof LoginSchema>
 export default function LoginForm({ email } : { email : string} ) {
   const { t } = useTranslation('global')
   const [isSignByMail, setIsSignByMail] = useState(false)
+  const [showPassword, setShowPassword] = useState(false)
 
   const form = useForm<LoginType>({
     resolver: zodResolver(LoginSchema)
@@ -55,7 +57,13 @@ export default function LoginForm({ email } : { email : string} ) {
   return (
     <>
       <form id="form-login" className="w-full max-w-sm space-y-4" onSubmit={handleSubmit(signWithPassword)}>
-        <Input className="p-6" placeholder={t('EnterPassword')} type="password" autoComplete="on" {...register('password')} />
+
+        <div className="relative flex items-center">
+          <Input className="p-6" placeholder={t('EnterPassword')} type={showPassword ? 'text' : 'password'} autoComplete="on" {...register('password')} />
+          <Eye className={cn('absolute text-second right-4', { 'hidden' : showPassword })} onClick={() => setShowPassword(!showPassword)} />
+          <EyeOff className={cn('absolute text-second right-4', { 'hidden' : !showPassword })} onClick={() => setShowPassword(!showPassword)} />
+        </div>
+
         <Button type="submit" className="w-full p-6" disabled={isSubmitting || !isValid}>
           {isSubmitting && <Loader2 className="-ml-1 mr-3 animate-spin" />}
           {t('SignIn')}
