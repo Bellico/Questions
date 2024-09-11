@@ -124,13 +124,16 @@ export const getGroupInProgressQuery = async (groupIds: string[], userId: string
     where: {
       dateStart: {
         not: null,
-        gte: new Date(new Date().getTime() - 3600 * 1000),
+        // gte: new Date(new Date().getTime() - 3600 * 1000),
       },
       userId: userId,
       dateEnd: null,
       groupId: {
         in: groupIds
       },
+    },
+    orderBy:{
+      dateStart: 'desc'
     },
     select:{
       id: true,
