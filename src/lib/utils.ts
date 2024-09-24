@@ -67,6 +67,20 @@ export function computeScore(results: number[]){
   }
 }
 
+export function computeAchievement(goodCount: number, totalGood: number, choicesCount: number){
+  if(totalGood == 0) return 0
+
+  else if(goodCount == totalGood && choicesCount == totalGood) return 100
+
+  else if(goodCount < totalGood && choicesCount <= totalGood) return (goodCount * 100) / totalGood
+
+  else {
+    const diff = goodCount - (choicesCount - totalGood)
+    const trueGoodCount = Math.max(diff, 0)
+    return (trueGoodCount * 100) / totalGood
+  }
+}
+
 export function diffDateToDhms(start : Date, end: Date, t : (key: string) => string) {
   return secondsToDhms(end.getTime() / 1000 - start.getTime() / 1000, t)
 }

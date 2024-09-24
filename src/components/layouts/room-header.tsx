@@ -15,8 +15,8 @@ export const RoomHeader = async () =>{
         <div className="mr-auto flex flex-1 gap-2">
           <Link href="/">
             <Button variant="ghost">
-              <SquareX className="mr-2" />
-              {t('Back')}
+              <SquareX className="sm:mr-2" />
+              <span className='hidden sm:inline'>{t('Back')}</span>
             </Button>
           </Link>
         </div>

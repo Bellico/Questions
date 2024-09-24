@@ -3,7 +3,7 @@
 import { ActionResultType, withValidate } from '@/actions/wrapper-actions'
 import prisma from '@/lib/prisma'
 import { AnswerRoomReturnType, AnswerRoomSchema, AnswerRoomType } from '@/lib/schema'
-import { computeScore } from '@/lib/utils'
+import { computeAchievement, computeScore } from '@/lib/utils'
 import { computeNextQuestionQuery } from '@/queries/actions-queries'
 import { getNextQuestionToAnswerQuery, getSessionUserId } from '@/queries/commons-queries'
 import { translate } from '@/queries/utils-queries'
@@ -22,17 +22,12 @@ export const answerRoomAction = withValidate(
     }
 
     const goodResponseIds = currentAnswerContext.question?.responses.map(r => r.id)!
-    const totalGoodResponse = goodResponseIds.length
     const goodChoicesCount = goodResponseIds.filter(rId => data.choices.includes(rId)).length
-
-    const diff = goodChoicesCount - (data.choices.length - totalGoodResponse)
-    const trueGoodResponse = data.choices.length > totalGoodResponse ? Math.max(diff, 0) : goodChoicesCount
-    const achievement = (trueGoodResponse * 100) / totalGoodResponse
+    const achievement = computeAchievement(goodChoicesCount, goodResponseIds.length, data.choices.length)
 
     const answeredQuestionIds = await getAnsweredQuestionIdsInRoom(data.roomId)
     const nextQuestionId = await computeNextQuestionQuery(currentAnswerContext.room.groupId!, currentAnswerContext.room.withRandom, answeredQuestionIds)
     const dateEnd = new Date()
-
     try {
       await prisma.$transaction(async (tx) => {
 
