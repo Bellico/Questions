@@ -60,7 +60,7 @@ export const createRoomStore = (initProps: RoomStateProps) => {
 
     disappearsWithResult: (result : RoomQuestionResultType, isEnd: boolean) => set((state) => {
       const newProgress = [...state.progress]
-      let index = newProgress.findIndex(p => p.id == result.id)
+      const index = newProgress.findIndex(p => p.id == result.id)
       newProgress[index].hasGood = result.hasGood
       newProgress[index].title = result.title
       newProgress[index].isAnswer = true
@@ -70,7 +70,7 @@ export const createRoomStore = (initProps: RoomStateProps) => {
 
     applyCorrection: (result : RoomQuestionResultType, choices: string[], isEnd: boolean) => set((state) => {
       const newProgress = [...state.progress]
-      let index = newProgress.findIndex(p => p.id == result.id)
+      const index = newProgress.findIndex(p => p.id == result.id)
       newProgress[index].hasGood = result.hasGood
       newProgress[index].title = result.title
       newProgress[index].isAnswer = true

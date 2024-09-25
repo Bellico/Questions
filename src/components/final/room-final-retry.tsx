@@ -16,8 +16,9 @@ export async function RoomFinalRetry({ roomId, shareLink} : { roomId: string, sh
     })
 
     if(result.success){
-      shareLink ?
-        redirect(`/room/${roomId}/?shareLink=${shareLink}`) :
+      if(shareLink)
+        redirect(`/room/${roomId}/?shareLink=${shareLink}`)
+      else
         redirect(`/room/${roomId}`)
     }
   }

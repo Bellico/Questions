@@ -4,7 +4,6 @@ import { Button } from '@/components/ui/button'
 import { translate } from '@/queries/utils-queries'
 import { SquareX } from 'lucide-react'
 import Link from 'next/link'
-import { useTranslation } from 'react-i18next'
 
 export const RoomHeader = async () =>{
   const { t } = await translate('global')

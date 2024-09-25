@@ -33,7 +33,7 @@ export function QuestionsEditorAccordion() {
         <DndContext onDragEnd={dragEndEvent} >
 
           <SortableContext
-            items={[...questionsMap].map(([key, _]) => key)}
+            items={[...questionsMap].map(([key]) => key)}
             strategy={verticalListSortingStrategy}
           >
             {[...questionsMap].map(([key, value]) => (

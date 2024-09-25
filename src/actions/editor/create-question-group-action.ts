@@ -4,6 +4,7 @@ import { ActionResultType, withValidateAndSession } from '@/actions/wrapper-acti
 import prisma from '@/lib/prisma'
 import { QuestionGroupSchema, QuestionGroupType } from '@/lib/schema'
 import { translate } from '@/queries/utils-queries'
+import { Prisma } from '@prisma/client'
 import { revalidatePath } from 'next/cache'
 
 export const createQuestionGroupAction = withValidateAndSession(
@@ -59,10 +60,13 @@ export const createQuestionGroupAction = withValidateAndSession(
         data: group.id
       }
     }
-    catch (error: any) {
-      return {
-        success: false,
-        message: t('ErrorServer', { message: error.message })
+    catch (error: unknown) {
+      if (error instanceof Prisma.PrismaClientKnownRequestError) {
+        return {
+          success: false,
+          message: t('ErrorServer', { message: error.message })
+        }
       }
+      throw error
     }
   })

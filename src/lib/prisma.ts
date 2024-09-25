@@ -1,7 +1,9 @@
 import { PrismaClient } from '@prisma/client'
 
 declare global {
-    var prisma: undefined | PrismaClient // eslint-disable-line
+    interface globalThis {
+        prisma: undefined | PrismaClient
+      }
 }
 
 const prisma = globalThis.prisma ?? new PrismaClient()

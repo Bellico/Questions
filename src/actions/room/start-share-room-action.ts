@@ -5,6 +5,7 @@ import prisma from '@/lib/prisma'
 import { RoomStartSchema, RoomStartType } from '@/lib/schema'
 import { computeNextQuestionQuery } from '@/queries/actions-queries'
 import { translate } from '@/queries/utils-queries'
+import { Prisma } from '@prisma/client'
 import { revalidatePath } from 'next/cache'
 
 export const startShareRoomAction = withValidate(
@@ -52,10 +53,13 @@ export const startShareRoomAction = withValidate(
         success: true,
       }
     }
-    catch (error: any) {
-      return {
-        success: false,
-        message: t('ErrorServer', { message: error.message })
+    catch (error: unknown) {
+      if (error instanceof Prisma.PrismaClientKnownRequestError) {
+        return {
+          success: false,
+          message: t('ErrorServer', { message: error.message })
+        }
       }
+      throw error
     }
   })

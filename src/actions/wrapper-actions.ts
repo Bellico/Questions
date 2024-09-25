@@ -13,7 +13,7 @@ export type ActionResultType<T> = {
 const ZparseOrError = <T extends ZodType>(
   schema: T,
   value: unknown,
-): void | ActionResultType<any> => {
+): void | ActionResultType<unknown> => {
   const validatedFields = schema.safeParse(value)
 
   if (!validatedFields.success) {

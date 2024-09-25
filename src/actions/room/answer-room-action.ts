@@ -7,6 +7,7 @@ import { computeAchievement, computeScore } from '@/lib/utils'
 import { computeNextQuestionQuery } from '@/queries/actions-queries'
 import { getNextQuestionToAnswerQuery, getSessionUserId } from '@/queries/commons-queries'
 import { translate } from '@/queries/utils-queries'
+import { Prisma } from '@prisma/client'
 
 export const answerRoomAction = withValidate(
   AnswerRoomSchema,
@@ -84,11 +85,14 @@ export const answerRoomAction = withValidate(
 
       })
     }
-    catch (error: any) {
-      return {
-        success: false,
-        message: t('ErrorServer', { message: error.message })
+    catch (error: unknown) {
+      if (error instanceof Prisma.PrismaClientKnownRequestError) {
+        return {
+          success: false,
+          message: t('ErrorServer', { message: error.message })
+        }
       }
+      throw error
     }
 
     return {

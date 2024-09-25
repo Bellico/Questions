@@ -1,6 +1,5 @@
-import { sendVerificationAuthToken } from '@/lib/send-verification-auth-token'
-/* @ts-ignore */
 import prisma from '@/lib/prisma'
+import { sendVerificationAuthToken } from '@/lib/send-verification-auth-token'
 import { PrismaAdapter } from '@auth/prisma-adapter'
 import {
   GetServerSidePropsContext,
@@ -20,7 +19,7 @@ declare module 'next-auth' {
 }
 
 export const authOptions: NextAuthOptions = {
-  /* @ts-ignore */
+  /* @ts-expect-error Should works */
   adapter: PrismaAdapter(prisma),
   providers: [
     EmailProvider({

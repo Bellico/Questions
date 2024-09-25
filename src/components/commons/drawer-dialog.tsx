@@ -31,7 +31,7 @@ type DrawerDialogProps = {
   title: string,
   description?: string
   className?: string,
-  trigger: any
+  trigger: never
 }
 
 export function DrawerDialog({ dialogId, trigger, title, description, className, children }: PropsWithChildren<DrawerDialogProps>) {

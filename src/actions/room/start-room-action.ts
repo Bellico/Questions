@@ -6,6 +6,7 @@ import { RoomSettingsSchema, RoomSettingsType } from '@/lib/schema'
 import { computeNextQuestionQuery } from '@/queries/actions-queries'
 import { canAccessGroup } from '@/queries/commons-queries'
 import { translate } from '@/queries/utils-queries'
+import { Prisma } from '@prisma/client'
 import { revalidatePath } from 'next/cache'
 
 export const startRoomAction = withValidateAndSession(
@@ -63,10 +64,13 @@ export const startRoomAction = withValidateAndSession(
         data: roomId
       }
     }
-    catch (error: any) {
-      return {
-        success: false,
-        message: t('ErrorServer', { message: error.message })
+    catch (error: unknown) {
+      if (error instanceof Prisma.PrismaClientKnownRequestError) {
+        return {
+          success: false,
+          message: t('ErrorServer', { message: error.message })
+        }
       }
+      throw error
     }
   })

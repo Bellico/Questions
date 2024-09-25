@@ -58,7 +58,7 @@ export function UserSettings(data: UserSettingsType & { email: string}) {
         <FormField
           control={form.control}
           name="username"
-          render={({ field }) => (
+          render={() => (
             <FormItem className="flex flex-col gap-2">
               <FormLabel>{t('Username')}</FormLabel>
               <FormControl>
@@ -85,7 +85,7 @@ export function UserSettings(data: UserSettingsType & { email: string}) {
           <FormField
             control={form.control}
             name="password"
-            render={({ field }) => (
+            render={() => (
               <FormItem className="flex flex-col gap-2">
                 <FormLabel>{t('Password')}</FormLabel>
                 <div className="flex items-center">
