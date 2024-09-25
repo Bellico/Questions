@@ -6,6 +6,7 @@ import { QuestionGroupSchema, QuestionGroupType } from '@/lib/schema'
 import { isGroupOwnerOrThrow } from '@/queries/actions-queries'
 import { getGroupInProgressQuery } from '@/queries/commons-queries'
 import { translate } from '@/queries/utils-queries'
+import { Prisma } from '@prisma/client'
 
 import { revalidatePath } from 'next/cache'
 
@@ -129,10 +130,13 @@ export const updateQuestionGroupAction = withValidateAndSession(
         success: true
       }
     }
-    catch (error: any) {
-      return {
-        success: false,
-        message: t('ErrorServer', { message: error.message })
+    catch (error: unknown) {
+      if (error instanceof Prisma.PrismaClientKnownRequestError) {
+        return {
+          success: false,
+          message: t('ErrorServer', { message: error.message })
+        }
       }
+      throw error
     }
   })

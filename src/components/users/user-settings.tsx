@@ -17,6 +17,7 @@ import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
+import packageJson from '../../../package.json'
 
 export function UserSettings(data: UserSettingsType & { email: string}) {
   const router = useRouter()
@@ -57,7 +58,7 @@ export function UserSettings(data: UserSettingsType & { email: string}) {
         <FormField
           control={form.control}
           name="username"
-          render={({ field }) => (
+          render={() => (
             <FormItem className="flex flex-col gap-2">
               <FormLabel>{t('Username')}</FormLabel>
               <FormControl>
@@ -84,7 +85,7 @@ export function UserSettings(data: UserSettingsType & { email: string}) {
           <FormField
             control={form.control}
             name="password"
-            render={({ field }) => (
+            render={() => (
               <FormItem className="flex flex-col gap-2">
                 <FormLabel>{t('Password')}</FormLabel>
                 <div className="flex items-center">
@@ -140,6 +141,8 @@ export function UserSettings(data: UserSettingsType & { email: string}) {
           <Button type="submit" disabled={!isValid}>{t('Save')}</Button>
         </div>
       </form>
+
+      <p className="text-center text-xs">Version {packageJson.version}</p>
     </Form>
   )
 }

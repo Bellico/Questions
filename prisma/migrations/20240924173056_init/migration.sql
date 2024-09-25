@@ -8,6 +8,7 @@ CREATE TABLE "User" (
     "email" TEXT,
     "emailVerified" TIMESTAMP(3),
     "image" TEXT,
+    "password" TEXT,
 
     CONSTRAINT "User_pkey" PRIMARY KEY ("id")
 );
@@ -73,7 +74,7 @@ CREATE TABLE "Question" (
 -- CreateTable
 CREATE TABLE "Response" (
     "id" TEXT NOT NULL,
-    "text" VARCHAR(250) NOT NULL,
+    "text" VARCHAR(550) NOT NULL,
     "questionId" TEXT NOT NULL,
     "isCorrect" BOOLEAN NOT NULL,
 
@@ -95,6 +96,8 @@ CREATE TABLE "Room" (
     "withRetry" INTEGER,
     "withRandom" BOOLEAN NOT NULL,
     "withCorrection" BOOLEAN NOT NULL,
+    "withProgressState" BOOLEAN NOT NULL,
+    "withNavigate" BOOLEAN NOT NULL,
     "withResults" BOOLEAN NOT NULL,
     "withProgress" BOOLEAN NOT NULL,
 
@@ -120,6 +123,14 @@ CREATE TABLE "Choices" (
     "responseId" TEXT NOT NULL,
 
     CONSTRAINT "Choices_pkey" PRIMARY KEY ("answerId","responseId")
+);
+
+-- CreateTable
+CREATE TABLE "GroupsUsers" (
+    "groupId" TEXT NOT NULL,
+    "userId" TEXT NOT NULL,
+
+    CONSTRAINT "GroupsUsers_pkey" PRIMARY KEY ("groupId","userId")
 );
 
 -- CreateTable
@@ -185,3 +196,9 @@ ALTER TABLE "Choices" ADD CONSTRAINT "Choices_answerId_fkey" FOREIGN KEY ("answe
 
 -- AddForeignKey
 ALTER TABLE "Choices" ADD CONSTRAINT "Choices_responseId_fkey" FOREIGN KEY ("responseId") REFERENCES "Response"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "GroupsUsers" ADD CONSTRAINT "GroupsUsers_groupId_fkey" FOREIGN KEY ("groupId") REFERENCES "QuestionGroup"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "GroupsUsers" ADD CONSTRAINT "GroupsUsers_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

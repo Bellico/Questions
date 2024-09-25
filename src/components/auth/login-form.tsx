@@ -40,7 +40,7 @@ export default function LoginForm({ email } : { email : string} ) {
   }, [setFocus])
 
   const signWithPassword = async (data: LoginType) => {
-    var result = await loginPasswordUserAction({ email: email, password: data.password })
+    const result = await loginPasswordUserAction({ email: email, password: data.password })
     if (!result.success) {
       setError('root.invalidCredentials', { type: 'custom', message: t('InvalidCredentials') })
     }

@@ -153,7 +153,7 @@ export function QuestionsEditorSection({
             <FormField
               control={control}
               name="subject"
-              render={({ field }) => (
+              render={() => (
                 <FormItem className="w-full">
                   <FormControl>
                     {/* <Textarea className="min-h-[100px]" placeholder="Write your next question here..." {...field} /> */}

@@ -38,11 +38,11 @@ export default function SubscribeForm() {
   }, [setFocus])
 
   const signWithEmail = async (data: SignInSchemaType) => {
-    var result = await fetch(`/api/subscribre?email=${data.email}`, {
+    const result = await fetch(`/api/subscribre?email=${data.email}`, {
       method: 'POST',
     })
 
-    var json = await result.json()
+    const json = await result.json()
     if(json.goToLogin){
       setError('root.goToLogin', { type: 'custom' })
       router.push(`/login?email=${data.email}`)

@@ -4,6 +4,7 @@ import { ActionResultType, withValidateAndSession } from '@/actions/wrapper-acti
 import prisma from '@/lib/prisma'
 import { isGroupOwnerOrThrow } from '@/queries/actions-queries'
 import { translate } from '@/queries/utils-queries'
+import { Prisma } from '@prisma/client'
 import { revalidatePath } from 'next/cache'
 import z from 'zod'
 
@@ -69,10 +70,13 @@ export const deleteQuestionGroupAction = withValidateAndSession(
         success: true
       }
     }
-    catch (error: any) {
-      return {
-        success: false,
-        message: t('ErrorServer', { message: error.message })
+    catch (error: unknown) {
+      if (error instanceof Prisma.PrismaClientKnownRequestError) {
+        return {
+          success: false,
+          message: t('ErrorServer', { message: error.message })
+        }
       }
+      throw error
     }
   })

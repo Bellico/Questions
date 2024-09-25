@@ -66,16 +66,16 @@ export const createQuestionsEditorStore = (initProps?: Partial<QuestionsEditorSt
     // questionsMap: generateRandomGroup()
   }
 
-  return create<QuestionsEditorState>()(persist((set, get) => ({
+  return create<QuestionsEditorState>()(persist((set) => ({
     ...DEFAULT_PROPS,
     ...initProps,
 
-    updateGroupName: (name: string) => set((state) => ({ name: name })),
+    updateGroupName: (name: string) => set(() => ({ name: name })),
 
     addQuestion: () => set((state) => {
       const newMap = new Map(state.questionsMap)
       const newKey = crypto.randomUUID()
-      const maxOrder = [...state.questionsMap].map(([_, value]) => value.order).reduce((a, b) => Math.max(a, b))
+      const maxOrder = [...state.questionsMap].map(([, value]) => value.order).reduce((a, b) => Math.max(a, b))
       newMap.set(newKey, { ...defaultQuestion, order: maxOrder + 1 })
       return { questionsMap: newMap, lastQuestionAdded: newKey }
     }),

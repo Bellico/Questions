@@ -6,6 +6,7 @@ import { RoomStartSchema, RoomStartType } from '@/lib/schema'
 import { canRetryRoomQuery, computeNextQuestionQuery } from '@/queries/actions-queries'
 import { getSessionUserId } from '@/queries/commons-queries'
 import { translate } from '@/queries/utils-queries'
+import { Prisma } from '@prisma/client'
 
 export const retryRoomAction = withValidate(
   RoomStartSchema,
@@ -59,10 +60,13 @@ export const retryRoomAction = withValidate(
         success: true
       }
     }
-    catch (error: any) {
-      return {
-        success: false,
-        message: t('ErrorServer', { message: error.message })
+    catch (error: unknown) {
+      if (error instanceof Prisma.PrismaClientKnownRequestError) {
+        return {
+          success: false,
+          message: t('ErrorServer', { message: error.message })
+        }
       }
+      throw error
     }
   })

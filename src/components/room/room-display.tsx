@@ -23,8 +23,9 @@ export function RoomDisplay({roomId, withProgress, withNavigate, shareLink} : Ro
   const { isPending, animation, submitChoices, navigate} = useRoomFader(roomId, shareLink)
 
   if(isCompleted){
-    shareLink ?
-      redirect(`/final/${roomId}/?shareLink=${shareLink}`) :
+    if(shareLink)
+      redirect(`/final/${roomId}/?shareLink=${shareLink}`)
+    else
       redirect(`/final/${roomId}`)
   }
 

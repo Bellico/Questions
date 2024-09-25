@@ -10,7 +10,7 @@ export async function POST(request: NextRequest) {
   const url = new URL(request.url)
   const email = url.searchParams.get('email')
 
-  var user = await prisma.user.findFirst({
+  const user = await prisma.user.findFirst({
     where:{
       email: email,
     },

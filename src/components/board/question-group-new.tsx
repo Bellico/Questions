@@ -13,7 +13,7 @@ export function QuestionGroupNew({className, children} : PropsWithChildren<{clas
   const requestAction = useAction()
   const { t } = useTranslation(['actions'])
 
-  const onDrop = async (groupName : string, questions: any) => {
+  const onDrop = async (groupName : string, questions: unknown) => {
     requestAction(
       () => createQuestionGroupAction({
         id: null,

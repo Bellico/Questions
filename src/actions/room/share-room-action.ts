@@ -5,6 +5,7 @@ import prisma from '@/lib/prisma'
 import { RoomShareSchema, RoomShareType } from '@/lib/schema'
 import { isGroupOwnerOrThrow } from '@/queries/actions-queries'
 import { translate } from '@/queries/utils-queries'
+import { Prisma } from '@prisma/client'
 
 export const shareRoomAction = withValidateAndSession(
   RoomShareSchema,
@@ -57,10 +58,13 @@ export const shareRoomAction = withValidateAndSession(
         data: shareUrl
       }
     }
-    catch (error: any) {
-      return {
-        success: false,
-        message: t('ErrorServer', { message: error.message })
+    catch (error: unknown) {
+      if (error instanceof Prisma.PrismaClientKnownRequestError) {
+        return {
+          success: false,
+          message: t('ErrorServer', { message: error.message })
+        }
       }
+      throw error
     }
   })

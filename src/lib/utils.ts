@@ -11,14 +11,14 @@ export type ArrayType<T> = T extends (infer Item)[] ? Item : T
 export const sleep = (s: number) => new Promise((r) => setTimeout(r, s * 1000))
 
 export const mapToArray = <T>(map: Map<string, T>): T[] =>
-  Array.from(map, ([_, value]) => value)
+  Array.from(map, ([, value]) => value)
 
 export const arrayToMap = <T>(datas: T[]) =>
   new Map<string, T>(datas.map((e) => [crypto.randomUUID(), e]))
 
 export const findIndexOfKeyMap = (map: Map<string, unknown>, key: string) =>  {
   let index = 0
-  for (const [mapKey, _] of map) {
+  for (const [mapKey] of map) {
     if (mapKey === key) {
       return index
     }
@@ -32,10 +32,10 @@ export const randomSwName = () => swNames[Math.floor(Math.random() * swNames.len
 export const randomCommonName = () => commonNames[Math.floor(Math.random() * commonNames.length)]
 
 export function generateRandomGroup(questionCount: number = 6, responsesCount: number = 4){
-  let questions: any[] = []
+  const questions: unknown[] = []
   for (let q = 0; q < questionCount; q++) {
 
-    let responses: any[] = []
+    const responses: unknown[] = []
     for (let r = 0; r < responsesCount; r++) {
       const isGood = (q + r) % 2 == 0
       responses.push({
@@ -67,15 +67,29 @@ export function computeScore(results: number[]){
   }
 }
 
+export function computeAchievement(goodCount: number, totalGood: number, choicesCount: number){
+  if(totalGood == 0) return 0
+
+  else if(goodCount == totalGood && choicesCount == totalGood) return 100
+
+  else if(goodCount < totalGood && choicesCount <= totalGood) return (goodCount * 100) / totalGood
+
+  else {
+    const diff = goodCount - (choicesCount - totalGood)
+    const trueGoodCount = Math.max(diff, 0)
+    return (trueGoodCount * 100) / totalGood
+  }
+}
+
 export function diffDateToDhms(start : Date, end: Date, t : (key: string) => string) {
   return secondsToDhms(end.getTime() / 1000 - start.getTime() / 1000, t)
 }
 
-export function secondsToDhms(seconds : number, t : (key: string, o: any) => string) {
-  var d = Math.floor(seconds / (3600*24))
-  var h = Math.floor(seconds % (3600*24) / 3600)
-  var m = Math.floor(seconds % 3600 / 60)
-  var s = Math.floor(seconds % 60)
+export function secondsToDhms(seconds : number, t : (key: string, o: unknown) => string) {
+  const d = Math.floor(seconds / (3600*24))
+  const h = Math.floor(seconds % (3600*24) / 3600)
+  const m = Math.floor(seconds % 3600 / 60)
+  const s = Math.floor(seconds % 60)
 
   let label = ''
 
