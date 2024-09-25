@@ -13,7 +13,7 @@ export async function GET(request: NextRequest) {
 
   await isGroupOwnerOrThrow(id, userId)
 
-  var group = await prisma.questionGroup.findUniqueOrThrow({
+  const group = await prisma.questionGroup.findUniqueOrThrow({
     where:{
       id: id,
       authorId: userId

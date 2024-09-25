@@ -36,7 +36,7 @@ export function ShareDialog( {settingValues} : { settingValues: () => RoomSettin
 
   const share = async ({usermail}: ShareSchemaType) => {
     const shareValues = { usermail, ...settingValues()}
-    var result = await shareRoomAction(shareValues)
+    const result = await shareRoomAction(shareValues)
 
     if(result.success){
       shareLinkRef.current = result.data!

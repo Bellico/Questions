@@ -13,7 +13,7 @@ export async function GET(request: NextRequest) {
 
   await isGroupOwnerOrThrow(id, userId)
 
-  var groupsUsers = await prisma.groupsUsers.findMany({
+  const groupsUsers = await prisma.groupsUsers.findMany({
     where:{
       groupId: id,
     },
@@ -26,7 +26,7 @@ export async function GET(request: NextRequest) {
     }
   })
 
-  var allUsers = await prisma.user.findMany({
+  const allUsers = await prisma.user.findMany({
     where:{
       id:{
         not: userId

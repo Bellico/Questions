@@ -86,10 +86,10 @@ export function diffDateToDhms(start : Date, end: Date, t : (key: string) => str
 }
 
 export function secondsToDhms(seconds : number, t : (key: string, o: any) => string) {
-  var d = Math.floor(seconds / (3600*24))
-  var h = Math.floor(seconds % (3600*24) / 3600)
-  var m = Math.floor(seconds % 3600 / 60)
-  var s = Math.floor(seconds % 60)
+  const d = Math.floor(seconds / (3600*24))
+  const h = Math.floor(seconds % (3600*24) / 3600)
+  const m = Math.floor(seconds % 3600 / 60)
+  const s = Math.floor(seconds % 60)
 
   let label = ''
 

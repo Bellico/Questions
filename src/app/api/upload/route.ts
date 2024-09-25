@@ -31,7 +31,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ success: true, url: `${process.env.PUBLIC_URL}/api/upload?id=${existing.id}` })
   }
 
-  var newImg = await prisma.images.create({
+  const newImg = await prisma.images.create({
     data:{
       name: file.name,
       filetype: file.type,
@@ -51,7 +51,7 @@ export async function GET(request: NextRequest) {
 
   if(!id) notFound()
 
-  var img = await prisma.images.findUniqueOrThrow({
+  const img = await prisma.images.findUniqueOrThrow({
     where:{
       id: id
     }
