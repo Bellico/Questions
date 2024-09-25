@@ -10,10 +10,10 @@ export type ActionResultType<T> = {
   issues?: unknown
 }
 
-const ZparseOrError = <T extends ZodType>(
+const ZparseOrError = <T extends ZodType, TResult>(
   schema: T,
   value: unknown,
-): void | ActionResultType<unknown> => {
+): void | ActionResultType<TResult> => {
   const validatedFields = schema.safeParse(value)
 
   if (!validatedFields.success) {
@@ -27,18 +27,18 @@ const ZparseOrError = <T extends ZodType>(
   }
 }
 
-export function withValidate<TResult, TData, TSchema extends ZodType>(schema : TSchema,  action : (TData) => Promise<ActionResultType<TResult>>){
+export function withValidate<TResult, TData, TSchema extends ZodType>(schema : TSchema,  action : (data: TData) => Promise<ActionResultType<TResult>>){
   return async(data: TData) => {
-    const errors = ZparseOrError(schema, data)
+    const errors = ZparseOrError<TSchema, TResult>(schema, data)
     if (errors) return errors
 
     return action(data)
   }
 }
 
-export function withValidateAndSession<TResult, TData, TSchema extends ZodType>(schema : TSchema,  action : (TData, userId: string) => Promise<ActionResultType<TResult>>){
+export function withValidateAndSession<TResult, TData, TSchema extends ZodType>(schema : TSchema,  action : (data: TData, userId: string) => Promise<ActionResultType<TResult>>){
   return async(data: TData) => {
-    const errors = ZparseOrError(schema, data)
+    const errors = ZparseOrError<TSchema, TResult>(schema, data)
     if (errors) return errors
 
     const userId = await getSessionUserIdOrThrow()

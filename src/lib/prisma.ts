@@ -1,12 +1,6 @@
 import { PrismaClient } from '@prisma/client'
 
-declare global {
-    interface globalThis {
-        prisma: undefined | PrismaClient
-      }
-}
-
-const prisma = globalThis.prisma ?? new PrismaClient()
+const prisma: PrismaClient = globalThis.prisma ?? new PrismaClient()
 
 if (process.env.NODE_ENV !== 'production') globalThis.prisma = prisma
 
