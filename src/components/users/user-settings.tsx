@@ -134,6 +134,8 @@ export function UserSettings(data: UserSettingsType & { email: string}) {
           )}
         />
 
+        <p className="text-center text-xs">Version {packageJson.version}</p>
+
         <div className="flex flex-col md:flex-row md:justify-end">
           <DialogTrigger className="hidden md:block" asChild>
             <Button variant="ghost">{t('Cancel')}</Button>
@@ -142,7 +144,6 @@ export function UserSettings(data: UserSettingsType & { email: string}) {
         </div>
       </form>
 
-      <p className="text-center text-xs">Version {packageJson.version}</p>
     </Form>
   )
 }

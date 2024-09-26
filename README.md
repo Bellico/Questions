@@ -65,7 +65,7 @@ BACKUP_KEEP_DAYS = 7
 
 #### Build from docker-compose.yml
 
-```
+```bash
 docker-compose -f docker-compose.yml up -d --build
 docker build -t bellico/questions-editor:latest .
 docker push bellico/questions-editor:latest
