@@ -124,7 +124,7 @@ export const updateQuestionGroupAction = withValidateAndSession(
         timeout: 5000
       })
 
-      revalidatePath('/board/')
+      revalidatePath('/board')
 
       return {
         success: true

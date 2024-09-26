@@ -3,7 +3,6 @@ import { ThemeToggle } from '@/components/commons/theme-toogle'
 import { Button } from '@/components/ui/button'
 import { translate } from '@/queries/utils-queries'
 import { SquareX } from 'lucide-react'
-import Link from 'next/link'
 
 export const RoomHeader = async () =>{
   const { t } = await translate('global')
@@ -12,12 +11,13 @@ export const RoomHeader = async () =>{
     <header className="border-b">
       <div className="container flex h-16 items-center">
         <div className="mr-auto flex flex-1 gap-2">
-          <Link href="/">
+          {/* Not use next link for cache trouble */}
+          <a href="/">
             <Button variant="ghost">
               <SquareX className="sm:mr-2" />
               <span className='hidden sm:inline'>{t('Back')}</span>
             </Button>
-          </Link>
+          </a>
         </div>
         <div className="flex flex-auto items-center justify-center gap-2 text-sm font-bold">
           <QEditorIcon colored className="size-6" />

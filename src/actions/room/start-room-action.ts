@@ -4,10 +4,9 @@ import { ActionResultType, withValidateAndSession } from '@/actions/wrapper-acti
 import prisma from '@/lib/prisma'
 import { RoomSettingsSchema, RoomSettingsType } from '@/lib/schema'
 import { computeNextQuestionQuery } from '@/queries/actions-queries'
-import { canAccessGroup } from '@/queries/commons-queries'
+import { canAccessGroup, getGroupInProgressQuery } from '@/queries/commons-queries'
 import { translate } from '@/queries/utils-queries'
 import { Prisma } from '@prisma/client'
-import { revalidatePath } from 'next/cache'
 
 export const startRoomAction = withValidateAndSession(
   RoomSettingsSchema,
@@ -18,6 +17,11 @@ export const startRoomAction = withValidateAndSession(
     const canAccess = await canAccessGroup(data.groupId, userId)
     if (!canAccess.canAccess) {
       throw new Error('401 Unauthorized')
+    }
+
+    const activeRooms = await getGroupInProgressQuery([data.groupId], userId)
+    if(activeRooms.length > 0){
+      throw new Error('403 Forbidden')
     }
 
     if (!canAccess.isAuthor && data.mode === 'Training') {
@@ -56,8 +60,6 @@ export const startRoomAction = withValidateAndSession(
 
         return room.id
       })
-
-      revalidatePath('/start/')
 
       return {
         success: true,

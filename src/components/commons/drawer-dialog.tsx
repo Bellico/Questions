@@ -31,7 +31,8 @@ type DrawerDialogProps = {
   title: string,
   description?: string
   className?: string,
-  trigger: never
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  trigger: any
 }
 
 export function DrawerDialog({ dialogId, trigger, title, description, className, children }: PropsWithChildren<DrawerDialogProps>) {

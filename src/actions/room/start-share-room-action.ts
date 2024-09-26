@@ -47,7 +47,7 @@ export const startShareRoomAction = withValidate(
 
       })
 
-      revalidatePath('/share/')
+      revalidatePath('/share')
 
       return {
         success: true,

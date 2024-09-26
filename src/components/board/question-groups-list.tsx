@@ -55,12 +55,13 @@ export async function QuestionGroupsList({userId} : { userId: string}) {
             </div>
 
             <div className="flex flex-wrap gap-2 sm:gap-4">
-              <Link href={`/start/${group.id}`}>
+              {/* Not use next link for cache trouble */}
+              <a href={`/start/${group.id}`}>
                 <Button>
                   <Play className="mr-2 size-4" />
                   {group.roomInProgress ? t('Continue') : t('Start') }
                 </Button>
-              </Link>
+              </a>
 
               <Link href={`/editor/${group.id}`}>
                 <Button variant="secondary">

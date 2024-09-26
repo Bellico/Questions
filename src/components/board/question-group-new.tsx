@@ -2,6 +2,7 @@
 
 import { createQuestionGroupAction } from '@/actions/editor/create-question-group-action'
 import { useAction } from '@/hooks/useAction'
+import { QuestionType } from '@/lib/schema'
 import { cn } from '@/lib/utils'
 import { FileUp } from 'lucide-react'
 import Link from 'next/link'
@@ -13,7 +14,7 @@ export function QuestionGroupNew({className, children} : PropsWithChildren<{clas
   const requestAction = useAction()
   const { t } = useTranslation(['actions'])
 
-  const onDrop = async (groupName : string, questions: unknown) => {
+  const onDrop = async (groupName : string, questions: QuestionType[]) => {
     requestAction(
       () => createQuestionGroupAction({
         id: null,

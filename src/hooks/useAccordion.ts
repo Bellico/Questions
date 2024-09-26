@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react'
 
-export function useAccordion(entries: Map<string, unknown>, lastAddedKey?: string) {
+export function useAccordion<T>(entries: Map<string, T>, lastAddedKey?: string) {
 
-  const defaultValue = entries.size == 1 ? [entries.entries().next()?.value[0]] : []
+  const defaultValue = entries.size == 1 ? [entries.keys().next().value as string] : []
   const [accordionState, setAccordionState] = useState<string[]>(defaultValue)
 
   useEffect(() => {
