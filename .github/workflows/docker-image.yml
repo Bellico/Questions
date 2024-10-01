@@ -14,7 +14,6 @@ jobs:
 
     permissions:
       contents: read
-      secrets: read
 
     steps:
     - name: Debug secrets
