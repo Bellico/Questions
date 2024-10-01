@@ -1,6 +1,6 @@
 import { PrismaClient, RoomMode } from '@prisma/client'
 
-export const autoCleanTrainingJob = async () => {
+export const cleanTrainingJob = async () => {
   const prisma = new PrismaClient()
   let result = 0
 

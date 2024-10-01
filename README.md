@@ -56,19 +56,22 @@ DATABASE_URL = postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOS
 
 # If your app is deployed
 NEXTAUTH_URL = "yourdomain.com"
-
-# Service backups : You can configure the backups servive if needed
-# See: https://github.com/prodrigestivill/docker-postgres-backup-local
-SCHEDULE=@daily
-BACKUP_KEEP_DAYS = 7
 ```
 
 #### Build from docker-compose.yml
 
 ```bash
 docker-compose -f docker-compose.yml up -d --build
-docker build -t bellico/questions-editor:latest .
-docker push bellico/questions-editor:latest
+
+# app
+# docker build -t questions .
+# docker build -t bellico/questions-editor:latest .
+# docker push bellico/questions-editor:latest
+
+# jobs
+# docker build -t questions-jobs -f Dockerfile.jobs .
+# docker build -t bellico/questions-editor-jobs:latest .
+# docker push bellico/questions-editor-jobs:latest
 ```
 
 ## Run project
