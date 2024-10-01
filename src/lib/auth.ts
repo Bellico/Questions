@@ -19,7 +19,6 @@ declare module 'next-auth' {
 }
 
 export const authOptions: NextAuthOptions = {
-  /* @ts-expect-error Should works */
   adapter: PrismaAdapter(prisma),
   providers: [
     EmailProvider({

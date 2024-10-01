@@ -36,6 +36,9 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
+# jobs
+/jobs/*.js
+/jobs/node_modules
 
 # backups
 /backups
