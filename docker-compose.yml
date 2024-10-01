@@ -31,9 +31,12 @@ services:
       timeout: 10s
       retries: 5
 
-  pgbackups:
-    container_name: questions-backups
-    image: prodrigestivill/postgres-backup-local
+  jobs:
+    container_name: questions-jobs
+    #image: prodrigestivill/postgres-backup-local
+    build:
+      context: .
+      dockerfile: ./Dockerfile.jobs
     restart: always
     user: postgres:postgres
     volumes:

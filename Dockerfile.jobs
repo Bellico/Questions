@@ -1,35 +1,35 @@
-FROM postgres AS base
-
-RUN apt-get update && \
-    apt-get install -y nodejs \
-    npm
-
-RUN npm i -g npx
-
-FROM base AS deps
+FROM node:22-alpine AS base-node
 WORKDIR /app
 
 COPY package.json package-lock.json ./
-
 RUN npm ci
 
-FROM base AS builder
+FROM base-node AS builder
 WORKDIR /app
-COPY --from=deps /app/node_modules ./node_modules
-COPY /prisma .
-COPY src/jobs src/jobs
+
+COPY prisma ./prisma
+COPY src/jobs ./src/jobs
 
 RUN npx prisma generate && npx tsc src/jobs/worker.ts
 
-FROM base AS runner
+# runner
+FROM postgres:17-alpine AS runner
 WORKDIR /app
 
-ENV NODE_ENV production
+RUN apk add --no-cache nodejs npm
 
-COPY --from=builder /app/src/jobs .
+ENV NODE_ENV=production
 
-EXPOSE 3000
+RUN adduser --system --uid 1001 jobs
 
-ENV PORT 3000
+RUN mkdir /backups
+RUN chown postgres:postgres /backups
 
-CMD node worker.js
+COPY --from=builder /app/src/jobs ./jobs
+COPY --from=builder /app/node_modules ./node_modules
+
+VOLUME /backups
+
+USER jobs
+
+CMD node jobs/worker.js

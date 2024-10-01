@@ -10,41 +10,23 @@ export function getIsoDate() {
 const execAsync = promisify(exec)
 
 // Dump
-cron.schedule('*/5 * * * * *', async () => {
+cron.schedule('*/10 * * * * *', async () => {
   try {
-    const timestamp = getIsoDate()
-    const dumpFileName = `backup_${timestamp}.sql`
-    const command = `pg_dump -U ${process.env.POSTGRES_USER} -h ${process.env.POSTGRES_HOST} -p ${5432} -d ${process.env.POSTGRES_DB} -f ${dumpFileName}`
-
+    const dumpFileName = `/backups/backup_${getIsoDate()}.sql`
+    const command = `pg_dump -d ${process.env.DATABASE_URL} -f ${dumpFileName}`
     const { stdout, stderr } = await execAsync(command)
-
-    if (stderr) {
-      console.error('Erreur lors du dump PostgreSQL:', stderr)
-    } else {
-      console.log('Dump PostgreSQL réussi:', stdout)
-    }
+    console.log(getIsoDate(), 'Dump Completed', stdout, stderr)
   } catch (error) {
-    console.error('Erreur lors de l\'exécution du dump PostgreSQL:', error)
+    console.error(getIsoDate(), 'Dump error:', error)
   }
 })
 
 // Clean
 cron.schedule('*/5 * * * * *', async () => {
-  await autoCleanTrainingJob()
+  try{
+    const result =  await autoCleanTrainingJob()
+    console.log(getIsoDate(), 'Training Rooms deleted:', result)
+  } catch (error) {
+    console.error(getIsoDate(), 'Delete Room Error:', error)
+  }
 })
-
-// import { Client } from 'pg'
-// const connectionString = process.env.DATABASE_URL
-// cron.schedule('* * * * * *', async () => {
-//   try {
-//     const client = new Client({
-//       connectionString
-//     })
-//     client.connect()
-//     const result = await client.query('SELECT * FROM user')
-//     console.log('Résultat de la requête:', result.rows)
-//     client.end()
-//   } catch (error) {
-//     console.error('Erreur lors de la requête:', error)
-//   }
-// })
