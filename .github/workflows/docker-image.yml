@@ -17,7 +17,7 @@ jobs:
 
     steps:
     - name: Debug secrets
-      run: echo "Username ${{ secrets.DOCKERHUB_USERNAME }}"
+      run: echo "Username ${{ secrets.MY_SECRET_HERE }}"
         
     - name: Log in to Docker Hub
       run: echo ${{ secrets.DOCKERHUB_TOKEN }} | docker login --username ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
