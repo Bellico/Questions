@@ -33,7 +33,7 @@ services:
 
   jobs:
     container_name: questions-jobs
-    #image: prodrigestivill/postgres-backup-local
+    # image: bellico/questions-editor-jobs:latest
     build:
       context: .
       dockerfile: ./Dockerfile.jobs
