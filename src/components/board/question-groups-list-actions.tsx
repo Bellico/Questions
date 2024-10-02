@@ -88,7 +88,7 @@ export function QuestionGroupsListActions({ groupId, roomInProgress }: Questions
         {t('Duplicate')}
       </DropdownMenuItem>
 
-      <YesNoDialog action={onDeleteAction} titleDialog={t('YesNoTitle')} descDialog={t('YesNoDelete')}>
+      <YesNoDialog action={onDeleteAction} titleDialog={t('YesNoTitle')} descDialog={t('YesNoDeleteGroup')}>
         <DropdownMenuItem onSelect={closeDropDownHack}>
           {t('Delete')}
         </DropdownMenuItem>
