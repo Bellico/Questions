@@ -1,4 +1,4 @@
-name: Docker Questions Image CI
+name: Docker Questions Jobs CI
 
 on:
   push:
