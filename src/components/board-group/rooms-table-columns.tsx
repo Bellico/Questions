@@ -1,8 +1,9 @@
 import {
   ColumnDef
 } from '@tanstack/react-table'
-import { ArrowUpDown, TextSearch } from 'lucide-react'
+import { ArrowUpDown, TextSearch, Trash2 } from 'lucide-react'
 
+import { YesNoDialog } from '@/components/commons/yes-no-dialog'
 import { Button } from '@/components/ui/button'
 import { ArrayType } from '@/lib/utils'
 import { getRoomBoardQuery } from '@/queries/pages-queries'
@@ -13,8 +14,9 @@ type dataTableType = ArrayType<Awaited<ReturnType<typeof getRoomBoardQuery>>>
 export const RoomsTableColumns: (
   userId: string,
   onRetry : (roomId: string) => Promise<void>,
+  onDelete : (roomId: string) => Promise<void>,
   t : (key: string) => string
-) => ColumnDef<dataTableType>[] = (userId, onRetry, t) =>
+) => ColumnDef<dataTableType>[] = (userId, onRetry, onDelete, t) =>
   ([
     {
       id: 'who',
@@ -93,20 +95,26 @@ export const RoomsTableColumns: (
     {
       id: 'actions',
       cell: ({ row }) =>
-        <div className="space-x-2">
+        <div className="space-y-2">
           <Link href={`/results/${row.original.id}`}>
-            <Button variant="outline">
+            <Button className='mr-2' variant="outline">
               <TextSearch className="mr-2 size-4" />
               {t('Details')}
             </Button>
           </Link>
 
           {userId == row.original.user.id && row.original.withRetry !== null && row.original.withRetry > 0 &&
-              <Button variant="destructive" onClick={() => onRetry(row.original.id)}>
+              <Button className='mr-2' variant="destructive" onClick={() => onRetry(row.original.id)}>
                 <TextSearch className="mr-2 size-4" />
                 {t('Retry')} ({row.original.withRetry})
               </Button>
           }
+
+          <YesNoDialog action={() => onDelete(row.original.id)} titleDialog={t('YesNoTitle')} descDialog={t('YesNoDeleteRoom')}>
+            <Button variant="secondary" >
+              <Trash2 className="size-4" />
+            </Button>
+          </YesNoDialog>
         </div>
     }
   ])

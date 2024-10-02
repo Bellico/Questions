@@ -1,4 +1,5 @@
 import prisma from '@/lib/prisma'
+import { RoomMode } from '@prisma/client'
 
 export const isGroupOwnerOrThrow = async (groupId: string, userId: string): Promise<boolean> => {
   const isOwner = await prisma.questionGroup.count({
@@ -85,4 +86,22 @@ export const computeNextQuestionQuery = async (groupId: string, withRandom: bool
   }
 
   return nextQuestionId
+}
+
+export const canDeleteRoomQuery = async (roomId: string, userId?: string) => {
+  return await prisma.room.findFirstOrThrow({
+    where: {
+      id: roomId,
+      mode: RoomMode.Rating,
+      dateEnd: {
+        not: null
+      },
+      group:{
+        authorId: userId
+      }
+    },
+    select: {
+      id: true,
+    }
+  })
 }

@@ -70,7 +70,7 @@ docker-compose -f docker-compose.yml up -d --build
 
 # jobs
 # docker build -t questions-jobs -f Dockerfile.jobs .
-# docker build -t bellico/questions-editor-jobs:latest .
+# docker build -t bellico/questions-editor-jobs:latest -f Dockerfile.jobs .
 # docker push bellico/questions-editor-jobs:latest
 ```
 

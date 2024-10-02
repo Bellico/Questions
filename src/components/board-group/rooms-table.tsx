@@ -1,5 +1,6 @@
 'use client'
 
+import { deleteRoomAction } from '@/actions/room/delete-room-action'
 import { retryRoomAction } from '@/actions/room/retry-room-action'
 import { RoomsTableColumns } from '@/components/board-group/rooms-table-columns'
 import { DataTable } from '@/components/commons/data-table'
@@ -19,7 +20,7 @@ export function RoomsTable({ userId, roomsList } : { userId: string, roomsList: 
   const { t } = useTranslation('global')
   const requestAction = useAction()
 
-  const columns = RoomsTableColumns(userId, onRetryAction, t)
+  const columns = RoomsTableColumns(userId, onRetryAction, onDeleteAction, t)
   const table = useDataTable(roomsList, columns)
   const userSelect = [...new Set(roomsList.map(r => r.user.email!))].sort()
   const userMap = new Map(roomsList.map(item => [item.user.email, {email:  item.user.email!, name: item.user.name}]))
@@ -34,6 +35,13 @@ export function RoomsTable({ userId, roomsList } : { userId: string, roomsList: 
     requestAction(
       () => retryRoomAction({roomId}),
       () => { redirect(`/room/${roomId}`) },
+    )
+  }
+
+  async function onDeleteAction(roomId: string){
+    requestAction(
+      () => deleteRoomAction(roomId),
+      () => { },
     )
   }
 
