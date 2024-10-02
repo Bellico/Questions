@@ -42,7 +42,7 @@ if (process.env.NODE_ENV === 'production') {
       }
     }
   })
-  console.log('Clean Dump cron addedd')
+  console.log('Clean Dump cron added')
 }
 
 // Clean training
