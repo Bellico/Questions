@@ -32,7 +32,7 @@ jobs:
       uses: actions/checkout@v4
 
     - name: Build Docker questions-editor-jobs
-      run: docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/questions-editor-jobs:latest .
+      run: docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/questions-editor-jobs:latest -f Dockerfile.jobs .
 
     # - name: Push Docker questions-editor-jobs
     #   run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/questions-editor-jobs:latest
