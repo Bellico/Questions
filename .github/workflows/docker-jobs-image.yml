@@ -2,11 +2,11 @@ name: Docker Questions Image CI
 
 on:
   push:
-    branches: [ "main", "actions" ]
+    branches: [ "main" ]
     paths:
      - "jobs/**"
   pull_request:
-    branches: [ "main", "actions" ]
+    branches: [ "main" ]
     paths:
       - "jobs/**"
 
@@ -34,5 +34,5 @@ jobs:
     - name: Build Docker questions-editor-jobs
       run: docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/questions-editor-jobs:latest -f Dockerfile.jobs .
 
-    # - name: Push Docker questions-editor-jobs
-    #   run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/questions-editor-jobs:latest
+    - name: Push Docker questions-editor-jobs
+      run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/questions-editor-jobs:latest
