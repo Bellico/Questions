@@ -64,12 +64,10 @@ NEXTAUTH_URL = "yourdomain.com"
 docker-compose -f docker-compose.yml up -d --build
 
 # app
-# docker build -t questions .
 # docker build -t bellico/questions-editor:latest .
 # docker push bellico/questions-editor:latest
 
 # jobs
-# docker build -t questions-jobs -f Dockerfile.jobs .
 # docker build -t bellico/questions-editor-jobs:latest -f Dockerfile.jobs .
 # docker push bellico/questions-editor-jobs:latest
 ```
