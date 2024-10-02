@@ -1,15 +1,16 @@
-name: Docker Image CI
+name: Docker Questions Image CI
 
 on:
   push:
-    branches: [ "main", "actions" ]
+    branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
 
 jobs:
 
   build:
-
+    name: Build and Push Questions Images
+    
     runs-on: ubuntu-latest
 
     permissions:
