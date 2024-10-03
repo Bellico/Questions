@@ -3,13 +3,11 @@ name: Docker Questions CI
 on:
   push:
     branches: [ "main" ]
-    paths:
-     - "jobs/**"
 
 jobs:
 
   build:
-    name: Build and Push Questions Jobs Images
+    name: Build and Push Questions Docker images
 
     runs-on: ubuntu-latest
 
@@ -27,8 +25,24 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v4
 
+    - name: Build Docker questions-editor
+      run: docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/questions-editor:latest .
+
+    - name: Push Docker questions-editor
+      run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/questions-editor:latest
+
     - name: Build Docker questions-editor-jobs
       run: docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/questions-editor-jobs:latest -f Dockerfile.jobs .
 
+    - name: Jobs changes
+      run: |
+        git fetch origin main
+        if git diff --name-only origin/main HEAD | grep -q '^jobs/'; then
+          echo "push_jobs=true" >> $GITHUB_ENV
+        else
+          echo "No changes detected in the specific folder"
+          echo "push_jobs=false" >> $GITHUB_ENV
+
     - name: Push Docker questions-editor-jobs
+      if: env.push_jobs == 'true'
       run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/questions-editor-jobs:latest
