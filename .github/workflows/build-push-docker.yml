@@ -39,12 +39,12 @@ jobs:
             - 'jobs/**'
 
     - name: log test true
-       if: steps.changes.outputs.jobs == 'true'
-       run: echo "There's a thing in my code!"
+      if : steps.changes.outputs.jobs == 'true'
+      run: echo "There's a thing in my code!"
 
     - name: log test false
-       if: steps.changes.outputs.jobs == 'false'
-       run: echo "false"
+      if: steps.changes.outputs.jobs == 'false'
+      run: echo "false"
 
     # - name: Push Docker questions-editor
     #   run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/questions-editor:latest
