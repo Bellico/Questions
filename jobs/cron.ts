@@ -54,4 +54,4 @@ cron.schedule('0 3 * * *', async () => {
     console.error(getIsoDate(), 'Delete Room Error:', error)
   }
 })
-console.log('Clean training cron added')
+console.log('Clean training job cron added')
