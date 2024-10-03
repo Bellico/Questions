@@ -1,0 +1,27 @@
+name: Build Questions
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+
+  build:
+    name: Build Questions
+
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+
+    steps:
+
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: Build Docker questions-editor
+      run: docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/questions-editor:latest .
+
+    - name: Build Docker questions-editor-jobs
+      run: docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/questions-editor-jobs:latest -f Dockerfile.jobs .
