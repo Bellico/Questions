@@ -13,9 +13,11 @@ export type RoomState = RoomStateProps & {
   progressingId?: string
   isCompleted: boolean,
   isEnd: boolean
+  isAutoSubmit: boolean,
   canGoPrev: boolean,
   canGoNext: boolean,
   showFinal: () => void,
+  setAutoSubmit: (isAutoSubmit : boolean) => void,
   disappears: () => void,
   appearsNewQuestion: (question: RoomQuestionNextType) => void,
   disappearsWithResult: (result : RoomQuestionResultType, isEnd: boolean) => void,
@@ -29,6 +31,7 @@ export const createRoomStore = (initProps: RoomStateProps) => {
     animation: 'animate-scaleUp' as animationType,
     isCompleted : false,
     isEnd: false,
+    isAutoSubmit: false,
     canGoPrev: initProps.currentQuestion.questionId !== initProps.progress[0].id,
     canGoNext: false
   }
@@ -38,6 +41,8 @@ export const createRoomStore = (initProps: RoomStateProps) => {
     ...initProps,
 
     showFinal: () => set(() => ({ isCompleted : true })),
+
+    setAutoSubmit: (isAutoSubmit : boolean) => set(() => ({ isAutoSubmit  })),
 
     disappears: () => set((state) => ({ animation : 'animate-zoomOutRoom', isCompleted: state.isEnd })),
 
