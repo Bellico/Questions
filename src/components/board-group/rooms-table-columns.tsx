@@ -5,7 +5,7 @@ import { ArrowUpDown, TextSearch, Trash2 } from 'lucide-react'
 
 import { YesNoDialog } from '@/components/commons/yes-no-dialog'
 import { Button } from '@/components/ui/button'
-import { ArrayType } from '@/lib/utils'
+import { ArrayType, diffDateToDhms } from '@/lib/utils'
 import { getRoomBoardQuery } from '@/queries/pages-queries'
 import Link from 'next/link'
 
@@ -90,6 +90,23 @@ export const RoomsTableColumns: (
       cell: ({ row }) =>
         <div>
           {row.original.dateEnd!.toLocaleString()}
+        </div>,
+    },
+    {
+      accessorKey: 'duration',
+      sortingFn: 'alphanumeric',
+      accessorFn: (row) => row.dateEnd!.getTime() - row.dateStart!.getTime(),
+      header: ({ column }) =>
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}>
+          {t('Duration')}
+          <ArrowUpDown className="ml-2 size-4" />
+        </Button>
+      ,
+      cell: ({ row }) =>
+        <div>
+          {diffDateToDhms(row.original.dateStart!, row.original.dateEnd!, t)}
         </div>,
     },
     {

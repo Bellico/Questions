@@ -22,8 +22,8 @@ RUN apk add --no-cache nodejs npm
 
 ENV NODE_ENV=production
 
-RUN mkdir /backups
-RUN chown postgres:postgres /backups
+# RUN mkdir /backups
+# RUN chown postgres:postgres /backups
 
 COPY --from=builder /app .
 COPY --from=builder /app/node_modules ./node_modules

@@ -9,11 +9,11 @@ export async function RoomsList({ userId, groupId, mode } : { userId: string, gr
   const roomsList = await getRoomBoardQuery(groupId, mode)
 
   const chartDatas = roomsList
-    .slice(0, 10)
     .filter(row => row.user.id === userId)
-    .map(row => ({
-      score: row.score!
-    }))
+    .reverse()
+    .slice(0, 10)
+    .map(row => ({ score: row.score! }))
+    .reverse()
 
   return (
     <>
