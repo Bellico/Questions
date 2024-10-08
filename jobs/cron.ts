@@ -21,8 +21,8 @@ if (process.env.NODE_ENV === 'production') {
   // Dump
   cron.schedule('0 4 * * *', async () => {
     try {
-      const dumpFileName = `${backupsFolder}/backup_${getIsoDate()}.sql`
-      const command = `pg_dump -d ${process.env.DATABASE_URL} -f ${dumpFileName}`
+      const dumpFileName = `${backupsFolder}/backup_${getIsoDate()}.sql.gz`
+      const command = `pg_dump -d ${process.env.DATABASE_URL} -f ${dumpFileName} -Z1`
       const { stdout, stderr } = await execAsync(command)
       console.log(getIsoDate(), 'Dump Completed', stdout, stderr)
     } catch (error) {
