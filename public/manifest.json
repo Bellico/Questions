@@ -1,6 +1,6 @@
 {
   "name": "Questions Editor",
-  "short_name": "Questions Editor",
+  "short_name": "Questions",
   "description": "Questions app for training and practice",
   "start_url": "/",
   "display": "standalone",
