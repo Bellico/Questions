@@ -13,7 +13,7 @@ const inter = Inter({
 export const metadata: Metadata = {
   title: 'Questions Editor',
   description: 'A personal questionnaire application',
-  manifest: 'manifest.json'
+  manifest: '/manifest.json'
 }
 
 export const viewport: Viewport = {
